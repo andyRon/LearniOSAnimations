@@ -55,49 +55,50 @@ class ViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        heading.center.x    -=  view.bounds.width
-        username.center.x   -=  view.bounds.width
-        password.center.x   -=  view.bounds.width
+        // heading,username,password的图层动画
+        let flyRight = CABasicAnimation(keyPath: "position.x")
+        flyRight.fromValue = -view.bounds.size.width/2
+        flyRight.toValue = view.bounds.size.width/2
+        flyRight.duration = 0.5
+        heading.layer.add(flyRight, forKey: nil)
         
-        cloud1.alpha = 0.0
-        cloud2.alpha = 0.0
-        cloud3.alpha = 0.0
-        cloud4.alpha = 0.0
+        flyRight.beginTime = CACurrentMediaTime() + 0.3
+        flyRight.fillMode = kCAFillModeBoth
+        username.layer.add(flyRight, forKey: nil)
+        
+        flyRight.beginTime = CACurrentMediaTime() + 0.4
+        password.layer.add(flyRight, forKey: nil)
+        // 把实际图层设置到屏幕中间
+        username.layer.position.x = view.bounds.size.width/2
+        password.layer.position.x = view.bounds.size.width/2
         
         loginButton.center.y += 30.0
         loginButton.alpha = 0.0
+        
 
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
-        UIView.animate(withDuration: 0.5) {
-            self.heading.center.x += self.view.bounds.width
-        }
         
-        UIView.animate(withDuration: 0.5, delay: 0.3, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.0, options: [], animations: {
-            self.username.center.x += self.view.bounds.width
-        }, completion: nil)
-
-        UIView.animate(withDuration: 0.5, delay: 0.4, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.0, options: [], animations: {
-            self.password.center.x += self.view.bounds.width
-        }, completion: nil)
+        // 云淡入的图层动画
+        let cloudFade = CABasicAnimation(keyPath: "alpha")
+        cloudFade.duration = 0.5
+        cloudFade.fromValue = 0.0
+        cloudFade.toValue = 1.0
+        cloudFade.fillMode = kCAFillModeBackwards
         
+        cloudFade.beginTime = CACurrentMediaTime() + 0.5
+        cloud1.layer.add(cloudFade, forKey: nil)
         
-        UIView.animate(withDuration: 0.5, delay: 0.5, options: [], animations: {
-            self.cloud1.alpha = 1.0
-        }, completion: nil)
-        UIView.animate(withDuration: 0.5, delay: 0.7, options: [], animations: {
-            self.cloud2.alpha = 1.0
-        }, completion: nil)
-        UIView.animate(withDuration: 0.5, delay: 0.9, options: [], animations: {
-            self.cloud3.alpha = 1.0
-        }, completion: nil)
-        UIView.animate(withDuration: 0.5, delay: 1.1, options: [], animations: {
-            self.cloud4.alpha = 1.0
-        }, completion: nil)
+        cloudFade.beginTime = CACurrentMediaTime() + 0.7
+        cloud2.layer.add(cloudFade, forKey: nil)
+        
+        cloudFade.beginTime = CACurrentMediaTime() + 0.9
+        cloud3.layer.add(cloudFade, forKey: nil)
+        
+        cloudFade.beginTime = CACurrentMediaTime() + 1.1
+        cloud4.layer.add(cloudFade, forKey: nil)
         
         UIView.animate(withDuration: 0.5, delay: 0.5, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.0, options: [], animations: {
             self.loginButton.center.y -= 30.0
@@ -191,4 +192,11 @@ func delay(_ seconds: Double, completion: @escaping ()->Void) {
 }
 
 
-
+func tintBackgroundColor(layer: CALayer, toColor: UIColor) {
+    let tint = CABasicAnimation(keyPath: "backgroundColor")
+    tint.fromValue = layer.backgroundColor
+    tint.toValue = toColor.cgColor
+    tint.duration = 0.5
+    layer.add(tint, forKey: nil)
+    layer.backgroundColor = toColor.cgColor
+}
