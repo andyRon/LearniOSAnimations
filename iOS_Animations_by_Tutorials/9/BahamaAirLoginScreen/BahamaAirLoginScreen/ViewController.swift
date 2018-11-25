@@ -29,6 +29,9 @@ class ViewController: UIViewController {
 
     var statusPosition = CGPoint.zero
     
+    
+    let info = UILabel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -50,6 +53,9 @@ class ViewController: UIViewController {
         status.addSubview(label)
         
         statusPosition = status.center
+        
+        // 设置提示信息UILabel
+        setInfoLabel()
 
     }
     
@@ -60,14 +66,19 @@ class ViewController: UIViewController {
         flyRight.fromValue = -view.bounds.size.width/2
         flyRight.toValue = view.bounds.size.width/2
         flyRight.duration = 0.5
+        flyRight.delegate = self
+        flyRight.setValue("form", forKey: "name")
+        flyRight.setValue(heading.layer, forKey: "layer")
         heading.layer.add(flyRight, forKey: nil)
+        
         
         flyRight.beginTime = CACurrentMediaTime() + 0.3
         flyRight.fillMode = kCAFillModeBoth
-//        flyRight.isRemovedOnCompletion = false
+        flyRight.setValue(username.layer, forKey: "layer")
         username.layer.add(flyRight, forKey: nil)
         
         flyRight.beginTime = CACurrentMediaTime() + 0.4
+        flyRight.setValue(password.layer, forKey: "layer")
         password.layer.add(flyRight, forKey: nil)
         
         
@@ -108,10 +119,26 @@ class ViewController: UIViewController {
             self.loginButton.alpha = 1.0
         }, completion: nil)
         
-        animateCloud(cloud: cloud1)
-        animateCloud(cloud: cloud2)
-        animateCloud(cloud: cloud3)
-        animateCloud(cloud: cloud4)
+        animateCloud(layer: cloud1.layer)
+        animateCloud(layer: cloud2.layer)
+        animateCloud(layer: cloud3.layer)
+        animateCloud(layer: cloud4.layer)
+
+        // 提示信息Label的两个动画
+        let flyLeft = CABasicAnimation(keyPath: "position.x")
+        flyLeft.fromValue = info.layer.position.x + view.frame.size.width
+        flyLeft.toValue = info.layer.position.x
+        flyLeft.duration = 5.0
+        info.layer.add(flyLeft, forKey: "infoappear")
+        
+        let fadeLabelIn = CABasicAnimation(keyPath: "opacity")
+        fadeLabelIn.fromValue = 0.2
+        fadeLabelIn.toValue = 1.0
+        fadeLabelIn.duration = 4.5
+        info.layer.add(fadeLabelIn, forKey: "fadein")
+        
+        username.delegate = self
+        password.delegate = self
     }
     
     @IBAction func logIn(_ sender: UIButton) {
@@ -182,7 +209,7 @@ class ViewController: UIViewController {
             roundCorners(layer: self.loginButton.layer, toRadius: 10.0)
         })
     }
-    /// 云动画
+    /// 云的视图动画
     func animateCloud(cloud: UIImageView) {
         // 假设云从进入屏幕到离开屏幕需要大约60.0s，可以计算出云移动的速度
         let cloudSpeed = view.frame.size.width / 60.0
@@ -194,6 +221,29 @@ class ViewController: UIViewController {
             cloud.frame.origin.x = -cloud.frame.size.width
             self.animateCloud(cloud: cloud)
         }
+    }
+    /// 云的图层动画
+    func animateCloud(layer: CALayer) {
+        let cloudSpeed = 60.0 / Double(view.layer.frame.size.width)
+        let duration: TimeInterval = Double(view.layer.frame.size.width - layer.frame.origin.x) * cloudSpeed
+        print(duration)
+        let cloudMove = CABasicAnimation(keyPath: "position.x")
+        cloudMove.duration = duration
+        cloudMove.toValue = self.view.bounds.width + layer.bounds.width/2
+        cloudMove.delegate = self
+        cloudMove.setValue("cloud", forKey: "name")
+        cloudMove.setValue(layer, forKey: "layer")
+        layer.add(cloudMove, forKey: nil)
+    }
+    
+    func setInfoLabel() {
+        info.frame = CGRect(x: 0.0, y: loginButton.center.y + 60.0,  width: view.frame.size.width, height: 30)
+        info.backgroundColor = UIColor.clear
+        info.font = UIFont(name: "HelveticaNeue", size: 12.0)
+        info.textAlignment = .center
+        info.textColor = UIColor.white
+        info.text = "Tap on a field and enter username and password"
+        view.insertSubview(info, belowSubview: loginButton)
     }
 
 }
@@ -219,4 +269,48 @@ func roundCorners(layer: CALayer, toRadius: CGFloat) {
     round.duration = 0.33
     layer.add(round, forKey: nil)
     layer.cornerRadius = toRadius    
+}
+
+
+extension ViewController: CAAnimationDelegate {
+    
+    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+        print(anim.description, "动画完成")
+        guard let name = anim.value(forKey: "name") as? String else {
+            return
+        }
+
+        if name == "form" {
+            // `value(forKey:)`的结果总是`Any`，因此需要转换为所需类型
+            let layer = anim.value(forKey: "layer") as? CALayer
+            // 简单的脉动动画
+            let pulse = CABasicAnimation(keyPath: "transform.scale")
+            pulse.fromValue = 1.25
+            pulse.toValue = 1.0
+            pulse.duration = 0.25
+            layer?.add(pulse, forKey: nil)
+        }
+        
+        if name == "cloud" {
+            if let layer = anim.value(forKey: "layer") as? CALayer {
+                anim.setValue(nil, forKey: "layer")
+                
+                layer.position.x = -layer.bounds.width/2
+                delay(0.5) {
+                    self.animateCloud(layer: layer)
+                }
+            }
+        }
+        
+    }
+}
+
+extension ViewController: UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        guard let runningAnimations = info.layer.animationKeys() else {
+            return
+        }
+        print(runningAnimations)
+        info.layer.removeAnimation(forKey: "infoappear")
+    }
 }
