@@ -2,8 +2,8 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "saffron.jpg",
-      "scale" : "1x"
+      "scale" : "1x",
+      "filename" : "marjorana.jpg"
     },
     {
       "idiom" : "universal",

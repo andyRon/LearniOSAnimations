@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x"
+      "scale" : "1x",
+      "filename" : "rosemary.jpg"
     },
     {
       "idiom" : "universal",
-      "filename" : "bg@2x.jpg",
       "scale" : "2x"
     },
     {
