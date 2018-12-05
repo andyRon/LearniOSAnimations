@@ -1,0 +1,336 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9C485DA41A1CCBE1004A6132 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C485DA31A1CCBE1004A6132 /* AppDelegate.swift */; };
+		9C485DA61A1CCBE1004A6132 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C485DA51A1CCBE1004A6132 /* ViewController.swift */; };
+		9C485DA91A1CCBE1004A6132 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C485DA71A1CCBE1004A6132 /* Main.storyboard */; };
+		9C485DAB1A1CCBE1004A6132 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C485DAA1A1CCBE1004A6132 /* Images.xcassets */; };
+		9C485DAE1A1CCBE1004A6132 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9C485DAC1A1CCBE1004A6132 /* LaunchScreen.xib */; };
+		9C485DC61A1CCBFB004A6132 /* FlightData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C485DC41A1CCBFB004A6132 /* FlightData.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		9C485D9E1A1CCBE1004A6132 /* Snow Scene.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Snow Scene.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9C485DA21A1CCBE1004A6132 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9C485DA31A1CCBE1004A6132 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		9C485DA51A1CCBE1004A6132 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		9C485DA81A1CCBE1004A6132 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		9C485DAA1A1CCBE1004A6132 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		9C485DAD1A1CCBE1004A6132 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		9C485DC41A1CCBFB004A6132 /* FlightData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlightData.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9C485D9B1A1CCBE1004A6132 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9C485D951A1CCBE1004A6132 = {
+			isa = PBXGroup;
+			children = (
+				9C485DA01A1CCBE1004A6132 /* Flight Info */,
+				9C485D9F1A1CCBE1004A6132 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9C485D9F1A1CCBE1004A6132 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9C485D9E1A1CCBE1004A6132 /* Snow Scene.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9C485DA01A1CCBE1004A6132 /* Flight Info */ = {
+			isa = PBXGroup;
+			children = (
+				9C485DC71A1CCCF0004A6132 /* Classes */,
+				9C485DA31A1CCBE1004A6132 /* AppDelegate.swift */,
+				9C485DA51A1CCBE1004A6132 /* ViewController.swift */,
+				9C485DA71A1CCBE1004A6132 /* Main.storyboard */,
+				9C485DAA1A1CCBE1004A6132 /* Images.xcassets */,
+				9C485DAC1A1CCBE1004A6132 /* LaunchScreen.xib */,
+				9C485DA11A1CCBE1004A6132 /* Supporting Files */,
+			);
+			path = "Flight Info";
+			sourceTree = "<group>";
+		};
+		9C485DA11A1CCBE1004A6132 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				9C485DA21A1CCBE1004A6132 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		9C485DC71A1CCCF0004A6132 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				9C485DC41A1CCBFB004A6132 /* FlightData.swift */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9C485D9D1A1CCBE1004A6132 /* Snow Scene */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9C485DBD1A1CCBE1004A6132 /* Build configuration list for PBXNativeTarget "Snow Scene" */;
+			buildPhases = (
+				9C485D9A1A1CCBE1004A6132 /* Sources */,
+				9C485D9B1A1CCBE1004A6132 /* Frameworks */,
+				9C485D9C1A1CCBE1004A6132 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Snow Scene";
+			productName = "Flight Info";
+			productReference = 9C485D9E1A1CCBE1004A6132 /* Snow Scene.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9C485D961A1CCBE1004A6132 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0900;
+				ORGANIZATIONNAME = "Razeware LLC";
+				TargetAttributes = {
+					9C485D9D1A1CCBE1004A6132 = {
+						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = ZHNA975N38;
+						LastSwiftMigration = 0900;
+					};
+				};
+			};
+			buildConfigurationList = 9C485D991A1CCBE1004A6132 /* Build configuration list for PBXProject "Snow Scene" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 9C485D951A1CCBE1004A6132;
+			productRefGroup = 9C485D9F1A1CCBE1004A6132 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9C485D9D1A1CCBE1004A6132 /* Snow Scene */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9C485D9C1A1CCBE1004A6132 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9C485DA91A1CCBE1004A6132 /* Main.storyboard in Resources */,
+				9C485DAE1A1CCBE1004A6132 /* LaunchScreen.xib in Resources */,
+				9C485DAB1A1CCBE1004A6132 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9C485D9A1A1CCBE1004A6132 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9C485DA61A1CCBE1004A6132 /* ViewController.swift in Sources */,
+				9C485DA41A1CCBE1004A6132 /* AppDelegate.swift in Sources */,
+				9C485DC61A1CCBFB004A6132 /* FlightData.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		9C485DA71A1CCBE1004A6132 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9C485DA81A1CCBE1004A6132 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		9C485DAC1A1CCBE1004A6132 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9C485DAD1A1CCBE1004A6132 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		9C485DBB1A1CCBE1004A6132 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		9C485DBC1A1CCBE1004A6132 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		9C485DBE1A1CCBE1004A6132 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = ZHNA975N38;
+				INFOPLIST_FILE = "Flight Info/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.razeware.Snow-Scene";
+				PRODUCT_NAME = "Snow Scene";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		9C485DBF1A1CCBE1004A6132 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = ZHNA975N38;
+				INFOPLIST_FILE = "Flight Info/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.razeware.Snow-Scene";
+				PRODUCT_NAME = "Snow Scene";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9C485D991A1CCBE1004A6132 /* Build configuration list for PBXProject "Snow Scene" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9C485DBB1A1CCBE1004A6132 /* Debug */,
+				9C485DBC1A1CCBE1004A6132 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9C485DBD1A1CCBE1004A6132 /* Build configuration list for PBXNativeTarget "Snow Scene" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9C485DBE1A1CCBE1004A6132 /* Debug */,
+				9C485DBF1A1CCBE1004A6132 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9C485D961A1CCBE1004A6132 /* Project object */;
+}
