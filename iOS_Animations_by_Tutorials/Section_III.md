@@ -1,6 +1,8 @@
-# Section III: 图层动画(Layer Animations)
+# 系统学习iOS动画之三：图层动画
 
 
+
+图层动画(Layer Animations)
 
 之前学习了创建视图动画（View Animations），这一部分学习功能更强大、更偏底层的**Core Animation APIs**。（暂时把核心动画理解为这边视图动画）
 
@@ -952,7 +954,7 @@ flyLeft.speed = 2.0
 
 
 
-## Chapter 11: Layer Springs
+## Chapter 11: 图层弹簧动画(Layer Springs)
 
 UIKit的[Springs]()可以让你创建一个有点过于简单的弹簧式动画，但核心动画Layer Springs对应物会呈现一个看起来和感觉更自然的正确物理模拟。
 
@@ -1179,8 +1181,56 @@ func roundCorners(layer: CALayer, toRadius: CGFloat) {
 
 ## Chapter 12: Layer KeyFrame Animations and Struct Properties
 
-Layer上的关键帧动画与UIView上的关键帧动画略有不同。 查看关键帧动画是将独立简单动画组合在一起的简单方法; 它们可以为不同的视图和属性设置动画，动画可以重叠或在两者之间存在间隙。
+Layer上的关键帧动画与UIView上的关键帧动画略有不同。 [视图关键帧动画]()是将独立简单动画组合在一起的简单方法; 它们可以为不同的视图和属性设置动画，动画可以重叠或在两者之间存在间隙。
+
 相比之下，`CAKeyframeAnimation`允许您为给定图层上的单个属性设置动画。 您可以定义动画的不同关键点，但动画中不能有任何间隙或重叠。 尽管起初听起来有些限制，但你可以使用CAKeyframeAnimation创建一些非常引人注目的效果。
+
+在本章中，您将创建许多图层关键帧动画，从非常基本模拟真实世界碰撞到更高级的动画。 在[第15章“笔画和路径动画”]()中，您将学习如何进一步获取图层动画，并沿给定路径为图层设置动画。
+
+现在，您将在跑步之前走路，并为您的第一层关键帧动画创建一个时髦的摇摆效果。
+
+
+
+![](https://ws1.sinaimg.cn/large/006tNbRwgy1fx690o3li9g308m060dho.gif)
+
+
+
+### 介绍
+
+
+
+想一想基本动画是如何运作的。 使用fromValue和toValue，Core Animation会在指定的持续时间内逐步修改这些值之间的特定图层属性。
+例如，当您在45°和-45°（或π/ 4和-π/ 4之间）为您的数学类型旋转图层时，您只需要指定这两个值，并且图层渲染所有中间值以完成 动画：
+
+![image-20181127104828153](https://ws3.sinaimg.cn/large/006tNbRwgy1fxmfg5sraej30ds0703zm.jpg)
+
+CAKeyframeAnimation使用一组值来动画，命名值，而不是fromValue和toValue。 值的元素是动画的测量里程碑。 您还需要提供动画应达到每个值的关键点的时间。
+
+在上面的动画中，图层从45°旋转到-45°，但这次它有两个独立的阶段：
+
+![image-20181127104845088](https://ws1.sinaimg.cn/large/006tNbRwgy1fxmfgenky3j30dp05ldgk.jpg)
+
+首先，它在动画持续时间的前三分之二内从45°旋转到22°，然后它 在剩余的时间内一直旋转到-45°。
+实质上，使用关键帧设置动画层要求您为要设置动画的属性提供关键值，以及在0.0和1.0之间进行相应数量的相对关键时间。
+
+
+
+### 创建图层关键帧动画
+
+使用上一章完成的项目或使用原书对应章节的[**开始项目**](#项目代码)
+
+在`resetForm()`中添加：
+
+```swift
+let wobble = CAKeyframeAnimation(keyPath: "transform.rotation")
+wobble.duration = 0.25
+wobble.repeatCount = 4
+wobble.values = [0.0, -.pi/4.0, 0.0, .pi/4.0, 0.0]
+wobble.keyTimes = [0.0, 0.25, 0.5, 0.75, 1.0]
+heading.layer.add(wobble, forKey: nil)
+```
+
+`keyTimes`是从`0.0`到`1.1`的一系列值，并且与`values`一一对应。在登录按钮恢复原状后，heading有一个摇摆的效果：
 
 
 
@@ -1190,55 +1240,140 @@ Layer上的关键帧动画与UIView上的关键帧动画略有不同。 查看�
 
 眼睛敏锐的读者可能已经注意到我还没有介绍过结构属性的动画。 大多数情况下，你可以放弃动画结构的单个组件，例如CGPoint的x组件，或CATransformation3D的旋转组件，但是接下来你会发现动态结构值的动画比 你可能会先考虑一下。
 
-
-
 ### Animating struct values
 
-结构实例是Swift中的一等公民。 实际上，在使用类和结构之间语法上几乎没有区别。
-但是，Core Animation是一个基于C构建的Objective-C框架，这意味着结构的处理方式截然不同。 Objective-C API喜欢处理对象，因此结构需要一些特殊的处理。
-这就是为什么对图层属性（如颜色或数字）进行动画制作相对容易的原因，但是为CGPoint等结构属性设置动画并不容易。
-CALayer有许多可动画的属性，它们包含struct值，包括CGPoint类型的位置，CATransform3D类型的转换和CGRect类型的边界。 为了帮助管理这个问题，Cocoa包含了NSValue类，它将一个struct值“包装”或“包装”为一个对象。
+结构体是Swift中的一等公民。 实际上，在使用类和结构之间语法上几乎没有区别。（关于类和结构体可查[以撸代码的形式学习Swift-9：类和结构体(Classes and Structures)](http://andyron.com/2017/swift-9-structures-classes.html)）
+但是，**Core Animation**是一个基于C构建的Objective-C框架，这意味着结构体的处理方式截然不同。 Objective-C API喜欢处理对象，因此结构体需要一些特殊的处理。
+这就是为什么对图层属性（如颜色或数字）进行动画制作相对容易的原因，但是为CGPoint等结构体属性设置动画并不容易。
+`CALayer`有许多可动画属性，它们包含struct值，包括`CGPoint`类型的位置，`CATransform3D`类型的转换和`CGRect`类型的边界。 为了帮助管理这个问题，Cocoa包含了`NSValue`类，它将一个struct值“包装”或“包装”为一个对象。
 
 
 
+NSValue附带了许多便利初始化程序，您可以将它们用于需要打包的每个结构，包括以下内容：
+
+```swift
+init(cgPoint: CGPoint)
+init(cgSize: CGSize)
+init(cgRect rect: CGRect)
+init(caTransform3D: CATransform3D)
+```
+
+你会如何使用这些初始化器来装箱你的value？ 以下是使用CGPoint的示例位置动画：
+
+```swift
+let move = CABasicAnimation(keyPath: "position")
+move.duration = 1.0
+move.fromValue = NSValue(cgPoint: CGPoint(x: 100.0, y: 100.0))
+move.toValue = NSValue(cgPoint: CGPoint(x: 200.0, y: 200.0))
+```
 
 
-### Intermediate keyframe animations
 
-如果您需要在屏幕上显示图像但不需要使用UIView的所有好处（例如自动布局约束，附加手势识别器等），您可以简单地使用上面的代码示例中的CALayer。
+在把`CGPoint`赋值给`fromValue`或`toValue`之前，需要把`CGPoint`转化为`NSValue`，否则动画无法工作。关键帧动画同样如此。
 
 
+
+### 热气球的关键帧动画
+
+
+
+在`logIn()`中添加：
+
+```swift
+let balloon = CALayer()
+balloon.contents = UIImage(named: "balloon")!.cgImage
+balloon.frame = CGRect(x: -50.0, y: 0.0, width: 50.0, height: 65.0)
+view.layer.insertSublayer(balloon, below: username.layer)
+```
+
+`insertSublayer(_:below)`方法创建了一个图片图层作为`view.layer`的子图层。
+
+如果需要在屏幕上显示图像但不需要使用UIView的所有好处（例如自动布局约束，附加手势识别器等），可以简单地使用上面的代码示例中的CALayer。
+
+
+
+在上面的代码后添加动画代码：
+
+```swift
+let flight = CAKeyframeAnimation(keyPath: "position")
+flight.duration = 12.0
+flight.values = [
+  CGPoint(x: -50.0, y: 0.0),
+  CGPoint(x: view.frame.width + 50.0, y: 160.0),
+  CGPoint(x: -50.0, y: loginButton.center.y)
+].map { NSValue(cgPoint: $0) }
+
+flight.keyTimes = [0.0, 0.5, 1.0]
+```
+
+
+
+`values`的三个对应点如下：
 
 ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fx69jdo8zrj30d606zglk.jpg)
 
 
 
+最后把动画添加到气球图层上，并且设置气球图层最终位置：
+
+```swift
+balloon.add(flight, forKey: nil)
+balloon.position = CGPoint(x: -50.0, y: loginButton.center.y)
+```
+
+
+
+运行，效果：
+
 ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fx69ltw09dg308s0avwtn.gif)
 
 
 
-## Chapter 13: Shapes and Masks
+
+
+
+
+## Chapter 13: 形状和蒙版(Shapes and Masks)
 
 本章标志着本书这一部分的一个转变：你不仅要开始使用不同的示例项目，而且还要使用多层效果，创建看起来与物理交互的图层动画。 彼此在动画运行时在形状之间变换。
 
-`CAShapeLayer`
 
 
-
-本章中的形状将由CAShapeLayer处理，这是一个CALayer子类，可以让您在屏幕上绘制各种形状，从非常简单到非常复杂：
+本章中的形状由`CAShapeLayer`处理，这是一个`CALayer`子类，可以用它在屏幕上绘制各种形状，从非常简单到非常复杂都可以。
 
 您可以在屏幕上绘制CALayer CGPath，而不是接受绘图说明。 这很方便，因为Core Graphics已经为构建CGPath形状定义了非常广泛的绘图指令API。
 如果您更熟悉UIBezierPath，可以使用它来定义形状，然后使用其cgPath属性来获取其Core Graphics表示。 你将在本章稍后再试一试。
 
 
 
-### 开始项目
+创建所需形状后，可以将此类属性设置为 stroke 颜色，填充颜色和stroke虚线模式。
+
+当然，到现在为止你可能会问“......但我可以为这些属性设置动画吗？”是的，你可以：
+
+`path`：将图层的形状变形为不同的形状。
+`fillColor`：将形状的填充色调更改为其他颜色。
+`lineDashPhase`：在你的形状周围创建一个选框或“行进蚂蚁”效果。
+`lineWidth`：增大或缩小形状笔划线的大小。
+
+绘制形状时可以使用另外两个可设置动画的属性; 您将在[第15章“笔划和路径动画”]()中了解这些内容。
+
+本章的项目模拟了正在搜索在线对手的战斗游戏的起始屏幕。 您将模拟一些在线通信并添加动画以显示通信状态。 [开始项目]()
+
+到本章结束时，该项目看起来很像下面的屏幕：
+
+![image-20181127114438155](https://ws2.sinaimg.cn/large/006tNbRwgy1fxmh2kmsvpj309z09xta6.jpg)
 
 
 
-### avatar view
+### 头像视图
 
-`photoLayer`：头像的图像层。
+项目设置相当简单：一个视图控制器显示一个漂亮的背景图像，一些标签，一个”再次搜索“按钮，和两个头像图像，其中一个将是空的，直到应用程序”找到“一个对手。
+这两个头像都是AvatarView类的一个实例。 在本章的这一部分中，您将在学习AvatarView的工作原理时快速完成类代码的编写。
+打开AvatarView.swift并查看`didMoveToWindow()`，您将在其中构建头像视图的以下元素：
+
+
+
+`photoLayer`：头像的图片图层。
 `circleLayer`：用于绘制圆的形状图层。
 `maskLayer`：另一个用于绘制蒙版的形状图层。
 `label`：显示玩家姓名的标签。
@@ -1249,9 +1384,89 @@ CALayer有许多可动画的属性，它们包含struct值，包括CGPoint类型
 
 
 
-### Creating the bounce-off animation
+上面的组件已经存在于项目中，但尚未添加到视图中 - 这是您的第一个任务。 将以下代码添加到`didMoveToWindow()`：
+
+```swift
+photoLayer.mask = maskLayer
+```
 
 
+这简单地用maskLayer中的圆形掩模掩盖上面的方形图像。
+构建并运行您的项目以查看事物的外观; 您还可以通过`@IBDesignable`(关于`@IBDesignable`，可查看[iOS tutorial 8：使用IBInspectable 和 IBDesignable定制UI](http://andyron.com/2017/ios-tutorial-8-ibinspectable-ibdesignable.html))在故事板中看到更改：
+
+现在将边框图层添加到`didMoveToWindow()`中的头像视图图层：
+
+```swift
+layer.addSublayer(circleLayer)
+```
+
+
+
+添加名字标签：
+
+```swift
+addSubview(label)
+```
+
+
+
+
+
+
+
+### 创建反弹(bounce-off)动画
+
+在`ViewController`中创建`searchForOpponent()`函数，并在`viewDidAppear`中调用：
+
+```swift
+  func searchForOpponent() {
+    let avatarSize = myAvatar.frame.size
+    let bounceXOffset: CGFloat = avatarSize.width/1.9
+    let morphSize = CGSize(width: avatarSize.width * 0.85, height: avatarSize.height * 1.1) 
+  }
+```
+
+`bounceXOffset`是相互反弹时应移动的水平距离。
+
+`morphSize`是头像碰撞后的形变大小（宽度变小，长度变大）。
+
+
+
+在`searchForOpponent()`里添加：
+
+```swift
+	let rightBouncePoint = CGPoint(x: view.frame.size.width/2.0 + bounceXOffset, y: myAvatar.center.y)
+    let leftBouncePoint = CGPoint(x: view.frame.size.width/2.0 - bounceXOffset, y: myAvatar.center.y)
+
+	myAvatar.bounceOff(point: rightBouncePoint, morphSize: morphSize)
+    opponentAvatar.bounceOff(point: leftBouncePoint, morphSize: morphSize)
+```
+
+
+
+在`AvatarView`类中添加`bounceOff(point:morphSize:)`方法，两个参数分别代表头像应该移动的位置和它应该变形的大小：
+
+```swift
+    func bounceOff(point: CGPoint, morphSize: CGSize) {
+        let originalCenter = center
+        
+        UIView.animate(withDuration: animationDuration, delay: 0.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.0, animations: {
+            self.center = point
+        }, completion: {_ in
+            
+        })
+        
+        UIView.animate(withDuration: animationDuration, delay: animationDuration, usingSpringWithDamping: 0.7, initialSpringVelocity: 1.0, animations: {
+            self.center = originalCenter
+        }) { (_) in
+            delay(seconds: 0.1) {
+                self.bounceOff(point: point, morphSize: morphSize)
+            }
+        }
+   }
+```
+
+上面的两个动画分别是，*使用弹簧动画将头像移动到指定位置* 和 *使用弹簧动画将头像移动到原来位置*。此时效果如下：
 
 ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fx6g7btqrug308s08u77g.gif)
 
@@ -1259,50 +1474,214 @@ CALayer有许多可动画的属性，它们包含struct值，包括CGPoint类型
 
 ### Morphing shapes(变形图形)
 
+上面当两个头像视图接触时会有短暂时间保持再一次，但还没有两个问题碰撞后”压扁“的效果。
 
-
-![](https://ws1.sinaimg.cn/large/006tNbRwgy1fx6gl8vr2tg308s08uwhy.gif)
-
-
+在`bounceOff(point:morphSize:)`添加：
 
 ```swift
-        maskLayer.add(morphAnimation, forKey: nil)
+let morphedFrame = (originalCenter.x > point.x) ?
+        CGRect(x: 0.0, y: bounds.height - morphSize.height, width: morphSize.width, height: morphSize.height) :
+        CGRect(x: bounds.width - bounds.width, y: bounds.height - morphSize.height, width: morphSize.width, height: morphSize.height)
+```
+
+通过`originalCenter.x > point.x`来判断是左边头像还是右边头像。
+
+在`bounceOff(point:morphSize:)`继续添加：
+
+```swift
+let morphAnimation = CABasicAnimation(keyPath: "path")
+morphAnimation.duration = animationDuration
+morphAnimation.toValue = UIBezierPath(ovalIn: morphedFrame).cgPath
+
+morphAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
+
+circleLayer.add(morphAnimation, forKey: nil)
+```
+
+通过`UIBezierPath`创建椭圆。
+
+运行后，效果有点问题：
+
+![image-20181127144558179](https://ws3.sinaimg.cn/large/006tNbRwgy1fxmmb90qrcj309z0443z1.jpg)
+
+
+
+只有边框图层发生了变形，图片图层没有变化。
+
+把`morphAnimation`动画添加到蒙版图层：
+
+```swift
+maskLayer.add(morphAnimation, forKey: nil)
+```
+
+这样的效果就好很多：
+
+![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxmmdra4j2g308m0760vk.gif)
+
+
+
+### 搜索对手
+
+在`searchForOppoent()`里最后添加`delay(seconds: 4.0, completion: foundOppoent)`，然后在`ViewController`中添加：
+
+```swift
+  func foundOpponent() {
+    status.text = "Connecting..."
+    
+    opponentAvatar.image = UIImage(named: "avatar-2")
+    opponentAvatar.name = "Andy"
+  }
+```
+
+延迟一段时间后寻找对手。
+
+在`foundOpponent()`里添加`delay(seconds: 4.0, completion: connectedToOpponent)`，然后然后在`ViewController`中添加：
+
+```swift
+  func connectedToOpponent() {
+    myAvatar.shouldTransitionToFinishedState = true
+    opponentAvatar.shouldTransitionToFinishedState = true
+  }
+```
+
+`shouldTransitionToFinishedState`是`AvatarView`中自定义的属性，用于判断连接是否完成，在下一节中使用。
+
+在`connectedToOpponent()`里添加`delay(seconds: 1.0, completion: completed)`，然后然后在`ViewController`中添加：
+
+```swift
+  func completed() {
+    status.text = "Ready to play"
+    UIView.animate(withDuration: 0.2) {
+        self.vs.alpha = 1.0
+        self.searchAgain.alpha = 1.0
+    }
+  }
+```
+
+对手找到后，修改状态语，并显示重新搜索按钮。
+
+效果：
+
+![](https://ws4.sinaimg.cn/large/006tNbRwgy1fxmn6zintyg308m0fn1kx.gif)
+
+
+
+### 完成连接后头像变成正方形
+
+在中添加一个属性`var isSquare = false`，用于判断头像是否需要转换为正方形。
+
+
+
+在`bounceOff(point:morphSize:)`的第一个动画（*头像移动到指定位置*）的 `completion`闭包中添加：
+
+```swift
+if self.shouldTransitionToFinishedState {
+    self.animateToSquare()
+}
+```
+
+其中`animateToSquare()`为：
+
+```swift
+  // 变换为正方形动画
+  func animateToSquare() {
+    isSquare = true
+    
+    let squarePath = UIBezierPath(rect: bounds).cgPath
+    let morph = CABasicAnimation(keyPath: "path")
+    morph.duration = 0.25
+    morph.fromValue = circleLayer.path
+    morph.toValue = squarePath
+    
+    circleLayer.add(morph, forKey: nil)
+    maskLayer.add(morph, forKey: nil)
+    
+    circleLayer.path = squarePath
+    maskLayer.path = squarePath
+    
+  }
+```
+
+在`bounceOff(point:morphSize:)`的第二个动画（*头像移动到原来位置*）的 `completion`闭包添加判断：
+
+```swift
+if !self.isSquare {
+    self.bounceOff(point: point, morphSize: morphSize)
+}
 ```
 
 
 
-??
+这样的最终效果就是：
+
+![](https://ws2.sinaimg.cn/large/006tNbRwgy1fxmnjaf154g308m0fn1gb.gif)
 
 
 
 
 
-## Chapter 14: Gradient Animations
+
+
+## Chapter 14: 渐变动画(Gradient Animations)
 
 
 
+iOS的许多外观和感觉来自UI中非常微妙的动画。 虽然它不再是iOS的一部分，但其中最好的是一个简单的小动画：锁定屏幕上的“滑动解锁”标签。 在本章中，您将学习如何使用移动渐变模拟此效果以及如何为这些渐变的颜色和布局设置动画：
 
+您将为“幻灯片显示”标签设置渐变动画，然后在用户在标签上滑动时显示一个很酷的神秘效果。 但是，你必须完成本章，看看这个很酷的效果是什么！ 作为额外的奖励，您将学习如何从一段文本中创建一个图层蒙版，并用它来掩盖渐变。
+
+
+
+[开始项目]()  是个单页的项目，只有一个显示时间的`UILabel`，和一个之后用于渐变动画的自定义的`UIView`子类`AnimateMaskLabel`
+
+
+
+### 第一个渐变图层
+
+`CAGradientLayer`是`CALayer`的另一个子类，专门用于渐变的图层。
+
+配置`CAGradientLayer`:
 
 ```swift
-let gradientLayer = CAGradientLayer()
-        
-        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
-        gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
-        let colors = [
-            UIColor.black.cgColor,
-            UIColor.white.cgColor,
-            UIColor.black.cgColor
-        ]
-        gradientLayer.colors = colors
-        let locations: [NSNumber] = [0.25, 0.5, 0.75]
-        gradientLayer.locations = locations
-        
-        return gradientLayer
+gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
+gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
 ```
 
+这定义了渐变的方向及其起点和终点。
 
+![image-20181128090956756](https://ws4.sinaimg.cn/large/006tNbRwgy1fxni7yuioaj30bl03j0sr.jpg)
+
+继续添加：
+
+```swift
+let colors = [
+    UIColor.black.cgColor,
+    UIColor.white.cgColor,
+    UIColor.black.cgColor
+]
+gradientLayer.colors = colors
+let locations: [NSNumber] = [0.25, 0.5, 0.75]
+gradientLayer.locations = locations
+```
+
+上面的定义方式和前面学习的[关键帧动画]() 中的`values`和`keyTimes`有点类似。
+
+结果就是渐变以黑色开始，混合为白色，最后混合为黑色。通过`locations`指定这些颜色应该出现在渐变过程中的确切位置。当然也是可以很多歌颜色点，和对应位置点的。
+
+上面的效果就类似：
 
 ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fx6k8b06x9j30b403udfp.jpg)
+
+
+
+在`layoutSubviews()`中定义渐变图层的`frame`：
+
+```swift
+gradientLayer.frame = bounds
+layer.addSublayer(gradientLayer)
+```
+
+这就把渐变的图层定义在`AnimateMaskLabel`。
 
 
 
@@ -1312,42 +1691,88 @@ let gradientLayer = CAGradientLayer()
 
 
 
-### Animating gradients
+### 给渐变图层添加动画  Animating gradients
 
-
+在`didMoveToWindow()`中添加：
 
 ```swift
-        let gradientAnimation = CABasicAnimation(keyPath: "locations")
-        gradientAnimation.fromValue = [0.0, 0.0, 0.25]
-        gradientAnimation.toValue = [0.75, 1.0, 1.0]
-        gradientAnimation.duration = 3.0
-        gradientAnimation.repeatCount = .infinity
-        gradientLayer.add(gradientAnimation, forKey: nil)
+let gradientAnimation = CABasicAnimation(keyPath: "locations")
+gradientAnimation.fromValue = [0.0, 0.0, 0.25]
+gradientAnimation.toValue = [0.75, 1.0, 1.0]
+gradientAnimation.duration = 3.0
+gradientAnimation.repeatCount = .infinity
+gradientLayer.add(gradientAnimation, forKey: nil)
 ```
 
+在此图层动画中，首先将三个颜色里程碑推到渐变框架的左边缘，然后将所有三个里程碑推向右边缘结束动画：
 
+`repeatCoun`t设置为无穷大，动画持续3秒并将永远重复。效果如下：
 
 ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fx6kjtzpg0g308k08r3za.gif)
 
-在这一层动画中，首先将三个颜色里程碑推到渐变框架的左边缘，然后结束动画，将所有三个里程碑推向右边缘：
+上面的效果可能一时不好理解，如果把渐变图层的`locations`分别设置成`[0.0, 0.0, 0.25]`和`[0.75, 1.0, 1.0]`，情况分别是：
+
+![image-20181128094342790](https://ws1.sinaimg.cn/large/006tNbRwgy1fxnj72m40uj3075026dfl.jpg)
+
+![image-20181128094501134](https://ws2.sinaimg.cn/large/006tNbRwgy1fxnj8fvy5sj307a02edfl.jpg)
+
+动画的效果就是前者的状态到后者的状态，这样就方便理解了。
 
 
 
-
+这看起来很漂亮，但渐变非常刺耳，特别是在中间附近。 没问题：只需放大渐变边界，你就会得到更温和的渐变。
+在`layoutSubviews()`中找到`gradientLayer.frame = bounds`行，并将其替换为以下为渐变图层设置更大框架的代码：
 
 ```swift
-        gradientLayer.frame = CGRect(x: -bounds.size.width, y: bounds.origin.y, width: 3 * bounds.size.width, height: bounds.size.height)
+gradientLayer.frame = CGRect(x: -bounds.size.width, y: bounds.origin.y, width: 3 * bounds.size.width, height: bounds.size.height)
+```
+
+这会将渐变框设置为可见区域宽度的三倍。 动画进入视图，直接穿过它，并从右侧退出：
+
+![image-20181128100059850](https://ws2.sinaimg.cn/large/006tNbRwgy1fxnjp1sk7pj309101gmwz.jpg)
+
+效果：
+
+![](https://ws2.sinaimg.cn/large/006tNbRwgy1fxnjl8seo5g308q060aal.gif)
+
+
+
+### 创建文本蒙版
+
+在`AnimateMaskLabel`中创造一个文本属性：
+
+```swift
+let textAttributes: [NSAttributedString.Key: Any] = {
+    let style = NSMutableParagraphStyle()
+    style.alignment = .center
+    return [
+        NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Thin", size: 28.0)!,
+        NSAttributedString.Key.paragraphStyle: style
+    ]
+}()
+```
+
+接下来，您需要将文本渲染为图像。 执行此操作的自然位置是`text`属性的属性观察者。 在setNeedsDisplay()调用之后添加以下代码:
+
+```swift
+let image = UIGraphicsImageRenderer(size: bounds.size).image { (_) in
+        text.draw(in: bounds, withAttributes: textAttributes)
+}
+```
+
+在这里，您使用图像渲染器来设置上下文，绘制它，并将结果作为UIImage获取。 现在，您可以使用该图像在渐变图层上创建蒙版。 为此，首先从图像中创建一个图层，如下所示：
+
+```swift
+let maskLayer = CALayer()
+maskLayer.backgroundColor = UIColor.clear.cgColor
+maskLayer.frame = bounds.offsetBy(dx: bounds.size.width, dy: 0)
+maskLayer.contents = image.cgImage
+gradientLayer.mask = maskLayer
 ```
 
 
 
-![](https://ws3.sinaimg.cn/large/006tNbRwgy1fx6kqy3tycg308k060gna.gif)
-
-
-
-### Creating a text mask
-
-
+只需使用CALayer的默认初始化程序，即可将maskLayer创建为空图层。 然后，您将设置一个完全透明的图层背景，因为您将使用该图层作为蒙版。 然后用图层的宽度偏移图层框架; 这样，蒙版将显示在渐变的中心。 这是必要的，因为“拉伸”渐变的宽度目前是可见视图的三倍。 最后，将图像对象直接分配给图层的contents属性。
 
 
 
@@ -1355,9 +1780,23 @@ let gradientLayer = CAGradientLayer()
 
 
 
-
+嘿 - 看起来很光滑！ 但是你还没有发现当用户在标签上滑动时会发现什么 - 你是否仅限于渐变的单色调色板？ 所有这些都将被揭示 - 当你完成下面的挑战时！
 
 ### 滑动手势动画
+
+在`viewDidLoad()`中添加：
+
+```swift
+let swipe = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.didSlide))
+        swipe.direction = .right
+        slideView.addGestureRecognizer(swipe)
+```
+
+
+
+
+
+
 
 ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fx6l9mrd4sg308k0fmaf4.gif)
 
@@ -1366,6 +1805,33 @@ let gradientLayer = CAGradientLayer()
 
 
 ### 彩色渐变动画
+
+修改渐变的图层的`colors`和`locations`：
+
+```swift
+        let colors = [
+            UIColor.yellow.cgColor,
+            UIColor.green.cgColor,
+            UIColor.orange.cgColor,
+            UIColor.cyan.cgColor,
+            UIColor.red.cgColor,
+            UIColor.yellow.cgColor
+        ]
+```
+
+```swift
+        let locations: [NSNumber] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.25]
+
+```
+
+并修改动画的`fromValue`和`toValue`：
+
+```swift
+gradientAnimation.fromValue = [0.0, 0.0, 0.0, 0.0, 0.0, 0.25]
+gradientAnimation.toValue = [0.65, 0.8, 0.85, 0.9, 0.95, 1.0]
+```
+
+
 
 
 
@@ -1379,29 +1845,128 @@ let gradientLayer = CAGradientLayer()
 
 
 
+本章结束了本书的图层动画部分; 当您在现有的Pack List项目中添加一个很酷的拉动 - 刷新动画时，您将了解笔画和路径动画，该项目会在应用程序假装从Internet上获取新数据时为用户提供娱乐：
+
+在此过程中，您将学习如何为形状绘制设置动画，作为奖励，您将看到一种特殊的关键帧动画，可用于沿任意路径移动对象。
+
+
+
 Pull-to-refresh animation
+
+
+
+### Creating interactive stroke animations
+
+ViewController.swift中现有代码可以为您填充表格，其中包含许多休假项。 拉下Table，你会看到屏幕顶部出现一个刷新视图：
+
+
+
+刷新视图保持可见状态四秒钟，然后缩回。 你在这里的工作是添加一个有趣的动画来娱乐用户等待。
+
+刷新视图已包含拉动和释放动作的所有代码; 你只需要担心添加动画。
+
+注意：下拉刷新代码基于我们的一个视频教程。 如果您想了解更多有关它如何工作的信息，请访问以下链接查看Swift Scroll View School视频系列：https：//videos.raywenderlich.com。
+
+构建动画的第一步是创建一个圆形。 打开`RefreshView.swift`并将以下代码添加到`init(frame:scrollView:)`中：
+
+```swift
+// 飞机移动路线图层
+ovalShapeLayer.strokeColor = UIColor.white.cgColor
+ovalShapeLayer.fillColor = UIColor.clear.cgColor
+ovalShapeLayer.lineWidth = 4.0
+ovalShapeLayer.lineDashPattern = [2, 3]
+
+let refreshRadius = frame.size.height/2 * 0.8
+
+ovalShapeLayer.path = UIBezierPath(ovalIn: CGRect(x: frame.size.width/2 - refreshRadius, y: frame.size.height/2 - refreshRadius, width: 2 * refreshRadius, height: 2 * refreshRadius)).cgPath
+layer.addSublayer(ovalShapeLayer)
+```
+
+
+
+ovalShapeLayer是一个类型为CAShapeLayer的RefreshView上的属性。 你已经非常熟悉形状层; 在这里，您只需设置笔触和填充颜色，并将圆直径设置为视图高度的80％，这样可确保在形状周围形成舒适的边距。
+上面代码中有一个你还没有遇到的属性：lineDashPattern。 此属性允许您为形状笔划设置虚线模式; 你只需提供一个数字，其中包含短划线的长度和间隙的长度（以像素为单位）。
+
+
+
+`redrawFromProgress()`中添加：
+
+```swift
+ovalShapeLayer.strokeEnd = progress
+```
+
+
+
+把飞机图片添加到飞机图层中，在`init(frame:scrollView:)`中添加：
+
+```swift
+// 添加飞机
+let airplaneImage = UIImage(named: "airplane.png")!
+airplaneLayer.contents = airplaneImage.cgImage
+airplaneLayer.bounds = CGRect(x: 0.0, y: 0.0, width: airplaneImage.size.width, height: airplaneImage.size.height)
+airplaneLayer.position = CGPoint(x: frame.size.width/2 + frame.size.height/2 * 0.8, y: frame.size.height/2)
+layer.addSublayer(airplaneLayer)
+```
+
+
+
+接着添加：
+
+```swift
+airplaneLayer.opacity = 0.0
+```
+
+
+
+以便在用户下拉时逐步更改飞机图层的不透明度，在`redrawFromProgress()`添加：
+
+```swift
+airplaneLayer.opacity = Float(progress)
+```
+
+
+
+
 
 
 
 ### Animating both stroke ends
 
-
+在`beginRefreshing()`中添加：
 
 ```swift
-        let strokeStartAnimation = CABasicAnimation(keyPath: "strokeStart")
-        strokeStartAnimation.fromValue = -0.5
-        strokeStartAnimation.toValue = 1.0
-        
-        let strokeEndAnimation = CABasicAnimation(keyPath: "strokeEnd")
-        strokeEndAnimation.fromValue = 0.0
-        strokeEndAnimation.toValue = 1.0
-        
-        let strokeAnimationGroup = CAAnimationGroup()
-        strokeAnimationGroup.duration = 1.5
-        strokeAnimationGroup.repeatDuration = 5.0
-        strokeAnimationGroup.animations = [strokeEndAnimation, strokeEndAnimation]
-        ovalShapeLayer.add(strokeAnimationGroup, forKey: nil)
+let strokeStartAnimation = CABasicAnimation(keyPath: "strokeStart")
+strokeStartAnimation.fromValue = -0.5
+strokeStartAnimation.toValue = 1.0
+
+let strokeEndAnimation = CABasicAnimation(keyPath: "strokeEnd")
+strokeEndAnimation.fromValue = 0.0
+strokeEndAnimation.toValue = 1.0
 ```
+
+他的代码创建了两个动画：第一个动画将strokeStart从-0.5动画为1.0。 这是一个简单而廉价的动画技巧; 虽然从-0.5到0.0的值动画没有任何反应，因为这些属性的所有负值都只意味着形状的任何部分都不可见。
+这给了第二个动画 - strokeEnd上的一个动画 - 有点先发制人。 这会在屏幕上绘制一小部分形状，直到strokeStart在动画结束时赶上strokeEnd。
+
+在`beginRefreshing()`的末尾添加以下代码以同时运行两个动画：
+
+```swift
+let strokeAnimationGroup = CAAnimationGroup()
+strokeAnimationGroup.duration = 1.5
+strokeAnimationGroup.repeatDuration = 5.0
+strokeAnimationGroup.animations = [strokeEndAnimation, strokeEndAnimation]
+ovalShapeLayer.add(strokeAnimationGroup, forKey: nil)
+```
+
+
+
+在上面的代码中，您创建一个动画组并重复动画五次。 这应该足够长，以便在刷新视图可见时保持动画运行。 然后，将两个动画添加到组中，并将组添加到进度条。
+构建并运行您的项目; 拉动并释放表格以查看动画中的动画：
+
+
+
+您刚刚创建了自己的自定义微调器！ 虽然它看起来非常整洁，但只需稍加努力就可以让它变得更酷 - 并且可以通过层路径动画获得一些帮助！
+
+
 
 
 
@@ -1411,35 +1976,47 @@ Pull-to-refresh animation
 
 #### Creating path keyframe animations
 
+您了解了如何使用关键帧动画和[第12章“关键帧动画和结构属性”]()中的values属性为图层设置动画。 要沿着路径设置图层动画，您可以执行相同的操作，但您可以将CGPath指定给动画的路径属性。
 
+然后，Core Animation将计算沿着CGPath的图层的中间位置，并在动画的持续时间内很好地制作动画。
+
+在`beginRefreshing()`的末尾添加飞机动画：
 
 ```swift
- 		// 飞机动画
-        let flightAnimation = CAKeyframeAnimation(keyPath: "position")
-        flightAnimation.path = ovalShapeLayer.path
-        flightAnimation.calculationMode = CAAnimationCalculationMode.paced
-        
-        let flightAnimationGroup = CAAnimationGroup()
-        flightAnimationGroup.duration = 1.5
-        flightAnimationGroup.repeatDuration = 5.0
-        flightAnimationGroup.animations = [flightAnimation]
-        airplaneLayer.add(flightAnimationGroup, forKey: nil)
+// 飞机动画
+let flightAnimation = CAKeyframeAnimation(keyPath: "position")
+flightAnimation.path = ovalShapeLayer.path
+flightAnimation.calculationMode = CAAnimationCalculationMode.paced
+
+let flightAnimationGroup = CAAnimationGroup()
+flightAnimationGroup.duration = 1.5
+flightAnimationGroup.repeatDuration = 5.0
+flightAnimationGroup.animations = [flightAnimation]
+airplaneLayer.add(flightAnimationGroup, forKey: nil)
 ```
+
+在这里，您可以创建一个CAKeyframeAnimation，就像之前一样，将动画属性设置为position。但是这次你为路径分配一个值。在这种情况下，您可以重复使用ovalShapeLayer的圆形路径。
+
+最后，将动画计算模式设置为节奏模式 - 这将确保图层沿路径平滑动画。
+
+`CAAnimationCalculationMode.paced`是另一种控制动画时间的方法。当您将该属性设置为kCAAnimationPaced时，Core Animation会以恒定的速度为您的图层设置动画，忽略您设置的任何关键时间。这对于在任意路径上生成平滑动画非常有用。
+另一个可能的值是kCAAnimationDiscrete。此计算模式使Core Animation从键值跳转到键值而不进行任何插值。是的，你做得对 - 核心动画有一个特殊的模式来制作动画，不动画任何东西。
+足够的计算模式乐趣 - 回到手头的任务。
+现在，您需要在此动画中创建一个组并在飞机图层上运行它。您稍后需要该组，因为您将添加第二个动画以补充第一个动画。
 
 
 
 ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fx7ixtawarg308q08r0y7.gif)
 
+你从来没有见过像这样的航展：飞机在天空中执行循环并保持完全垂直！ 虽然这很有趣，但你应该让飞机更自然地飞翔。
+注意：CAKeyframeAnimation有一个名为rotationMode的特殊属性，当设置为kCAAnimationRotateAuto时，它会自动将图层定向到它正在移动的方向。 但是，您将在本章中手动创建此效果，因为对于简单的圆形路径来说，这是一项简单的任务。
 
-
-
-
-调整飞机移动时角度
+在创建flightAnimationGroup的行上方插入以下新动画代码：调整飞机移动时角度
 
 ```swift
-        let airplaneOrientationAnimation = CABasicAnimation(keyPath: "transform.rotation")
-        airplaneOrientationAnimation.fromValue = 0
-        airplaneOrientationAnimation.toValue = 2.0 * .pi
+let airplaneOrientationAnimation = CABasicAnimation(keyPath: "transform.rotation")
+airplaneOrientationAnimation.fromValue = 0
+airplaneOrientationAnimation.toValue = 2.0 * .pi
 ```
 
 
@@ -1454,21 +2031,29 @@ Pull-to-refresh animation
 
 
 
+这包含了基本层动画部分。 你已经经历了很多 - 并且沿途学到了很多东西！
+在本书的这一部分中，您介绍了：
+基本移动，淡入淡出，旋转和缩放动画
+组和关键帧动画
+形状，蒙版和渐变动画
+笔画和路径动画
+
+下一章将指导您完成一个全新的专业领域 - 制作您自己的动画克隆！
+
 ## Chapter 16: Replicating Animations(复制动画)
 
-`CAReplicatorLayer`
-
-
-
-“CAReplicatorLayer背后的想法很简单。 你创建了一些内容 - 它可以是一个形状，一个图像或任何你可以用图层绘制的东西 - 而CAReplicatorLayer会在屏幕上复制它，如下所示：
+`CAReplicatorLayer`背后的想法很简单。 你创建了一些内容 - 它可以是一个形状，一个图像或任何你可以用图层绘制的东西 - 而CAReplicatorLayer会在屏幕上复制它，如下所示：
 
 ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fx7m9wkg4dj30bb05g74a.jpg)
 
 “为什么我需要克隆形状或图像？”你会问。 你这样问是对的; 通常情况下，你不需要克隆任何东西的确切外观。“
 
-
+CAReplicatorLayer的超级强大来自于你可以轻松指示它使每个克隆与其祖先略有不同的事实。
+例如，您可以逐步更改每个副本的色调。 原始图层可能是洋红色，而在创建每个副本时，您将色调向青色方向前进。
 
 ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fx7maaq340j30a2043a9u.jpg)
+
+此外，您可以在副本之间应用转换; 例如，您可以在每个副本之间应用简单的旋转变换以将它们绘制成圆形，如下所示：
 
 ![image-20181114152157889](https://ws4.sinaimg.cn/large/006tNbRwgy1fx7maqjd0yj309i050weq.jpg)
 
@@ -1478,6 +2063,19 @@ Pull-to-refresh animation
 您可以使用它来创建引人入胜且复杂的动画，您可以以同步方式为多个元素设置动画。
 
 
+
+您可以使用它来创建引人入胜且复杂的动画，您可以以同步方式为多个元素设置动画。
+在本章中，您将使用个人助理应用程序来“倾听”您的问题并回答。 作为Apple自己的私人助理Siri的眨眼，你的项目被命名为Iris。
+您将创建两个不同的复制。 首先，你将创建在Iris会话时播放的视觉反馈动画，它看起来很像一个迷幻的正弦波：
+
+
+
+然后你将使用CAReplicatorLayer创建一个交互式麦克风驱动的音频波，当用户说话时，它将提供视觉反馈：
+
+
+
+这两个动画将向您介绍CAReplicatorLayer的许多功能。 为了涵盖这一层提供的每个功能，它将自己填满整本书！
+但是你不需要听我说我喜欢用CAReplicatorLayer创建动画的程度; 是时候体验自己的魔力了。
 
 一个迷幻的正弦波
 

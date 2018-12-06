@@ -1,36 +1,53 @@
-# 第一部分: 视图动画(View Animations)
+# 系统学习iOS动画之一：视图动画
 
-这个部分介绍UIKit的动画API。该API专门用于轻松制作**View Animation**，同时避免**Core Animation**的复杂性<!-- ，Core Animation在幕后运行动画 -->。
+这个部分介绍**UIKit动画API**，这些API专门用于轻松制作**视图动画(View Animations)**，同时避免**核心动画(Core Animation)**(见[系统学习iOS动画之三：图层动画](Section_III))的复杂性。
 
-虽然易于使用，但UIKit动画API提供了大量灵活性和强大功能，可以处理大多数（当然不是全部）动画要求。
+**UIKit动画API**动画API不仅易于使用，而且提供了大量灵活性和强大功能，可以处理大多数（当然不是全部）动画要求。
 
-可以在屏幕上为最终继承自`UIView`的任何对象设置动画，例如：`UILabel`，`UIImageView`，`UIButton`等等，可以自己创建的任何自定义类(最终继承自`UIView`)。
+**UIKit动画API**可以在屏幕上为最终继承自`UIView`的任何对象设置动画，例如：`UILabel`，`UIImageView`，`UIButton`等等，也可以是自己创建的任何自定义最终继承自`UIView`类。
 
 在本节关于视图动画的五个章节中，您将学习如何使用动画来改进虚构的航空公司应用程序Bahama Air，为其UI元素添加各种动画。
 
-## Chapter 1: 开始使用View Animations
+本文包括五个章节，完成两个项目**BahamaAirLoginScreen**和**Flight Info**。
+
+*BahamaAirLoginScreen* 是一个登录页面项目，1、2、3章节为这个项目的一些UI添加各种动画。
+
+[1.视图动画入门](#1.视图动画入门)： 学习如何移动，缩放和淡化视图等基本的UIKit API。
+[2.弹簧动画]()： 在线性动画的概念基础上，使用弹簧动画创造出更引人注目的效果。😊
+[3.过渡动画]()：
+
+*Flight Info* 是一个航班状态变化项目，4、5章节用一些高级一点动画来完成这个项目
+
+[4.在实践中练习视图动画]()： 练习前面学到的动画技术。
+[5.关键帧动画]()：您将使用关键帧动画来解锁令人印象深刻的UI的最终成就：创建从许多不同阶段构建的精细动画序列。
+
+
+
+## 1.视图动画入门
 
 最终效果
 
 ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fw6k7jrgdmg30900fuwhz.gif)
 
-### 开始
 
-- 开始创建一个简单的登录页面，有两个TextField，一个Label，一个Button，4个云图片和一个背景图片，效果如下，**BahamaAirLoginScreen**：
+
+### 第一个动画
+
+这一章的[开始项目](README.md#关于代码)是一个简单的登录页面，有两个TextField，一个Label，一个Button，4个云图片和一个背景图片，效果如下，**BahamaAirLoginScreen**：
 
 ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fx9ypkbsm2j307r07e746.jpg)
 
-- 让heading和两个TextField在视图显示之前移动到屏幕外。在`viewWillAppear()`中添加：
+让Label和两个TextField在视图显示之前移动到屏幕外。在`viewWillAppear()`中添加：
 
   ```swift
-          heading.center.x    -=  view.bounds.width
-          username.center.x   -=  view.bounds.width
-          password.center.x   -=  view.bounds.width
+heading.center.x    -=  view.bounds.width
+username.center.x   -=  view.bounds.width
+password.center.x   -=  view.bounds.width
   ```
 
   ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fw8zt5x34nj30cm05na9x.jpg)
 
-- 添加heading和两个TextField进入屏幕动画，在`viewDidAppear()`中添加：
+添加Label和两个TextField进入屏幕的动画，在`viewDidAppear()`中添加：
 
 ```swift
 UIView.animate(withDuration: 0.5) {
@@ -52,50 +69,45 @@ UIView.animate(withDuration: 0.5, delay: 0.4, options: [],
 )
 ```
 
-  
+这样heading和TextField就有了前后分别进入屏幕的动画。
 
-  这样heading和TextField就有了前后分别进入屏幕的动画。
+类似`UIView.animate(...)`的方法根据参数的不同有好几个，不同参数的意义：
 
+ `withDuration` ：动画持续时间。
 
+ `delay` ：动画开始之前的延迟时间。
 
-  类似`UIView.animate()`的方法根据参数的不同有好几个，不同参数的意义：
+ `options` ：`UIView.AnimationOptions`的数组，用来定义动画的变化形式，之后会详细说明。
 
-  `withDuration` ：动画持续时间。
+ `animations` ：提供动画的闭包，也就是动画代码。
 
-  `delay` ：动画开始之前的延迟时间。
+ `completion` ：动画执行完成后的闭包 。 
 
-  `options` ：`UIView.AnimationOptions`的数组，用来自定义动画。
-
-  `animations` ：提供动画的闭包。
-
-  `completion` ：动画执行完成后的闭包 。 
-
-  还有 `usingSpringWithDamping`和`initialSpringVelocity`之后章节会提到。
+还有 `usingSpringWithDamping`和`initialSpringVelocity`之后章节会提到。
 
 
 
 ### 可动画属性
 
-  前面，使用`center`创建简单的位置变化**View Animation**。
+前面，使用`center`创建简单的位置变化视图动画。
 
-  并非所有视图属性都可以由于动画，但所有**View Animation**（从最简单到最复杂）都可以通过动画视图上的属性来构建的。下面来看看可用于动画的属性有哪些：
+并非所有视图属性都可以设置动画，但所有视图动画（从最简单到最复杂）都可以通过动画视图上的属性来构建。下面来看看可用于动画的属性有哪些：
 
-- Position and size
-  `bounds`  `frame` `center`  
+#### 位置的大小
+`bounds`  `frame` `center`  
 
-  ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxa1kn5wvyj30c3045jrb.jpg)
+![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxa1kn5wvyj30c3045jrb.jpg)
 
-- Appearance  
-  `backgroundColor`  `alpha`
+#### 外形(Appearance)  
+`backgroundColor`  
+`alpha` : 可创建淡入和淡出效果。
 
-
-
-  ![image-20181116174208253](https://ws2.sinaimg.cn/large/006tNbRwgy1fxaa9ghw07j309703k0t1.jpg)
-
+  ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fxaa9ghw07j309703k0t1.jpg)
 
 
-- Transformation  
-  `transform` ： 设置视图的旋转，缩放和/或位置的动画。
+
+#### 转换(Transformation)  
+`transform` ： 设置视图的旋转，缩放和/或位置的动画。
 
 
 
@@ -105,40 +117,42 @@ UIView.animate(withDuration: 0.5, delay: 0.4, options: [],
 
 这些看起来像是非常基本的动画，可以制作令人惊讶的复杂动画效果！😉
 
-### Animation options（动画选项）
 
-就是之前提到的`options`参数，它是`UIView.AnimationOptions`的数组。`UIView.AnimationOptions`是结构体，有很多常量值，具体可查看[官方文档](https://developer.apple.com/documentation/uikit/uiview/animationoptions) 。
+
+### 动画选项(Animation options)
+
+动画选项就是之前提到的`options`参数，它是`UIView.AnimationOptions`的数组。`UIView.AnimationOptions`是结构体，有很多常量值，具体可查看[官方文档](https://developer.apple.com/documentation/uikit/uiview/animationoptions) 。
 
 下面说明几个常用的
 
-- Repeating  
+#### 重复
 
-  `.repeat`  ：动画一直重复。
+`.repeat`  ：动画一直重复。
 
  `.autoreverse` ：如果仅有`.repeat`参数动画的过程，就像是 `b->e   b->e  ...`，而有了`.autoreverse`，动画过程就像是`b->e->b->e ...`。看下图很容易看出区别。
 
 ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fw6k7ynuqlg30k40ga0ut.gif)
 
-- Animation easing  （动画缓和）
+
+
+#### 缓动动画(Animation easing)
 
 > curve:弯曲；使弯曲。ease：减轻，缓和。
 
-  在现实生活中，事物并不只是突然开始或停止移动。 像汽车或火车这样的物体会慢慢加速直到达到目标速度，除非它们碰到砖墙，否则它们会逐渐减速直到它们完全停在最终目的地。
+在现实生活中，事物并不只是突然开始或停止移动。 像汽车或火车这样的物体会慢慢加速直到达到目标速度，除非它们碰到砖墙，否则它们会逐渐减速直到它们完全停在最终目的地。
 
-  为了使您的动画看起来更逼真，您可以应用相同的效果，在开始时慢慢加速，在结束前放慢速度，一般称为**缓入(ease-in)**和**缓出(ease-out)**。
+为了使动画看起来更逼真，可以在开始时慢慢加速，在结束前放慢速度，一般称为**缓入(ease-in)**和**缓出(ease-out)**。
 
-
-
-  `.curveLinear` ：不对动画应用加速或减速。
-  `.curveEaseIn` ：动画的开始时加速。
+`.curveLinear` ：不对动画应用加速或减速。
+`.curveEaseIn` ：动画的开始时加速。
 
 ```
 UIView.animate(withDuration: 1, delay: 0.6, options: [.repeat, .autoreverse, .curveEaseIn], animations: {
-          self.password.center.x += self.view.bounds.width
-      }, completion: nil)
+  self.password.center.x += self.view.bounds.width
+}, completion: nil)
 ```
 
-  `.curveEaseOut` ：动画结尾时减速。 
+`.curveEaseOut` ：动画结尾时减速。 
 
 ```swift
 UIView.animate(withDuration: 1, delay: 0.6, options: [.repeat, .autoreverse, .curveEaseOut], animations: {
@@ -152,13 +166,11 @@ UIView.animate(withDuration: 1, delay: 0.6, options: [.repeat, .autoreverse, .cu
 
 
 
-
-
-  `.curveEaseInOut`  ：动画开始时加速结束时减速
+ `.curveEaseInOut`  ：动画开始时加速结束时减速
 
 
 
-### 添加云的渐变动画
+### 云的淡入动画
 
 这个很好理解，就是云的`UIImageView`的透明度变化动画。先在`viewWillAppear()`中把云设置成透明：
 
