@@ -108,8 +108,6 @@ class ViewController: UIViewController {
         animateCloud(cloud: cloud3)
         animateCloud(cloud: cloud4)
         
-
-        
     }
     
     @IBAction func logIn(_ sender: UIButton) {
