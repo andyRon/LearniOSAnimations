@@ -2,19 +2,23 @@
 
 
 
-图层动画(Layer Animations)
-
-之前学习了创建视图动画（View Animations），这一部分学习功能更强大、更偏底层的**Core Animation APIs**。（暂时把核心动画理解为这边视图动画）
+[系统学习iOS动画之一：视图动画](Section_I.md) 学习了创建视图动画（View Animations），这一部分学习功能更强大、更偏底层的**Core Animation(核心动画)** APIs。核心动画的这个名字可能令人有点误解，暂时可以理解为本文的标题**图层动画(Layer Animations)**。
 
 在本书的这一部分中，您将学习动画层而不是视图以及如何使用特殊图层。
 
 图层是一个简单的模型类，它公开了许多属性来表示一些基于图像的内容。 每个`UIView`都有一个图层支持(都有一个`layer`属性)。
 
-由于以下原因，图层(Layers)与视图(Views)（相对于动画）不同：
 
-- 图层是一个模型对象 - 它公开数据属性并且不实现任何逻辑。 它没有复杂的自动布局依赖关系，也不用处理用户交互。
-- 图层具有预定义的可见特征 - 这些特征是许多影响内容在屏幕上呈现的数据属性，例如边框线，边框颜色，位置和阴影。
+
+### 视图 vs 图层
+
+由于以下原因，图层(Layers)与视图(Views)（对于动画）不同：
+
+- 图层是一个模型对象 —— 它公开数据属性并且不实现任何逻辑。 它没有复杂的自动布局依赖关系，也不用处理用户交互。
+- 图层具有预定义的可见特征 —— 这些特征是许多影响内容在屏幕上呈现的数据属性，例如边框线，边框颜色，位置和阴影。
 - 最后，**Core Animation**优化了图层内容的缓存并直接在**GPU**上快速绘图。
+
+单个来说，两者的优点。
 
 视图：
 
@@ -30,17 +34,40 @@
 - 默认情况下没有自定义逻辑 并直接在GPU上绘制。
 - 不那么灵活，子类的类更少。
 
-视图和图层的选择技巧：
+视图和图层的选择技巧： **任何时候都可以选择视图动画; 当需要更高的性能时，就需要使用图层动画。**
 
-*任何时候都可以选择视图动画; 当需要更高的性能时，就需要使用图层动画。*
+两者在架构中的位置：
 
 ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fxdhuq4gvcj30eo0aumxf.jpg)
 
 
 
-## Chapter 8: 图层动画基础知识(Getting Started with Layer Animations)
+#### 预览
+
+本文比较长，图片比较多，预警⚠️😀。
+
+在前四章中，您将重新创建和改进您在Bahama Air项目中本书前面所使用的一些视图动画：
+
+[8-图层动画入门](#8-图层动画入门)   将从最简单的图层动画开始，但也要了解调试动画错误的方法。
+第9章，动画键和委托：在这里，您可以更好地控制当前运行的动画，并使用委托方法对动画事件做出反应。
+第10章，组和高级计时：在本章中，您将组合了许多简单的动画，并将它们作为一个组一起运行。
+第11章，图层弹簧：在本章中，您将学习如何使用CASpringAnimation创建强大而灵活的弹簧图层动画。
+第12章，关键帧动画和结构属性：在这里，您将学习关键帧关键帧动画，这些动画功能强大，与视图关键帧动画略有不同。 有关动画结构属性的一些特殊处理，您也将了解它们。
+接下来，您将继续使用专门的图层：
 
 
+
+第13章，形状和蒙版：通过CAShapeLayer在屏幕上绘制形状，并为其特殊路径属性设置动画。
+第14章，渐变动画：了解如何使用CAGradientLayer来帮助您绘制渐变和动画渐变。
+第15章，笔画和路径动画：在这里，您将以交互方式绘制形状，并使用关键帧动画的一些强大功能。
+第16章，复制动画：您将学习如何创建图层内容的多个副本，然后同步动画它们。
+你正在寻找一个惊人的旅程 - 扣紧！：]
+
+
+
+
+
+## 8-图层动画入门
 
 **图层动画**的工作方式与**视图动画**非常相似; 只需在定义的时间段内为起始值和结束值之间的属性设置动画，然后让**Core Animation**处理两者之间的渲染。
 
@@ -48,23 +75,21 @@
 
 本章介绍CALayer和Core Animation的基础知识。 
 
-### 可动画属性(Animatable properties)
+### 可动画属性
 
-可与视图动画的[可动画属性]()对照着看。
+可与视图动画的[可动画属性](Section_I.md#可动画属性)对照着看。
 
-- 位置 和 大小 
+#### 位置 和 大小 
 
-  `bounds`、`position`、`transform`
+`bounds`、`position`、`transform`
 
 ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fw8y8bkr03j30do05qglq.jpg)
 
 
 
-- 边
+#### 边
 
 `borderColor`、 `borderWidth`、`cornerRadius`
-
-
 
 
 
@@ -72,156 +97,150 @@
 
 
 
-- 阴影
+#### 阴影
 
-  `![image-20181015154548338](https://ws2.sinaimg.cn/large/006tNbRwgy1fxde6lbbg1j30d004zjsm.jpg)
+![image-20181015154548338](https://ws2.sinaimg.cn/large/006tNbRwgy1fxde6lbbg1j30d004zjsm.jpg)
 
-  `shadowOffset`：修改此项以使阴影看起来更接近或更远离图层。
-  `shadowOpacity`：修改此项以使阴影淡入或淡出。
-  `shadowPath`：修改它以更改图层阴影的形状。 可以创建不同的3D效果，使图层看起来像浮动在不同的阴影形状和位置上。
-  `shadowRadius`：修改它以控制阴影的模糊; 当模拟视图朝向或远离投射阴影的表面移动时，这尤其有用。
+`shadowOffset`： 使阴影看起来更接近或更远离图层。
+`shadowOpacity`：使阴影淡入或淡出。
+`shadowPath`： 更改图层阴影的形状。 可以创建不同的3D效果，使图层看起来像浮动在不同的阴影形状和位置上。
+`shadowRadius`： 控制阴影的模糊; 当模拟视图朝向或远离投射阴影的表面移动时，这尤其有用。
 
-- 内容
+#### 内容
 
-  `contents`
+`contents` ：修改此项以将原始TIFF或PNG数据指定为图层内容。
 
-  `mask` ：修改它将用于掩盖图层可见内容的形状或图像。 这个属性在[Chapter 13]()将详细介绍和使用。
+`mask` ：修改它将用于掩盖图层可见内容的形状或图像。 这个属性在[13-形状和蒙版](#13-形状和蒙版)将详细介绍和使用。
 
-  `opacity`
+`opacity`
+
+
 
 
 ### 第一个图层动画
 
-使用[Chapter 3]()完成的项目，或这个章节的**开始项目**。
+**开始项目**使用[ 3-过渡动画](Section_I.md#3-过渡动画)完成的项目。
 
 把原本head的视图动画替换为图层动画。
 
-- 分别删除**ViewController**的`viewWillAppear()`中：
+分别删除**ViewController**的`viewWillAppear()`中：
 
-  ```swift
-  heading.center.x    -=  view.bounds.width
-  ```
+```swift
+heading.center.x    -=  view.bounds.width
+```
 
-  和`viewDidAppear()`中:
+和`viewDidAppear()`中:
 
-  ```swift
-  UIView.animate(withDuration: 0.5) {
-       self.heading.center.x += self.view.bounds.width
-  }
-  ```
+```swift
+UIView.animate(withDuration: 0.5) {
+     self.heading.center.x += self.view.bounds.width
+}
+```
 
+在`viewWillAppear()`的开始（`super`调用后）添加：
 
+```swift
+let flyRight = CABasicAnimation(keyPath: "position.x")
+flyRight.fromValue = -view.bounds.size.width/2
+flyRight.toValue = view.bounds.size.width/2
+flyRight.duration = 0.5	
+```
 
+核心动画中的动画对象只是**简单的数据模型**; 上面的代码创建了`CABasicAnimation`的实例，并设置了一些数据属性。
+这个实例描述了一个**潜在**的图层动画：*可以选择立即运行，稍后运行，或者根本不运行*。
 
-- 在`viewWillAppear()`的开始（`super`调用后）添加：
+由于动画未绑定到特定图层，因此可以在其他图层上**重复使用动画**，每个图层将独立运行动画的副本。
 
-  ```swift
-    let flyRight = CABasicAnimation(keyPath: "position.x")
-    flyRight.fromValue = -view.bounds.size.width/2
-    flyRight.toValue = view.bounds.size.width/2
-    flyRight.duration = 0.5	
-  ```
-
-  核心动画中的动画对象只是**简单的数据模型**; 上面的代码创建了`CABasicAnimation`模型的实例，并设置了一些数据属性。
-  这个个实例描述了一个**潜在**的图层动画：*可以选择立即运行，稍后运行，或者根本不运行*。
-
-  由于动画未绑定到特定图层，因此可以在其他图层上**重复使用动画**，每个图层将独立运行动画的副本。
-
-  在动画模型中，您可以将要设置为动画的属性指定为`keypath`参数(比如上面设置是`"position.x"`); 这很方便，因为动画总是在图层中设置。
+在动画模型中，您可以将要设置为动画的属性指定为`keypath`参数(比如上面设置是`"position.x"`); 这很方便，因为动画总是在图层中设置。
 
 
 
-  接下来，为在`keypath`上指定的属性设置`fromValue`和`toValue`。需要动画对象（此处我要处理的是heading）从屏幕左侧到屏幕中央。动画持续时间的概念没有改变; `duration`设置为0.5秒。
+接下来，为在`keypath`上指定的属性设置`fromValue`和`toValue`。需要动画对象（此处我要处理的是heading）从屏幕左侧到屏幕中央。动画持续时间的概念没有改变; `duration`设置为0.5秒。
 
-- 动图已经设置完成，现在需要把它添加需要运行此动画的动画对象。 在刚添加的代码下方添加，将动画添加到heading的图层：
+动图已经设置完成，现在需要把它添加需要运行此动画的图层上。 在刚添加的代码下方添加，将动画添加到heading的图层：
 
-  ```swift
-  heading.layer.add(flyRight, forKey: nil)
-  ```
+```swift
+heading.layer.add(flyRight, forKey: nil)
+```
 
-  `add(_:forKey:)`会把动画做个一个拷贝给将要添加的图层。 如果之后需要更改或停止动画，可以添加`forKey`参数用于识别动画。
+`add(_:forKey:)`会把动画做个一个**拷贝**给将要添加的图层。 如果之后需要更改或停止动画，可以添加`forKey`参数用于识别动画。
 
 此时的动画看上去和之前视图动画没有什么区别。
 
 
 
-### 更多图层动画知识(More elaborate layer animations)
+### 更多图层动画知识
 
-- 同一样的方法应用在**Username Filed**上，删除`viewWillAppear()`和`viewDidAppear()`中对应代码。再把之前的动画添加的**Username Filed**的layer上：
+同一样的方法应用在**Username Filed**上，删除`viewWillAppear()`和`viewDidAppear()`中对应代码。再把之前的动画添加的**Username Filed**的layer上：
 
-  ```swift
-  username.layer.add(flyRight, forKey: nil)
-  ```
+```swift
+username.layer.add(flyRight, forKey: nil)
+```
 
-  此时运行项目，看上去会有点别扭，因为**heading Label**，**Username Filed**的动画是相同的，**Username Filed**没有之前的延迟效果。
+此时运行项目，看上去会有点别扭，因为**heading Label**，**Username Filed**的动画是相同的，**Username Filed**没有之前的延迟效果。
 
-- 再添加动画到**Username Filed**的layer上之前，添加：
+在添加动画到**Username Filed**的layer上之前，添加：
 
-  ```swift
-  flyRight.beginTime = CACurrentMediaTime() + 0.3
-  ```
+```swift
+flyRight.beginTime = CACurrentMediaTime() + 0.3
+```
 
-  动画的`beginTime`属性设置动画应该开始的绝对时间; 在这种情况下，可以使用`CACurrentMediaTime()`获取当前时间(系统的一个绝对时间，机器开启时间，取自机器时间 `mach_absolute_time()`)，并以秒为单位添加所需的延迟。
+动画的`beginTime`属性设置动画应该开始的绝对时间; 在这种情况下，可以使用`CACurrentMediaTime()`获取当前时间(系统的一个绝对时间，机器开启时间，取自机器时间 `mach_absolute_time()`)，并以秒为单位添加所需的延迟。
 
-  此时，如果仔细观察会发现有个问题，**Username Filed**在开始动画之前已经出现了，这就涉及到另外一个图层动画属性 `fillMode`  了。
+此时，如果仔细观察会发现有个问题，**Username Filed**在开始动画之前已经出现了，这就涉及到另外一个图层动画属性 `fillMode`  了。
 
+#### 关于 `fillMode`  
 
-- 关于 `fillMode`  
+以**Username Field**的移动动画来看看`fillMode`不同值的区别，为了方便观察，我把`beginTime`时间变大，代码类似于：
 
-  以**Username Field**的移动动画来看看`fillMode`不同值的区别，为了方便观察，我把`beginTime`时间变大，代码类似于：
+```swift
+let flyRight = CABasicAnimation(keyPath: "position.x")
+flyRight.fromValue = -view.bounds.size.width/2
+flyRight.toValue = view.bounds.size.width/2
+flyRight.duration = 0.5
+heading.layer.add(flyRight, forKey: nil)
 
-  ```swift
-  let flyRight = CABasicAnimation(keyPath: "position.x")
-  flyRight.fromValue = -view.bounds.size.width/2
-  flyRight.toValue = view.bounds.size.width/2
-  flyRight.duration = 0.5
-  heading.layer.add(flyRight, forKey: nil)
-  
-  flyRight.beginTime = CACurrentMediaTime() + 2.3
-  flyRight.fillMode = kCAFillModeRemoved
-  username.layer.add(flyRight, forKey: nil)
-  ```
+flyRight.beginTime = CACurrentMediaTime() + 2.3
+flyRight.fillMode = kCAFillModeRemoved
+username.layer.add(flyRight, forKey: nil)
+```
 
-  * `kCAFillModeRemoved`  是`fillMode`的默认值
+* `kCAFillModeRemoved`  是`fillMode`的默认值
 
-    在定义的`beginTime`处启动动画(如果未设置`beginTime`，也就是`beginTime`等于`CACurrentMediaTime()`，则立即启动动画)， 并在动画完成时删除动画期间所做的更改：
+  在定义的`beginTime`处启动动画(如果未设置`beginTime`，也就是`beginTime`等于`CACurrentMediaTime()`，则立即启动动画)， 并在动画完成时删除动画期间所做的更改：
 
-    ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxk4aqik4wj30ee04bglh.jpg)
+  ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxk4aqik4wj30ee04bglh.jpg)
 
-    实际效果：
-    ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxk4qcfn85g308q060ta9.gif)
-    
-    *now* 到 *begin* 这段时间动画没有开始，**Username Field**直接显示了，然后到 *begin*时动画才开始，这就是之前遇到的情况。
+  实际效果：
+  ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxk4qcfn85g308q060ta9.gif)
 
-  * `kCAFillModeBackwards`
+  *now* 到 *begin* 这段时间动画没有开始，但**Username Field**直接显示了，然后到 *begin*时动画才开始，这就是之前遇到的情况。
 
-    无论动画的实际开始时间如何，`kCAFillModeBackwards`都会立即在屏幕上显示动画的第一帧，并在以后启动动画:
+* `kCAFillModeBackwards`
 
-    ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxk4h0w3ncj30du03w3yf.jpg)
+  无论动画的实际开始时间如何，`kCAFillModeBackwards`都会立即在屏幕上显示动画的第一帧，并在以后启动动画:
 
-    实际效果：
+  ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxk4h0w3ncj30du03w3yf.jpg)
 
-    ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fxk4klai6yg308q06075v.gif)
+  实际效果：
 
-    第一帧在`fromValue`处，也就是`"position.x"`是负的在屏幕外，因此开始时没有看见**Username Field**，等2.3s动画开始。
+  ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fxk4klai6yg308q06075v.gif)
 
-  * `kCAFillModeForwards`
+  第一帧在`fromValue`处，也就是`"position.x"`是负的在屏幕外，因此开始时没有看见**Username Field**，等待2.3s后动画开始。
 
-    `kCAFillModeForwards`像往常一样播放动画，但在屏幕上保留动画的最后一帧，直到您删除动画：
+* `kCAFillModeForwards`
 
-    ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fxk53tocyvj30dw049a9z.jpg)
+  `kCAFillModeForwards`像往常一样播放动画，但在屏幕上保留动画的最后一帧，直到您删除动画：
 
+  ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fxk53tocyvj30dw049a9z.jpg)
 
+  实际效果：
 
-    实际效果：
-    
-    ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fxk57t0yj4g308q060jsx.gif)
-    
-    除了设置kCAFillModeForwards之外，您还需要对图层进行一些其他更改以使最后一帧“粘贴”。 你将在本章后面稍后了解这一点。
-    
-    ？？和第一个有点类似，但还是有区别的。
+  ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fxk57t0yj4g308q060jsx.gif)
 
-  * `kCAFillModeBoth`
+  除了设置kCAFillModeForwards之外，还需要对图层进行一些其他更改以使最后一帧“粘贴”。 你将在本章后面稍后了解这一点。 和第一个有点类似，但还是有区别的。
+
+* `kCAFillModeBoth`
 
     `kCAFillModeBoth`是`kCAFillModeForwards`和`kCAFillModeBackwards`的组合; 这会使动画的第一帧立即出现在屏幕上，并在动画结束时在屏幕上保留最终帧：
 
@@ -233,24 +252,22 @@
 
 
 
-  要解决之前发现的问题，您将使用`kCAFillModeBoth`。
+  要解决之前发现的问题，将使用`kCAFillModeBoth`。
 
   同样对于**Password Field**，也删除其视图动画的代码，改换成类似**Username Field**的图层动画，不过`beginTime`要晚一点，具体代码：
 
   ```swift
-  flyRight.beginTime = CACurrentMediaTime() + 0.3
-  flyRight.fillMode = kCAFillModeBoth
-  username.layer.add(flyRight, forKey: nil)
-  
-  flyRight.beginTime = CACurrentMediaTime() + 0.4
-  password.layer.add(flyRight, forKey: nil)
+flyRight.beginTime = CACurrentMediaTime() + 0.3
+flyRight.fillMode = kCAFillModeBoth
+username.layer.add(flyRight, forKey: nil)
+
+flyRight.beginTime = CACurrentMediaTime() + 0.4
+password.layer.add(flyRight, forKey: nil)
   ```
 
+到目前为止，您的动画恰好在表单元素最初位于Interface Builder中的确切位置结束。 但是，很多时候情况并非如此。
 
-
-到目前为止，您的动画恰好在表单元素最初位于Interface Builder中的确切位置结束。 但是，很多时候情况并非如此。 在本章的下一部分中，您将了解如何处理图层在不同位置结束的情况 - 您将学习如何在整个过程中调试动画！
-
-### 调试动画(Debugging basic animations)
+### 调试动画
 
 在上面的动画后继续添加：
 
@@ -275,11 +292,11 @@ delay(seconds: 5.0)
 }
 ```
 
-并打断点后运行。
+并打断点后运行：
 
 ![image-20181125123017131](/Users/andyron/Library/Application Support/typora-user-images/image-20181125123017131.png)
 
-进入**UI hierarchy** 窗口
+进入**UI hierarchy** 窗口：
 
 ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fw9v6cjqdmj30xa0meacn.jpg)
 
@@ -303,10 +320,10 @@ delay(seconds: 5.0)
 
 动画完成后，代码更改会导致字段跳回其初始位置。 但为什么？
 
-### Animations vs. real content
+### 动画 vs 真实内容
 
 当你为**Text Field**设置动画时，你实际上并没有看到**Text Field**本身是动画的; 相反，你会看到它的缓存版本，称为**presentation layer**（显示层）。动画完成后原始图层再次到原本位置，则从屏幕上移除**presentation layer**。
-首先，请记住您在`viewWillAppear(_:)`中将**Text Field**设置在屏幕外：
+首先，请记住在`viewWillAppear(_:)`中将**Text Field**设置在屏幕外：
 
 ![image-20181125145909389](https://ws1.sinaimg.cn/large/006tNbRwgy1fxkbgcncy0j30ea03874p.jpg)
 
@@ -314,53 +331,54 @@ delay(seconds: 5.0)
 
 ![image-20181125145923978](https://ws3.sinaimg.cn/large/006tNbRwgy1fxkbgli16zj30do03f0t5.jpg)
 
-您无法点击动画对象，输入任何文本或使用任何其他特定文本字段功能，因为它不是真正的文本字段，只是可见的“幻像”。
+现在无法点击动画对象，输入任何文本或使用任何其他特定文本字段功能，因为它不是真正的文本字段，只是可见的“幻像”。
 动画一旦完成，它就会从屏幕上消失，原始**Text Field**将被取消隐藏。但它此时的位置还在屏幕左侧！
 
 ![image-20181125150009137](https://ws2.sinaimg.cn/large/006tNbRwgy1fxkbhdich6j30dh03saah.jpg)
 
 要解决这个难题，您需要使用另一个`CABasicAnimation`属性：`isRemovedOnCompletion`。
-将fillMode设置为kCAFillModeBoth可指示动画在完成后保留在屏幕上，并在动画开始之前显示动画的第一帧。要完成效果，您需要相应地设置removedOnCompletion;两者的组合将使动画在屏幕上可见。
-在设置fillMode之后，将以下行添加到viewWillAppear（）：
 
+将`fillMode`设置为`kCAFillModeBoth`可让动画在完成后保留在屏幕上，并在动画开始之前显示动画的第一帧。要完成效果，您需要相应地设置`removedOnCompletion`，两者的组合将使动画在屏幕上可见。
+在设置`fillMode`之后，将以下行添加到`viewWillAppear()`：
+
+```swift
 flyRight.isRemovedOnCompletion = false
+```
 
-isRemovedOnCompletion默认为true，因此动画一完成就会消失。将其设置为false并将其与正确的fillMode组合可将动画保留在屏幕上 - 并且也可见。
-立即构建并运行您的项目;一旦动画完成，您应该看到所有元素都按预期保留在屏幕上：
+`isRemovedOnCompletion`默认为`true`，因此动画一完成就会消失。将其设置为`false`并将其与正确的`fillMode`组合可将动画保留在屏幕上 。
 
-成功！现在点击用户名字段输入您的用户名 - 哦，等等。还记得前面关于实际文本字段和表示层之间差异的说明吗？您无法对此文本字段的预渲染图像执行任何操作。
-要完成所需的效果，您需要删除动画并在其位置显示真实文本字段。
-
+现在运行项目，应该能看到所有元素都按预期保留在屏幕上。
 
 
-- Updating the layer model
+
+#### 更新图层模型 Updating the layer model
 
 从屏幕上删除图层动画后，图层将回退到其当前位置和其他属性值。 这意味着您通常需要更新图层的属性以反映动画的最终值。
 
+虽然前面已经说明过把`isRemovedOnCompletion`设置成`false`是如何工作的，但尽可能避免使用它。 在屏幕上保留动画会影响性能，因此需要自动删除它们并更新原始图层的位置。
 
-
-虽然你知道当设置为false时isRemovedOnCompletion是如何工作的，但尽可能避免使用它。 在屏幕上保留动画会影响性能，因此您可以自动删除它们并更新原始图层的位置。
-
-
-
-现在需要把原来图层设置到屏幕中间：
+需要把原始图层设置到屏幕中间，在`viewWillAppear`中天假：
 
 ```swift
 username.layer.position.x = view.bounds.size.width/2
 password.layer.position.x = view.bounds.size.width/2
 ```
 
-当然此时要注意把之前注释掉`flyRight.fromValue = -view.bounds.size.width/2`，去掉注释，也要把调试动画时的代码去掉。
+当然此时要注意把之前注释掉的`flyRight.fromValue = -view.bounds.size.width/2`，去掉注释，也要把调试动画时的代码去掉。
 
-如果可能，请在Interface Builder中使用其最终值设计图层，并使用fromValue作为起始值和中间值。这降低了保持模型和表示层同步的复杂性。
+<!--
 
-### 最佳做法
+如果可能，在Interface Builder中使用其最终值设计图层，并使用`fromValue`作为起始值和中间值。这样降低了保持模型和表示层同步的复杂性。
+
+**小结**，
 
 哇 - 这是一个很长的篇章！你尝试了大量不同的图层动画技术，这才刚刚开始！
 此时你可能会感到有点不知所措并问自己“我应该使用fillMode吗？我应该删除我的动画吗？如何更新我的图层以使动画完成顺畅？“
 根据经验：删除动画并考虑从不使用fillMode，除非您想要实现的效果不可能。 fillMode使您的UI元素失去交互性，并使屏幕不反映图层对象中的实际值。
 在极少数情况下，当您为非交互式视觉元素设置动画时，fillMode将保存您的培根;您将在第16章“复制动画”中阅读更多相关内容。
 至于更新图层属性：考虑在将动画添加到图层后立即执行此操作。有时你可能会在初始和最终动画值之间得到奇怪的闪光
+
+-->
 
 ### 使用图层动画实现☁️的淡入
 
@@ -392,7 +410,7 @@ cloud4.layer.add(cloudFade, forKey: nil)
 
 ### 登录按钮背景颜色变化的动画
 
-把原本登录按钮背景颜色变化的动画修改成图层动画。
+把原登录按钮背景颜色变化的动画修改成图层动画。
 
 删除`logIn()`中的：
 
@@ -472,28 +490,30 @@ roundCorners(layer: self.loginButton.layer, toRadius: 10.0)
 
 
 
-两个动画函数`tintBackgroundColor`和`roundCorners`最后都需要把动画最变化最终值赋值给动画的属性，这对应于前面的 [Animations vs](#user-content-animations-vs-real-content) 章节
+两个动画函数`tintBackgroundColor`和`roundCorners`最后都需要把动画最变化最终值赋值给动画的属性，这对应于前面的 [动画 vs 真实内容](#动画 vs 真实内容) 章节
+
+
+
+本章节的最终效果：
+
+![](https://ws4.sinaimg.cn/large/006tNbRwgy1fxze3jk58xg308k0fq16j.gif)
 
 
 
 
+## 9-动画的Keys和代理
 
+关于视图动画和相应的闭包语法的一个棘手问题是，一旦您创建并运行视图动画，您就无法暂停，停止或以任何方式访问它。
 
-## Chapter 9: Animation Keys and Delegates
-
-
-
-关于UIKit动画和相应的闭包语法的一个棘手部分是，一旦您创建并运行视图动画，您就无法暂停，停止或以任何方式访问它。
-
-但是，使用Core Animation，您可以轻松检查在图层上运行的动画，并在需要时停止它们。 此外，您甚至可以在动画上设置委托对象并对动画事件做出反应。
+但是，使用核心动画，您可以轻松检查在图层上运行的动画，并在需要时停止它们。 此外，您甚至可以在动画上设置委托对象并对动画事件做出反应。
 
 
 
->  使用上一章完成的项目或使用原书对应章节的**开始项目**
+>  本章的[开始项目](README.md#关于代码)使用上一章完成的项目
 
 
 
-### 介绍动画代理
+### 动画代理介绍
 
 ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fx4io22vm1j30de06qjre.jpg)
 
@@ -533,11 +553,9 @@ extension ViewController: CAAnimationDelegate {
 
 会发现`animationDidStop(_:finished:)`方法被调用三次，并且每次调用的动画都不同，这因为当每一次调用`layer.add(_:forKey:)`把动画添加给图层时，都会拷贝一份，这在前面的图层动画基础知识中说明过。
 
+### KVO
 
-
-### Key-value coding compliance
-
-`CAAnimation`类及其子类是用Objective-C编写的，并且符合键值编码(KVO)，这意味着您可以将它们视为字典，并在运行时向它们添加新属性。(关于KVO，可查看的小结文章 [OC中的键/值编码(KVC)](http://andyron.com/2018/ios-oc-kvc-begin))
+`CAAnimation`类及其子类是用Objective-C编写的，并且符合键值编码(KVO)，这意味着您可以将它们视为字典，并在运行时向它们添加新属性。(关于KVO，可查看我的小结文章 [OC中的键/值编码(KVC)](http://andyron.com/2018/ios-oc-kvc-begin))
 
 使用此机制为`flyRight`动画指定名称，以便之后可以从其他活动动画中识别它。
 
@@ -564,38 +582,32 @@ flyRight.setValue(password.layer, forKey: "layer")
 
 
 
-
-
-### Switching on key values
-
 在代理回调方法中验证上面的代码，上面的移动动画结束后再添加一个简单的脉动动画：
 
 ```swift
-    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-        // print(anim.description, "动画完成")
-        guard let name = anim.value(forKey: "name") as? String else {
-            return
-        }
-    
-        if name == "form" {
-            // `value(forKey:)`的结果总是`Any`，因此需要转换为所需类型
-            let layer = anim.value(forKey: "layer") as? CALayer
-            anim.setValue(nil, forKey: "layer")
-            // 简单的脉动动画
-            let pulse = CABasicAnimation(keyPath: "transform.scale")
-            pulse.fromValue = 1.25
-            pulse.toValue = 1.0
-            pulse.duration = 0.25
-            layer?.add(pulse, forKey: nil)
-        }
-    }	
+func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+    // print(anim.description, "动画完成")
+    guard let name = anim.value(forKey: "name") as? String else {
+        return
+    }
+
+    if name == "form" {
+        // `value(forKey:)`的结果总是`Any`，因此需要转换为所需类型
+        let layer = anim.value(forKey: "layer") as? CALayer
+        anim.setValue(nil, forKey: "layer")
+        // 简单的脉动动画
+        let pulse = CABasicAnimation(keyPath: "transform.scale")
+        pulse.fromValue = 1.25
+        pulse.toValue = 1.0
+        pulse.duration = 0.25
+        layer?.add(pulse, forKey: nil)
+    }
+}	
 ```
 
 
 
-> 注意: `layer?.add()`这边是可选的，意味着如果动画中没有存储图层，则会跳过`add(_:forKey:)`的 调用。 
-
-
+> 注意: `layer?.add()`意味着如果动画中没有存储图层，则会跳过`add(_:forKey:)`的调用。 这是Swift中的[**可选链式调用**](https://docs.swift.org/swift-book/LanguageGuide/OptionalChaining.html)，可参考[以撸代码的形式学习Swift-17：可选链式调用(Optional Chaining)](http://andyron.com/2017/swift-17-optional-chaining.html)
 
 移动动画结束后有一个简单变大的脉动动画效果：
 
@@ -603,21 +615,17 @@ flyRight.setValue(password.layer, forKey: "layer")
 
 
 
-这照顾已经停止的动画; 但是你如何使用仍在运行的动画呢？ 这就是**animation keys**的用武之地。
 
 
-
-### Animation Keys
+### 动画Keys
 
 `add(_:forKey:)`中的参数`forKey`(注意不要和`setValue(_:forKey:)`中的`forKey`混淆)，之前一直没使用。
 
-在这部分中，您将创建另一个图层动画，学习如何一次运行多个动画，并了解如何使用Animation Keys控制正在运行的动画。
+在这部分中，将创建另一个图层动画，学习如何一次运行多个动画，并了解如何使用动画Keys控制正在运行的动画。
 
 添加一个新标签，新标签将从右到左缓慢动画，用来提示用户输入。 一旦用户开始输入他们的用户名或密码（**Text Field**获得焦点），该标签将停止移动并直接跳到其最终位置（居中位置）。 一旦用户知道该怎么做就没有必要继续动画。
 
-
-
-- 在`ViewController`中添加属性 `let info = UILabel()`，并在`viewDidLoad()`中配置：
+在`ViewController`中添加属性 `let info = UILabel()`，并在`viewDidLoad()`中配置：
 
 ```swift
 info.frame = CGRect(x: 0.0, y: loginButton.center.y + 60.0,  width: view.frame.size.width, height: 30)
@@ -631,127 +639,137 @@ view.insertSubview(info, belowSubview: loginButton)
 
 
 
-- 为`info`添加两个动画:
+为`info`添加两个动画:
 
-  ```swift
-  // 提示信息Label的两个动画
-  let flyLeft = CABasicAnimation(keyPath: "position.x")
-  flyLeft.fromValue = info.layer.position.x + view.frame.size.width
-  flyLeft.toValue = info.layer.position.x
-  flyLeft.duration = 5.0
-  info.layer.add(flyLeft, forKey: "infoappear")
-  
-  let fadeLabelIn = CABasicAnimation(keyPath: "opacity")
-  fadeLabelIn.fromValue = 0.2
-  fadeLabelIn.toValue = 1.0
-  fadeLabelIn.duration = 4.5
-  info.layer.add(fadeLabelIn, forKey: "fadein")
-  ```
+```swift
+// 提示信息Label的两个动画
+let flyLeft = CABasicAnimation(keyPath: "position.x")
+flyLeft.fromValue = info.layer.position.x + view.frame.size.width
+flyLeft.toValue = info.layer.position.x
+flyLeft.duration = 5.0
+info.layer.add(flyLeft, forKey: "infoappear")
 
-  `flyLeft`是从左到右移动的动画，`fadeLabelIn`是透明度渐渐变大的动画。
+let fadeLabelIn = CABasicAnimation(keyPath: "opacity")
+fadeLabelIn.fromValue = 0.2
+fadeLabelIn.toValue = 1.0
+fadeLabelIn.duration = 4.5
+info.layer.add(fadeLabelIn, forKey: "fadein")
+```
 
-  此时的动画效果如下：
+`flyLeft`是从左到右移动的动画，`fadeLabelIn`是透明度渐渐变大的动画。
 
-  ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fx524dojubg308q0600vk.gif)
+此时的动画效果如下：
 
-- 为**Text Field**添加代理。通过扩展，让`ViewController`遵循`UITextFieldDelegate`协议：
+![](https://ws1.sinaimg.cn/large/006tNbRwgy1fx524dojubg308q0600vk.gif)
 
-  ```swift
-  extension ViewController: UITextFieldDelegate {
-      func textFieldDidBeginEditing(_ textField: UITextField) {
-          guard let runningAnimations = info.layer.animationKeys() else {
-              return
-          }
-          print(runningAnimations)
-      }
-  }
-  ```
+为**Text Field**添加代理。通过扩展，让`ViewController`遵循`UITextFieldDelegate`协议：
 
-  在`viewDidAppear()`中添加：
+```swift
+extension ViewController: UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        guard let runningAnimations = info.layer.animationKeys() else {
+            return
+        }
+        print(runningAnimations)
+    }
+}
+```
 
-  ```swift
-  username.delegate = self
-  password.delegate = self
-  ```
+在`viewDidAppear()`中添加：
 
-  此时运行，`info`动画还在进行时点击文本框，会打印动画key值：
+```swift
+username.delegate = self
+password.delegate = self
+```
 
-  ```
-  ["infoappear", "fadein"]
-  ```
+此时运行，`info`动画还在进行时点击文本框，会打印动画key值：
 
-- 在 `textFieldDidBeginEditing(:)`里添加:
+```
+["infoappear", "fadein"]
+```
 
-  ```swift
-  info.layer.removeAnimation(forKey: "infoappear")
-  ```
 
-  删除从左向右移动的动画，点击文本框后，`info`立即到达终点，也就是屏幕中央：
 
-  ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fxkpgdflv2g308q07t0vk.gif)
+在 `textFieldDidBeginEditing(:)`里添加:
 
-  当然也可以通过`removeAllAnimations()`方法删除`layer`上的所有动画。
+```swift
+info.layer.removeAnimation(forKey: "infoappear")
+```
 
-> **注意：**动画进行完了，会被从`layer`上删除，也就是`animationKeys()`方法将获得不到动画key了。
+点击文本框后，删除从左向右移动的动画，`info`立即到达终点，也就是屏幕中央：
+
+![](https://ws1.sinaimg.cn/large/006tNbRwgy1fxkpgdflv2g308q07t0vk.gif)
+
+当然也可以通过`removeAllAnimations()`方法删除`layer`上的所有动画。
+
+> **注意：**动画进行完了，会默认被从`layer`上删除，也就是`animationKeys()`方法将获得不到动画keys了。
+
+
 
 ### 修改☁️的动画
 
 通过本章所学的动画代理和动画KVO修改☁️的动画
 
-- 先在`ViewController`中添加动画方法：
+先在`ViewController`中添加动画方法：
 
-  ```swift
-  /// 云的图层动画
-  func animateCloud(layer: CALayer) {
-      let cloudSpeed = 60.0 / Double(view.layer.frame.size.width)
-      let duration: TimeInterval = Double(view.layer.frame.size.width - layer.frame.origin.x) * cloudSpeed
-      
-      let cloudMove = CABasicAnimation(keyPath: "position.x")
-      cloudMove.duration = duration
-      cloudMove.toValue = self.view.bounds.width + layer.bounds.width/2
-      cloudMove.delegate = self
-      cloudMove.setValue("cloud", forKey: "name")
-      cloudMove.setValue(layer, forKey: "layer")
-      layer.add(cloudMove, forKey: nil)
-  }
-  ```
-
-- 把`viewDidAppear()`中的四个`animateCloud`方法调用替代为：
-
-  ```swift
-  animateCloud(layer: cloud1.layer)
-  animateCloud(layer: cloud2.layer)
-  animateCloud(layer: cloud3.layer)
-  animateCloud(layer: cloud4.layer)
-  ```
-
-- 在动画代理方法`animationDidStop`中添加：
-
-  ```swift
-  if name == "cloud" {
-      if let layer = anim.value(forKey: "layer") as? CALayer {
-          anim.setValue(nil, forKey: "layer")
-          
-          layer.position.x = -layer.bounds.width/2
-          delay(0.5) {
-              self.animateCloud(layer: layer)
-          }
-      }
-  }
-  ```
-
-  上面代码，让动画重复进行
+```swift
+/// 云的图层动画
+func animateCloud(layer: CALayer) {
+    let cloudSpeed = 60.0 / Double(view.layer.frame.size.width)
+    let duration: TimeInterval = Double(view.layer.frame.size.width - layer.frame.origin.x) * cloudSpeed
+    
+    let cloudMove = CABasicAnimation(keyPath: "position.x")
+    cloudMove.duration = duration
+    cloudMove.toValue = self.view.bounds.width + layer.bounds.width/2
+    cloudMove.delegate = self
+    cloudMove.setValue("cloud", forKey: "name")
+    cloudMove.setValue(layer, forKey: "layer")
+    layer.add(cloudMove, forKey: nil)
+}
+```
 
 
 
-## Chapter 10: Groups and Advaced Timing
+把`viewDidAppear()`中的四个`animateCloud`方法调用替代为：
 
-在上一章[9]()中，学习了如何向单个图层添加多个独立动画。 但是，如果您希望您的动画同步工作并保持彼此一致，该怎么办？ 不必分别掌握所有动画的数学和时间，这没什么好玩的。 这就是**animation groups**进来的地方。
+```swift
+animateCloud(layer: cloud1.layer)
+animateCloud(layer: cloud2.layer)
+animateCloud(layer: cloud3.layer)
+animateCloud(layer: cloud4.layer)
+```
 
-本章介绍如何使用`CAAnimationGroup`对动画进行分组，该动画允许您向组中添加多个动画并同时调整持续时间，委托和`timingFunction`等属性。
+
+
+让☁️不停的移动，在动画代理方法`animationDidStop`中添加：
+
+```swift
+if name == "cloud" {
+    if let layer = anim.value(forKey: "layer") as? CALayer {
+        anim.setValue(nil, forKey: "layer")
+        
+        layer.position.x = -layer.bounds.width/2
+        delay(0.5) {
+            self.animateCloud(layer: layer)
+        }
+    }
+}
+```
+
+本章的效果：
+
+![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxzelm0xktg308k0fq43t.gif)
+
+
+
+## 10-动画组和时间控制
+
+在上一章中，学习了如何向单个图层添加多个独立动画。 但是，如果您希望您的动画同步工作并保持彼此一致，该怎么办？ 这就用到**动画组(animation groups)**。
+
+本章介绍如何使用`CAAnimationGroup`对动画进行分组，可以向组中添加多个动画并同时调整持续时间，委托和`timingFunction`等属性。
 对动画进行分组会产生简化的代码，并确保您的所有动画将作为一个实体单元同步。
 
-> 使用上一章完成的项目或使用原书对应章节的**开始项目**
+> 本章的[开始项目](README.md#关于代码)使用上一章完成的项目
 
 
 
@@ -803,7 +821,7 @@ groupAnimation.animations = [scaleDown, rotate, fade]
 loginButton.layer.add(groupAnimation, forKey: nil)
 ```
 
-效果为：
+登录按钮的效果为：
 
 
 
@@ -813,60 +831,74 @@ loginButton.layer.add(groupAnimation, forKey: nil)
 
 
 
-### Animation easing 
+### 动画缓动(Animation easing) 
 
-图层动画中的easing与[Chapter1]()中介绍的视图动画的动画选项的，在概念上是相同的， 只是语法有所不同。
+图层动画中的动画缓动与[1-视图动画入门](Section_I.md#动画缓动(Animation easing))中介绍的视图动画的动画选项的，在概念上是相同的， 只是语法有所不同。
 
-`CAMediaTimingFunction`   `CAMediaTimingFunction(controlPoints: _: _: _:)`
-
-
-
-`kCAMediaTimingFunctionLinear`  速度不变化
-
-`kCAMediaTimingFunctionEaseIn`  速度从慢到块，也就加速
-
-`kCAMediaTimingFunctionEaseIn`  速度从快到慢，也就是在减速
-
-`kCAMediaTimingFunctionEaseInEaseOut`  
-
-![image-20181126112903447](https://ws4.sinaimg.cn/large/006tNbRwgy1fxlb038a98j30ba04n74l.jpg)
-
-用法，
+图层动画中的动画缓动通过类`CAMediaTimingFunction`来表示 。用法如下：
 
 ```swift
 groupAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
 ```
 
+`name`参数有如下几种，和视图动画中的差不多：
+
+`kCAMediaTimingFunctionLinear`  速度不变化
+
+`kCAMediaTimingFunctionEaseIn`  开始时慢，结束时快
+
+![image-20181208205237371](/Users/andyron/Library/Application Support/typora-user-images/image-20181208205237371.png)
+
+`kCAMediaTimingFunctionEaseOut`  开始时快，结束时慢
+
+![image-20181208205327720](/Users/andyron/Library/Application Support/typora-user-images/image-20181208205327720.png)
+
+`kCAMediaTimingFunctionEaseInEaseOut`  开始结束都慢，中间快
+
+![image-20181126112903447](https://ws4.sinaimg.cn/large/006tNbRwgy1fxlb038a98j30ba04n74l.jpg)
 
 
 
+可以试一下不同的效果。
 
-### More timing options
+另外`CAMediaTimingFunction`有个初始化方法`init(controlPoints c1x: Float, _ c1y: Float, _ c2x: Float, _ c2y: Float)`，可以自定义缓动模式，具体可参考[官方文档](https://developer.apple.com/documentation/quartzcore/camediatimingfunction/1522235-init)
 
 
 
-- 重复动画
+### 更多动画时间控制的选项
+
+
+
+#### 重复动画
+
+`repeatCount` 可设置重复动画指定的次数。
+为提示信息Label的动画添加重复次数，在`viewDidAppear()`中为`flyLeft`动画设置属性：
 
 ```swift
 flyLeft.repeatCount = 4
 ```
 
+另外一个`repeatDuration`可用来设置总重复时间。
 
+和视图动画一样，也要设置`autoreverses`，要不然不连贯：
 
 ```swift
 flyLeft.autoreverses = true
 ```
 
+现在效果看着不错了，但是还有点问题，就是4次重复结束后，会直接跳到屏幕中心，如下（由于太长，gif已经省略了前几次滚动）：
 
+![](https://ws2.sinaimg.cn/large/006tNbRwgy1fxzo8m3ohig308j03raga.gif)
 
-这很容易看起来很酷，但你的动画还是有点不完美。 指令动画四次，但标签然后直接跳到屏幕的中心。
-这是因为单个动画循环将标签移动到屏幕中心然后再次移出。 因此，当您运行动画四次时，最后一个循环以标签离开屏幕结束。 这就是标签似乎跳到屏幕中心的原因。 你不能跑半个动画周期 - 或者你可以吗？
+这也很好理解，最后一个循环以标签离开屏幕结束。解决办法就是半个动画周期：
 
 ```swift
 flyLeft.repeatCount = 2.5
 ```
 
-- 改变动画的速度
+
+
+#### 改变动画的速度
 
 可以通过设置速度属性来独立于持续时间来控制动画的速度。
 
@@ -874,20 +906,9 @@ flyLeft.repeatCount = 2.5
 flyLeft.speed = 2.0
 ```
 
+### 把三个form的动画修改为动画组
 
-
-只是为了好玩，你可以通过调整顶层视图控制器层的速度属性来使屏幕上的所有内容都超级快速地运行。
-
-
-
-玩动画speeds, reversing and repeating很有趣，但你的用户可能不会喜欢这样的UI元素！
-但如果您确实需要在本地调整动画速度，现在可以在动画级别以及整个图层上执行此操作。
-
-
-
-### 利用组动画修改三个form元素的动画
-
-
+下面代码：
 
 ```swift
     let flyRight = CABasicAnimation(keyPath: "position.x")
@@ -944,21 +965,19 @@ flyLeft.speed = 2.0
 
 
 
-将两个动画添加到动画组，并在表单标题标签和两个文本字段视图上运行该组。
-由于您希望在组动画完成时启动动画委托方法，因此您需要在动画组对象上设置委托和键，而不是在单个动画上设置。
-在将动画添加到每个文本字段之前，不要忘记使用setValue（_：forKey :)在动画上设置名称和图层键，以便正确调用委托方法。
-此外，您需要调整动画组对象的beginTime参数，以便像以前一样为正在设置动画的不同图层提供正确的延迟。
-通过这一挑战，您可以在与团队和代表合作方面获得更多宝贵的经验。 此时，您已准备好继续下一章，并为您的图层动画添加一些灵活性。
+本章节的最终效果：
+
+![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxzn61qt1vg308k0fqdlz.gif)
 
 
 
+## 11-图层弹簧动画
 
 
-## Chapter 11: 图层弹簧动画(Layer Springs)
 
-UIKit的[Springs]()可以让你创建一个有点过于简单的弹簧式动画，但核心动画Layer Springs对应物会呈现一个看起来和感觉更自然的正确物理模拟。
+UIKit的[2-弹簧动画](Section_I.md#2-弹簧动画)可以用于创建一个有点过于简单的弹簧式动画，而**图层弹簧动画(Layer Springs)**可以呈现一个看起来更自然的物理模拟。
 
-本章介绍了UIKit和Core Animation弹簧动画之间的差异，向**BahamaAirLoginScreen**项目中添加一些新的图层弹簧动画。
+本章节介绍了两种弹簧动画之间的差异，向**BahamaAirLoginScreen**项目中添加一些新的图层弹簧动画。
 
 先说一些理论知识：
 
@@ -1179,7 +1198,7 @@ func roundCorners(layer: CALayer, toRadius: CGFloat) {
 
 
 
-## Chapter 12: Layer KeyFrame Animations and Struct Properties
+## 12-Layer KeyFrame Animations and Struct Properties
 
 Layer上的关键帧动画与UIView上的关键帧动画略有不同。 [视图关键帧动画]()是将独立简单动画组合在一起的简单方法; 它们可以为不同的视图和属性设置动画，动画可以重叠或在两者之间存在间隙。
 
@@ -1333,7 +1352,11 @@ balloon.position = CGPoint(x: -50.0, y: loginButton.center.y)
 
 
 
-## Chapter 13: 形状和蒙版(Shapes and Masks)
+## 13-形状和蒙版
+
+形状和蒙版(Shapes and Masks)
+
+
 
 本章标志着本书这一部分的一个转变：你不仅要开始使用不同的示例项目，而且还要使用多层效果，创建看起来与物理交互的图层动画。 彼此在动画运行时在形状之间变换。
 
@@ -1622,9 +1645,9 @@ if !self.isSquare {
 
 
 
-## Chapter 14: 渐变动画(Gradient Animations)
+## 14.渐变动画
 
-
+渐变动画(Gradient Animations)
 
 iOS的许多外观和感觉来自UI中非常微妙的动画。 虽然它不再是iOS的一部分，但其中最好的是一个简单的小动画：锁定屏幕上的“滑动解锁”标签。 在本章中，您将学习如何使用移动渐变模拟此效果以及如何为这些渐变的颜色和布局设置动画：
 
@@ -1841,7 +1864,7 @@ gradientAnimation.toValue = [0.65, 0.8, 0.85, 0.9, 0.95, 1.0]
 
 
 
-## Chapter 15: Stroke and Path Animations
+## 15.Stroke and Path Animations
 
 
 
@@ -2040,9 +2063,13 @@ airplaneOrientationAnimation.toValue = 2.0 * .pi
 
 下一章将指导您完成一个全新的专业领域 - 制作您自己的动画克隆！
 
-## Chapter 16: Replicating Animations(复制动画)
+## 16.复制动画
 
-`CAReplicatorLayer`背后的想法很简单。 你创建了一些内容 - 它可以是一个形状，一个图像或任何你可以用图层绘制的东西 - 而CAReplicatorLayer会在屏幕上复制它，如下所示：
+Replicating Animations(复制动画)
+
+
+
+CAReplicatorLayer`背后的想法很简单。 你创建了一些内容 - 它可以是一个形状，一个图像或任何你可以用图层绘制的东西 - 而CAReplicatorLayer会在屏幕上复制它，如下所示：
 
 ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fx7m9wkg4dj30bb05g74a.jpg)
 

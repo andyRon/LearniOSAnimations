@@ -135,7 +135,7 @@ UIView.animate(withDuration: 0.5, delay: 0.4, options: [],
 
 
 
-#### 缓动动画(Animation easing)
+#### 动画缓动(Animation easing)
 
 > curve:弯曲；使弯曲。ease：减轻，缓和。
 

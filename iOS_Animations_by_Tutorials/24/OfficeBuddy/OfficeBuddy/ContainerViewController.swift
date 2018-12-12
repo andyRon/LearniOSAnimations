@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  BeginnerCook
+//  OfficeBuddy
 //
 //  Created by [Andy Ron](https://github.com/andyRon)  on 2018/12/4.
 //  Copyright © 2018 [Andy Ron](https://github.com/andyRon) . All rights reserved.
@@ -59,7 +59,7 @@ class ContainerViewController: UIViewController {
     // 让第一次也有3D效果
     setMenu(toPercent: 0.0)
   }
-  
+  // 手势处理
   @objc func handleGesture(_ recognizer: UIPanGestureRecognizer) {
     
     let translation = recognizer.translation(in: recognizer.view!.superview!)

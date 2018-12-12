@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  BeginnerCook
+//  Snow Scene
 //
 //  Created by [Andy Ron](https://github.com/andyRon)  on 2018/12/4.
 //  Copyright © 2018 [Andy Ron](https://github.com/andyRon) . All rights reserved.

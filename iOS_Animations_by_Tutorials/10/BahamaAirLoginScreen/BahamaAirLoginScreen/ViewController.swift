@@ -170,7 +170,7 @@ class ViewController: UIViewController {
         flyLeft.fromValue = info.layer.position.x + view.frame.size.width
         flyLeft.toValue = info.layer.position.x
         flyLeft.duration = 5.0
-        flyLeft.repeatCount = 2.5
+        flyLeft.repeatCount = 4
         flyLeft.autoreverses = true
         flyLeft.speed = 2.0
 //        info.layer.speed = 2.0

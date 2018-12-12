@@ -1,4 +1,4 @@
-# Section V: Animations with UIViewPropertyAnimator
+# 系统学习iOS动画之五：Animations with UIViewPropertyAnimator
 
 
 
@@ -27,7 +27,7 @@
 
 
 
-## Chapter20：UIViewPropertyAnimator入门
+## 20.UIViewPropertyAnimator入门
 
 
 
@@ -435,7 +435,7 @@ func toggleBlur(_ blurred: Bool) {
 
 
 
-## Chapter21：使用UIViewPropertyAnimator的中级动画 
+## 21.使用UIViewPropertyAnimator的中级动画 
 
 您已经使用UIViewPropertyAnimator尝试了一些动画，并且已经开始通过向界面添加令人愉快的动画来改进Widgets项目用户体验。 您还研究了创建基本和关键帧动画，并发现使用UIViewPropertyAnimator类并不困难！
 
@@ -792,7 +792,7 @@ UIViewPropertyAnimator也可以处理这些情况（不同的时序提供商会�
 
 
 
-## 第22章，使用UIViewPropertyAnimator进行交互式动画
+## 22.ViewPropertyAnimator进行交互式动画
 
 
 
@@ -865,7 +865,7 @@ isReversed属性默认为false，因为您总是以向前方向开始动画，�
 
 
 
-## 第23章，UIViewPropertyAnimator视图控制器转换
+## 23.UIViewPropertyAnimator视图控制器转换
 
 
 

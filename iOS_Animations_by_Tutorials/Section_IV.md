@@ -1,4 +1,6 @@
-# Section IV: View Controller Transition Animations
+# 系统学习iOS动画之四：视图控制器转场
+
+View Controller Transition Animations
 
 
 
@@ -20,7 +22,7 @@ Chapter 18-19 学习如何创建自定义导航控制器转换，包括一个很
 
 
 
-## Chapter 17: Presentation Controller & Orientation Animations
+## 17.Presentation Controller & Orientation Animations
 
 无论是**呈现** 照相机视图控制器，地址簿还是自定义的模态屏幕，每次都调用相同的**UIKit**方法：`present(_:animated:completion:)`。 此方法将当前屏幕“放弃”，然后跳到另一个视图控制器。
 
@@ -434,7 +436,7 @@ herbView.layer.cornerRadius = self.presenting ? 0.0 : 20.0/xScaleFactor
 
 
 
-## Chapter 18: UINavigationController Custom Transition Animations
+## 18.UINavigationController Custom Transition Animations
 
 `UINavigationController`是iOS中为数不多的内置应用导航解决方案之一。 将一个新的视图控制器推入导航堆栈或弹出一个视图控制器，这个过程可以是一个时尚的动画，而我们无需做任何工作。 一个新的屏幕来自右侧，并推迟旧屏幕，略有滞后，如：
 ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fx94f1ynj9j307b06q0sl.jpg)
@@ -730,7 +732,7 @@ toVC.view.layer.add(fadeIn, forKey: nil)
 
 
 
-## Chapter 19: Interactive UINavigationController Transitions
+## 19.Interactive UINavigationController Transitions
 
 
 
