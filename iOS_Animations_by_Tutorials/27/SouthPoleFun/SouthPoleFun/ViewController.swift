@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  BeginnerCook
+//  SouthPoleFun
 //
 //  Created by [Andy Ron](https://github.com/andyRon)  on 2018/12/4.
 //  Copyright © 2018 [Andy Ron](https://github.com/andyRon) . All rights reserved.
@@ -68,7 +68,6 @@ class ViewController: UIViewController {
   
   @IBAction func actionLeft(_ sender: AnyObject) {
     isLookingRight = false
-    
     penguin.startAnimating()
     
     UIView.animate(withDuration: animationDuration, delay: 0, options: .curveEaseOut, animations: {

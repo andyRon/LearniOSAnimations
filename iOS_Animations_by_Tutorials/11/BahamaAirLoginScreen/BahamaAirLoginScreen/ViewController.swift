@@ -407,6 +407,8 @@ extension ViewController: UITextFieldDelegate {
             flash.toValue = UIColor.white.cgColor
             flash.duration = flash.settlingDuration
             textField.layer.add(flash, forKey: nil)
+            
+            textField.layer.cornerRadius = 5
         }
     }
 }
