@@ -127,7 +127,7 @@ extension RefreshView: UIScrollViewDelegate {
         let flightAnimation = CAKeyframeAnimation(keyPath: "position")
         flightAnimation.path = ovalShapeLayer.path
         flightAnimation.calculationMode = CAAnimationCalculationMode.paced
-        
+ 
         // 调整飞机移动时的角度
         let airplaneOrientationAnimation = CABasicAnimation(keyPath: "transform.rotation")
         airplaneOrientationAnimation.fromValue = 0

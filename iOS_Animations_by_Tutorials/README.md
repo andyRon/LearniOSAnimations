@@ -48,7 +48,7 @@
 
 - **SlideToReveal**       14
 
-![](https://ws1.sinaimg.cn/large/006tNbRwgy1fx6l9mrd4sg308k0fmaf4.gif)
+![](https://ws2.sinaimg.cn/large/006tNbRwgy1fy6f1w4io8g308o0fpjw8.gif)
 
 - **PullToRefresh**       15
 
