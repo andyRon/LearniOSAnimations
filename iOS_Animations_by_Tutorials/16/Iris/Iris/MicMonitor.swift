@@ -23,6 +23,7 @@
 import Foundation
 import AVFoundation
 
+/// 麦克风(microphone)监听器
 class MicMonitor: NSObject {
     
     private var recorder: AVAudioRecorder!
