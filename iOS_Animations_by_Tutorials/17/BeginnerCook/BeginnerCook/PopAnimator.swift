@@ -64,6 +64,7 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         UIView.animate(withDuration: duration, delay: 0.0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0.0, options: [], animations: {
             herbView.transform = self.presenting ? CGAffineTransform.identity : scaleTransform
             herbView.center = CGPoint(x: finalFrame.midX, y: finalFrame.midY)
+            
             // 给特定的containerView设置渐变
             herbController.containerView.alpha = self.presenting ? 1.0 : 0.0
             

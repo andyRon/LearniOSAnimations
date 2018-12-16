@@ -56,15 +56,21 @@
 
 - **Lris**                16
 
+
+
+![](https://ws4.sinaimg.cn/large/006tNbRwgy1fy7mgff62bg308o0811bi.gif)
+
 - **BeginnerCook**        17
 
-
+![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxtgx7q5s5g308s0fqqv5.gif)
 
 - **LogoReveal**          18 19
 
-
+![](https://ws1.sinaimg.cn/large/006tNbRwgy1fxtxbxrvowg308s0fqan5.gif)
 
 - **LockSearch** 		20 21 22 23 
+
+
 
 - **OfficeBuddy** 	24
 
@@ -96,7 +102,7 @@
 [系统学习iOS动画之一：视图动画](Section_I.md)
 [系统学习iOS动画之二：自动布局](Section_II.md)
 [系统学习iOS动画之三：图层动画](Section_III.md)
-[系统学习iOS动画之四：视图控制器的转场](Section_IV.md)
+[系统学习iOS动画之四：视图控制器的转场动画](Section_IV.md)
 [系统学习iOS动画之五：使用UIViewPropertyAnimator](Section_V.md)
 [系统学习iOS动画之六：3D动画](Section_VI.md)
 [系统学习iOS动画之七：其它类型的动画](Section_VII.md)

@@ -1,14 +1,12 @@
-# 系统学习iOS动画之四：视图控制器转场
-
-View Controller Transition Animations
+# 系统学习iOS动画之四：视图控制器的转场动画
 
 
 
-现在是时候学习如何在更广泛的应用程序导航和布局环境中使用这些动画技术。 您已经为多个视图和图层设置了动画，但现在可以采用更大的视角，并考虑制作整个视图控制器的动画！
+之前学习了视图动画、图层动画、自动布局动画等。这个部分让视野更大一点，学习整个视图控制器的动画，**视图控制器的转场动画(View Controller Transition Animations)**。
 
-iOS中最容易识别的动画之一是将新视图控制器推入导航堆栈，
+iOS中最容易识别的动画之一是将新视图控制器推入导航堆栈的动画，当我们想让APP有自己的特色，自定义转场动画是非常好的方式。
 
-在iOS 7中，Apple在旧导航控制器开始在新的导航控制器移动之前增加了一点延迟，为该动画添加了一些天赋。 这是一个很好的效果 - 但是当你想要建立自己的品牌形象时，自定义转场动画可能会有很大的帮助。
+
 
 在本节中，您将学习如何使用动画创建自己的自定义视图控制器转换。
 
@@ -22,11 +20,11 @@ Chapter 18-19 学习如何创建自定义导航控制器转换，包括一个很
 
 
 
-## 17.Presentation Controller & Orientation Animations
+## 17-视图控制器转场和屏幕旋转转场
 
-无论是**呈现** 照相机视图控制器，地址簿还是自定义的模态屏幕，每次都调用相同的**UIKit**方法：`present(_:animated:completion:)`。 此方法将当前屏幕“放弃”，然后跳到另一个视图控制器。
+无论是**呈现** 照相机视图控制器、地址簿还是自定义的模态屏幕，每次都调用相同的**UIKit**方法：`present(_:animated:completion:)`。 此方法将当前屏幕“放弃”，然后跳到另一个视图控制器。
 
-下图显示了一个“New Contact”视图控制器向上滑动以覆盖当前视图（联系人列表），这是默认的动画方式：
+下图呈现一个“New Contact”视图控制器向上滑动以覆盖当前视图（联系人列表），这是默认的动画方式：
 
 ![image-20181202162829195](https://ws3.sinaimg.cn/large/006tNbRwgy1fxshdgh771j308k0a1gm3.jpg)
 
@@ -36,11 +34,9 @@ Chapter 18-19 学习如何创建自定义导航控制器转换，包括一个很
 
 
 
-
-
 ### 开始项目
 
-本章开始项目是一个新项目，项目名称叫做**BeginnerCook**，可从[原书的代码]()中获得。
+本章[开始项目](README.md#关于代码)是一个新项目，叫**BeginnerCook**。
 
 这个开始项目可以简单概括 如下，`ViewController`中包括一个背景图`UIImageView`，一个标题`UILabel`，一个文本视图`UITextView`，下面是一个可以左右移动的`UIScrollView`。这个`UIScrollView`里会用代码加入一些香草(herb)图片，点击图片会跳转到另个展示详情的视图控制器`HerbDetailsViewController`，这个转场是标准的从下到上的垂直覆盖转场动画。
 
@@ -52,37 +48,35 @@ Chapter 18-19 学习如何创建自定义导航控制器转换，包括一个很
 
 
 
-下面工作是为这个应用添加一些自定义转场控制器动画，替代某人的过去动画。
+下面工作是为这个应用添加一些自定义转场动画，替代默认的转场动画。
 
 
 
-### Behind the scences of custom transitions 
+### 自定义转场的原理
 
-**UIKit**实现定制转场动画是通过代理模式完成的。因此首先要让`ViewController`遵守`UIViewControllerTransitioningDelegate`协议。
+**UIKit**实现自定义转场动画是通过代理模式完成的。因此首先需要让`ViewController`遵守`UIViewControllerTransitioningDelegate`协议。
 
-每次**呈现**新的视图控制器时，UIKit都会询问其代理是否应该使用自定义转换。以下是自定义转场动画的第一步：
+每次**呈现**新的视图控制器时，UIKit都会询问其代理是否要使用自定义转场。以下是自定义转场动画的第一步：
 
 ![image-20181202172719920](https://ws1.sinaimg.cn/large/006tNbRwgy1fxsj2owhp1j30d9068mye.jpg)
 
-实现`animationController(forPresented:presenting:source:) `方法，这个方法如果返回`nil`，则进行默认的转场动画，如果返回时`UIViewControllerAnimatedTransitioning`对象，则将这个对象作为转场的动画控制器。
+需要实现`animationController(forPresented:presenting:source:) `方法，这个方法如果返回`nil`，则进行默认的转场动画，如果返回时遵守`UIViewControllerAnimatedTransitioning`协议的对象，则将这个对象作为自定义转场的**Animator**（可以翻译为动画师）。
 
 
 
-在UIKit使用自定义动画控制器之前，还需要一些步骤：
+在UIKit使用自定义**Animator**之前，还需要一些步骤：
 
 ![image-20181202172932834](https://ws2.sinaimg.cn/large/006tNbRwgy1fxsj4zacy0j30ey06q75k.jpg)
 
-UIKit首先要求您的动画控制器（简称为**Animator**）以秒为单位转换持续时间，然后调用`animateTransition(using:)`，这个方法是自定义动画的地方。
+`transitionDuration(using:)`返回动画持续时间。
 
-在`animateTransition(using:)`中，可以访问屏幕上的当前视图控制器以及要显示的新视图控制器，可以自己根据需要淡化，缩放，旋转和操作现有视图和新视图。
+`animateTransition(using:)`方法时实际动画代码所在的地方。在这个方法中可以访问屏幕上的当前视图控制器以及将要显示的新视图控制器，可以自己根据需要淡化，缩放，旋转等操作现有视图和新视图。
 
-现在您已经了解了自定义演示控制器的工作原理，您可以开始创建自己的演示控制器。
+下面开始实现自定义转场！💪
 
+### 实现转场代理
 
-
-### Implementing transition delegates
-
-新建一个`NSObject`子类`PopAnimator`(这个类就是之前提到的**Animator**)，并遵守协议 `UIViewControllerAnimatedTransitioning`  。并在这个动画类中添加两个函数的存根：
+新建一个`NSObject`子类`PopAnimator`(就是之前提到的**Animator**)，并遵守协议 `UIViewControllerAnimatedTransitioning`  。并在这个动画类中添加两个函数的存根：
 
 ```swift
 func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
@@ -93,9 +87,7 @@ func animateTransition(using transitionContext: UIViewControllerContextTransitio
 }
 ```
 
-前一个函数是表示动画持续时间，后一个函数动画代码。
-
-让`ViewController`也遵守`UIViewControllerTransitioningDelegate`协议：
+让`ViewController`遵守`UIViewControllerTransitioningDelegate`协议：
 
 ```swift
 extension ViewController: UIViewControllerTransitioningDelegate {
@@ -105,9 +97,13 @@ extension ViewController: UIViewControllerTransitioningDelegate {
 
 
 
-在`didTapImageView(_:)`中的`present(herbDetails, animated: true, completion: nil)`前添加`herbDetails.transitioningDelegate = self`
+在`didTapImageView(_:)`中的`present(herbDetails, animated: true, completion: nil)`前添加：
 
-现在，每次要在在屏幕上显示详细信息视图控制器时，UIKit都会向`ViewController`询问动画对象。 但是，您仍然没有实现任何`UIViewControllerTransitioningDelegate`中的相关方法，因此UIKit仍将使用默认转换。
+```
+herbDetails.transitioningDelegate = self
+```
+
+现在，每次在屏幕上显示详情页的视图控制器时，UIKit都会向`ViewController`询问动画对象。 但是，目前仍然没有实现任何`UIViewControllerTransitioningDelegate`中的相关方法，因此UIKit仍将使用默认转换。
 
 
 
@@ -119,7 +115,7 @@ let transition = PopAnimator()
 
 
 
-实现展示时动画的协议方法：
+实现呈现时动画的协议方法：
 
 ```swift
 func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {  
@@ -127,7 +123,7 @@ func animationController(forPresented presented: UIViewController, presenting: U
 }
 ```
 
-实现消失是动画的协议方法：
+实现解除（dismiss）时动画的协议方法：
 
 ```swift
 func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
@@ -135,15 +131,11 @@ func animationController(forDismissed dismissed: UIViewController) -> UIViewCont
 }
 ```
 
-
-
-上述方法与前一个方法基本相同：您检查哪个视图控制器被解除并决定是否返回nil并使用默认动画，或者返回自定义转场动画师并使用它。 在你返回nil的那一刻，因为你不会在以后实施解雇动画。 
+现在点击香草🌿图片时，没有反应，这是因为，把默认的转场动画修改成了自定义，但自定义动画目前是空的。
 
 
 
-现在点击香草🌿图片时，没有反应，这是因为，把默认的转场动画修改成了定制的，但定制动画目前是空的。
-
-### Creating your transition animator
+### 创建转场动画师
 
 在`PopAnimator`添加：
 
@@ -155,27 +147,28 @@ var originFrame = CGRect.zero
 
 `duration` 是动画持续时间。
 
-`presenting` 是用判断当前是**呈现**视图还是**去除**视图。
+`presenting` 是用判断当前是**呈现**还是**解除*。
 
-`originFrame`用来存储用户点击的图像的原始 *frame* —— **呈现**动画就是需要它从原始*frame*到全屏图像*frame*，对应的**去除**动画正好相反。 
+`originFrame`用来存储用户点击的图像的原始 *frame* —— **呈现**动画就是需要它从原始*frame*到全屏图像*frame*，对应的**解除**动画正好相反。 
 
-现在，您可以实现`UIViewControllerAnimatedTransitioning`的方法。
 用以下内容替换`transitionDuration()`中的代码：
 
 ```swift
 return duration
 ```
 
-- 设置转场动画的上下文
+#### 设置转场动画的上下文
 
-是时候为`animateTransition(using:)`添加代码了。 此方法有一个类型为`UIViewControllerContextTransitioning`的参数，通过该参数可以访问转场的参数和视图控制器。
-在开始处理代码本身之前，了解动画上下文实际上是什么很重要。
+是时候为`animateTransition(using:)`添加代码了。 此方法有一个类型为`UIViewControllerContextTransitioning`的参数，通过该参数可以访问转场的相关参数和视图控制器。
 
-当两个视图控制器之间的转场开始时，现有视图将添加到转场容器视图(transition container view)中，并且新视图控制器的视图已创建但尚未可见，如下所示：
+在开始写动画代码之前，了解动画上下文实际上是什么很重要。
+
+当两个视图控制器之间的转场开始时，现有视图将添加到**转场容器视图**(transition container view)中，并且新视图控制器的视图已创建但尚未可见，如下所示：
 
 ![image-20181202105011119](https://ws2.sinaimg.cn/large/006tNbRwgy1fxs7li884gj30f607cjtg.jpg)
 
-因此，现在的任务是将新视图添加到`animateTransition()`中的转场容器中，以特定动画将其显示，如有需要也是特定动画的方式**去除**旧视图。
+因此，现在的任务是将新视图添加到`animateTransition()`中的转场容器中，以特定动画将其显示，如有需要也是特定动画的方式**解除**旧视图。
+
 默认情况下，转场动画完成后，旧视图将从转场容器中删除。
 
 ![image-20181202105026911](https://ws2.sinaimg.cn/large/006tNbRwgy1fxs7lpwd9ij30ep07840o.jpg)
@@ -184,7 +177,7 @@ return duration
 
 
 
-- Adding a fade transition
+#### 淡出转场
 
 获得动画将在其中进行的容器视图，然后您将获取新视图并将其存储在toView中，在`animateTransition()`中添加：
 
@@ -193,7 +186,7 @@ let containerView = transitionContext.containerView
 let toView = transitionContext.view(forKey: .to)!
 ```
 
-`view(forKey:)`和`viewController(forKey:)`两个方法非常类似，分别获得 转场动画的 相应的视图和视图控制器。
+`view(forKey:)`和`viewController(forKey:)`两个方法非常类似，分别获得转场动画对应的视图和视图控制器。
 
 继续在`animateTransition()`中添加：
 
@@ -207,7 +200,7 @@ UIView.animate(withDuration: duration, animations: {
 })
 ```
 
-在动画完成闭包中滴啊用`completeTransition()`，这告诉UIKit你的转场动画已经完成，UIKit可以自由地结束视图控制器转场。
+在动画完成闭包中调用用`completeTransition()`，告诉UIKit你的转场动画已经完成，UIKit可以自由地结束视图控制器转场。
 
 目前的效果就是：
 
@@ -215,7 +208,7 @@ UIView.animate(withDuration: duration, animations: {
 
 
 
-- Adding a pop transition
+#### pop转场
 
 上面的fade效果不是最终想要的，把`animateTransition()`中的代码替换为：
 
@@ -227,7 +220,7 @@ let herbView = presenting ? toView : transitionContext.view(forKey: .from)!
 
 
 
-`containerView`是动画视图将存在的地方，而`toView`是要**呈现**的新视图。 如果是**呈现**（`presenting`为`true`），`herbView`是`toView`，否则将从上下文中获取。 对于**呈现**和**去除**，`herbView`将始终是动画视图。 当显示详细信息控制器视图时，它将逐渐占用整个屏幕。 当被**去除**时，它将缩小到图像的原始帧。
+`containerView`是动画将存在的地方，而`toView`是要**呈现**的新视图。 如果是**呈现**（`presenting`为`true`），`herbView`是`toView`，否则将从上下文中获取。 对于**呈现**和**解除**，`herbView`将始终是表现动画的视图。 当呈详细页的控制器视图时，它将逐渐占用整个屏幕。 当被**解除**时，它将缩小到图像的原始帧。
 
 在上面代码后添加：
 
@@ -239,7 +232,7 @@ let xScaleFactor = presenting ? initialFrame.width / finalFrame.width : finalFra
 let yScaleFactor = presenting ? initialFrame.height / finalFrame.height : finalFrame.height / initialFrame.height
 ```
 
-`initialFrame`和`finalFrame`分别是初始和最终动画frame，`xScaleFactor` 和`yScaleFactor`分别是x轴和y轴上视图变化的**比例因子（scale factor）** 。
+`initialFrame`和`finalFrame`分别是初始和最终动画的`frame`，`xScaleFactor` 和`yScaleFactor`分别是x轴和y轴上视图变化的**比例因子（scale factor）** 。
 
 继续在上面代码后添加：
 
@@ -272,7 +265,7 @@ UIView.animate(withDuration: duration, delay: 0.0, usingSpringWithDamping: 0.4, 
 
 首先将`toView`添加到容器中，并确保`herbView`位于顶部，因为这是动画的唯一视图。
 
-然后，实现动画，在这里使用弹簧动画会。在动画表达式中，可以更改`herbView`的`transform`和位置。在**呈现**时，将从底部的小尺寸变为全屏；在**去除**时，将全屏缩小变为原始图像大小。
+然后，实现动画，在这里使用弹簧动画。在动画表达式中，可以更改`herbView`的`transform`和位置。在**呈现**时，将从底部的小尺寸变为全屏；在**解除**时，将全屏缩小变为原始图像大小。
 
 最后，您调用了`completeTransition()`告诉**UIKit**转场动画已经完成。
 
@@ -292,15 +285,15 @@ selectedImage!.isHidden = true
 
 这会将转场动画的`originFrame`设置为`selectedImage`的`frame`，并在动画期间隐藏初始图像。
 
-目前的效果是初始小视图转场到全屏了，没有问题，但是**去除**详情页时就有问题，详情页突然就消失了：
+目前的效果是初始小视图转场到全屏了，没有问题，但是**解除**详情页时就有问题，详情页突然就消失了：
 
 ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxtcugg85pg308q0fn7wj.gif)
 
 
 
-- Adding a dismiss transition
+#### 解除转场
 
-剩下要做的就是**去除**详细页控制器。 你实际上已经完成了动画的大部分工作 - 转换动画代码执行逻辑杂耍设置正确的初始和最终帧，所以你大部分都是向前和向后播放动画。 甜！
+剩下要做的就是**解除**详细页视图的动画。 
 
 在**ViewController.swift**的`animationController(forDismissed:)`中添加：
 
@@ -309,17 +302,17 @@ transition.presenting = false
 return transition
 ```
 
-上面的代表 `transition`对象也作为消除过场动画使用
+上面的代表 `transition`对象也作为解除转场动画使用。
 
-转场动画看起来很棒，但去除详细页面后，原始的小尺寸的图片消失了。下面就解决这个问题
+转场动画看起来很棒，但解除详细页面后，原始的小尺寸的图片消失了。下面就解决这个问题。
 
-在类`PopAnimator`中添加一个闭包属性，作为**去除**动画完成后处理：
+在类`PopAnimator`中添加一个闭包属性，作为**解除**动画完成后处理：
 
 ```swift
 var dismissCompletion: (()->Void)?
 ```
 
-在`animateTransition(using:)`的`transitionContext.completeTransition(true)`之前添加(也就是通知**UIKit**转场动画结束之前，如果是**去除**动画，就进行一些处理)：
+在`animateTransition(using:)`的`transitionContext.completeTransition(true)`之前添加(也就是通知**UIKit**转场动画结束之前，如果是**解除**动画，就进行一些处理)：
 
 ```swift
 if !self.presenting {
@@ -343,28 +336,27 @@ transition.dismissCompletion = {
 
 
 
-### Device orientation transition
+### 屏幕旋转转场
 
-设备方向更改视为从视图控制器到其自身的转场过程，只是在不同的大小。
+设备方向更改视为从视图控制器到其自身的转场过程。
 
-iOS 8中引入的`viewWillTransition(to:with:)`，用来提供了一种简单直接的方法来处理设备方向的变化。 不需要构建单独的纵向或横向布局; 相反，只需要对视图控制器视图的大小进行更改。
+iOS 8中引入的`viewWillTransition(to:with:)`方法，用来提供了一种简单直接的方法来处理设备方向的变化。 不需要构建单独的纵向或横向布局，而只需要对视图控制器视图的大小进行更改。
 
 在`ViewController`中添加：
 
 ```swift
-  override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
     super.viewWillTransition(to: size, with: coordinator)
 
     coordinator.animate(alongsideTransition: { context in
-        self.bgImage.alpha = (size.width > size.height) ? 0.25 : 0.55
-    }, completion: nil)
-  }
+                                              self.bgImage.alpha = (size.width > size.height) ? 0.25 : 0.55
+                                             }, completion: nil)
+}
 ```
 
 
 
-第一个参数（`size`）指视图控制器变换后的大小。 第二个参数（`coordinator`）是转换协调器对象，它允许您访问许多转换的属性。
-
+第一个参数（`size`）指视图控制器变换后的大小。 第二个参数（`coordinator`）是转场协调对象，它可以访问许多转场的属性。
 
 `animate(alongsideTransition:completion:)`允许指定自己的自定义动画，与**UIKit**在更改方向时默认执行的旋转动画一起执行。当设备横向时，减少背景图像的透明度，让文本看上去更清晰，更容易阅读。
 
@@ -374,25 +366,23 @@ iOS 8中引入的`viewWillTransition(to:with:)`，用来提供了一种简单直
 
 
 
-将屏幕旋转为横向模式时，可以清楚地看到背景暗淡。这使得更长的文本行更容易阅读。
+将屏幕旋转为横向模式时，可以清楚地看到背景变深。
 
 
 
-知道现在上面的动画看上去已经很不错，但如果仔细观看，会发现还有两个问题，**去除**动画时，全屏视图到小视图完成之前看到详细视图的文本；全屏视图是直角，直到动画要完成的最后一个才从直角突然变到圆角。
+现在上面的动画看上去已经很不错，但如果仔细观看，会发现还有两个问题，**解除**动画时，全屏视图到小视图完成之前看到详细视图的文本；全屏视图是直角，直到动画要完成的最后一个才从直角突然变到圆角。
 
 ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fxtfxqpzeog306y07mtq7.gif)
 
 
 
-### Smooth the transition animation
+### 平滑转场动画
 
-平滑转场动画
 
-您的第一个任务是在转换时适当地淡入或淡出草药详细信息视图的内容。 这纠正了细节视图的文本在被解除时消失的尴尬时刻。
-看一下storyboard文件; 您将看到详细信息控制器已将其所有文本视图添加到连接到containerView插座的主视图中。
-您需要做的就是在转换动画发生时淡入或淡出containerView。
 
-在`animateTransition(using:)`中的动画开始前添加：
+纠正了细节视图的文本在被解除时消失的问题。
+
+在`animateTransition(using:)`中的动画(`UIView.animate(...)`)开始前添加：
 
 ```swift
 let herbController = transitionContext.viewController(forKey: presenting ? .to : .from) as! HerbDetailsViewController
@@ -410,11 +400,9 @@ herbController.containerView.alpha = self.presenting ? 1.0 : 0.0
 
 
 
-要更仔细地检查更改结果，可以将转换持续时间增加到10秒并详细观察动画（或者从iOS模拟器主菜单中使用“调试/切换最前面应用程序中的慢动画”）。
-
 ### 圆角动画
 
-最后，您将为细节视图的角半径设置动画，使其与主视图控制器中草本图像的圆角相匹配。
+最后，为详情页视图的图层角半径设置动画，使其与主视图控制器中草本图像的圆角相匹配。
 
 在`animateTransition(using:)`中的动画闭包中添加：
 
@@ -430,30 +418,35 @@ herbView.layer.cornerRadius = self.presenting ? 0.0 : 20.0/xScaleFactor
 
 
 
-这章演示控制器动画。接下来，导航控制器转场动画。你会发现两者之间有很多相似之处，所以把草药放在一边然后潜入！
 
 
 
 
+## 18-导航控制器转场
 
-## 18.UINavigationController Custom Transition Animations
 
-`UINavigationController`是iOS中为数不多的内置应用导航解决方案之一。 将一个新的视图控制器推入导航堆栈或弹出一个视图控制器，这个过程可以是一个时尚的动画，而我们无需做任何工作。 一个新的屏幕来自右侧，并推迟旧屏幕，略有滞后，如：
-![](https://ws4.sinaimg.cn/large/006tNbRwgy1fx94f1ynj9j307b06q0sl.jpg)
 
-上图显示了iOS如何将新视图控制器推送到设置应用中的导航堆栈：新视图从右侧滑入以覆盖旧视图，新标题淡入，而旧标题标题从视图中淡出。
+`UINavigationController`是iOS中为数不多的内置应用导航解决方案之一。 将一个新的视图控制器推入或弹出导航堆栈，这个过程自带一个时尚的动画。 
 
-iOS中的导航范例已经成为用户的老头，因为相同的动画已经使用了很多年。 这样就可以让你在不抛弃用户的情况下修饰你的导航控制器转场。
+![](https://ws3.sinaimg.cn/large/006tNbRwgy1fy8go5czmog308q09fgp7.gif)
 
-### 初始项目
 
-**LogoReveal**  
 
-点击默认屏幕任意地方（`MasterViewController`），跳转展示vacation packing list页面(`DetailViewController`)，
+上图显示了iOS如何将新视图控制器推送到设置应用中的导航堆栈：新视图从右侧滑入以覆盖旧视图，新标题淡入，而旧标题淡出。
 
-RW Logo是通过`CAShapeLayer`绘制的一个图层。
+本章的自定义导航控制器转场与前一章中构建自定义视图控制器转场的方式类似。
 
-原理类似上一篇文章[17]()，可以用两个图概括：
+### 开始项目
+
+本章[开始项目](README.md#关于代码)是一个新项目，叫**LogoReveal**  。
+
+![](https://ws2.sinaimg.cn/large/006tNbRwgy1fy8gxv524xj307o0amwet.jpg)
+
+点击默认屏幕任意地方（`MasterViewController`），跳转展示vacation packing list页面(`DetailViewController`)，RW Logo是通过`UIBezierPath`绘制的`CAShapeLayer`图层。
+
+### 自定义导航控制器转场的原理
+
+自定义导航控制器转场的原理类似上一章节的[自定义转场的原理](#自定义转场的原理)，同样也可以用两个图概括：
 
 ![image-20181203214052969](https://ws1.sinaimg.cn/large/006tNbRwgy1fxtw0sqszej30dz05e3z5.jpg)
 
@@ -461,7 +454,7 @@ RW Logo是通过`CAShapeLayer`绘制的一个图层。
 
 ![image-20181203214104467](https://ws2.sinaimg.cn/large/006tNbRwgy1fxtw10skywj30e206374n.jpg)
 
-### 导航控制器代理The navigation controller delegate
+### 导航控制器代理
 
 首先需要新建一个**Animator**，新建一个`NSObject`子类`RevealAnimator`的类文件，并让它遵守`UIViewControllerAnimatedTransitioning`协议：
 
@@ -487,7 +480,7 @@ class RevealAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     }
 ```
 
-`operation`是`UINavigationControllerOperation`类型的属性，用于指示是在推送还是弹出视图控制器。
+`operation`是`UINavigationControllerOperation`类型的属性，用于表示是在推送还是弹出控制器。
 
 
 
@@ -520,19 +513,19 @@ func navigationController(_ navigationController: UINavigationController, animat
 }
 ```
 
-这是一个方法名称非常长，细看归结为以下参数：
+这是一个方法名称非常长，参数有：
 
-`navigationController`：当您的对象是多个导航控制器的委托时，这有助于区分导航控制器;这不太可能，但你仍需要防范这种可能性。
+`navigationController`：当对象是多个导航控制器的委托时，这用来区分导航控制器，这不是太常见。
 
 `operation`：这是一个枚举`UINavigationControllerOperation`，可以是`.push`或`.pop`。
 
-`fromVC`：这是当前在屏幕上可见的视图控制器;它通常是导航堆栈中的最后一个视图控制器。
+`fromVC`：这是当前在屏幕上可见的视图控制器，它通常是导航堆栈中的最后一个视图控制器。
 
-`toVC`：这是你将转场到的视图控制器。
+`toVC`：这是将转场到的视图控制器。
 
-如果需要不同视图控制器有不同转场动画，则可以选择要返回的动画对象类型。为了简化此项目，在设置Animator的操作属性以指示推送或弹出转场后，您将始终返回`RevealAnimator`对象。
+如果需要不同视图控制器有不同转场动画，则可以选择返回不同的**Animator**。为了简化此项目，在推送或弹出转场时，都返回`RevealAnimator`对象。
 
-现在运行项目，点击，导航栏有一个两秒转场，但其他就没有反应了，这是因为`animateTransition()`中还没有编写任何代码。
+运行，点击，导航栏有一个两秒转场，但其他就没有反应了，这是因为`animateTransition()`中还没有编写任何代码。
 
 ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fxtmk2z7xbg308s090mxf.gif)
 
@@ -542,18 +535,18 @@ func navigationController(_ navigationController: UINavigationController, animat
 
 
 
-### Adding a custom reveal animation
+### 添加自定义显示动画
 
-自定义转场动画的计划相对简单。 您只需在DetailViewController上为蒙版设置动画，使其看起来像RW徽标的透明部分，显示底层视图控制器的内容。
+自定义转场动画的计划相对简单。 您只需在`DetailViewController`上为蒙版设置动画，使其看起来像RW徽标的透明部分，显示底层视图控制器的内容。
 你将不得不处理图层和一些动画任务，但是到目前为止你还没有完成任务。 对于像你这样的动画专业人士来说，创建转场动画将是一件轻松的事！
 
-在`RevealAnimator`类中创建一个存储动画上下文的属性：
+在`RevealAnimator`中创建一个存储动画上下文的属性：
 
 ```swift
 weak var storedContext: UIViewControllerContextTransitioning?
 ```
 
-在`animateTransition()`中添加：
+再在`animateTransition()`中添加：
 
 ```swift
 storedContext = transitionContext
@@ -565,11 +558,12 @@ transitionContext.containerView.addSubview(toVC.view)
 toVC.view.frame = transitionContext.finalFrame(for: toVC)
 ```
 
-首先，你从”视图控制器（fromVC）获取并将其转换为MasterViewController; 然后，您将获取到CVC作为DetailViewController。
-最后，您只需将VC.view添加到转换容器视图，并将其框架设置为transitionContext中的“final”框架。 这将假期装箱单放在主屏幕上的最终位置。
+先获取`fromVC`并将其转换为`MasterViewController`；然后，获取`toVC`并转换为`DetailViewController`。
+最后，只需将`toVC.view`添加到转场容器视图中，并将其`frame`设置为`transitionContext`中的最终`frame`，这是详情页面在主屏幕上的最终位置。
 
-现在你要创建揭示动画。 揭示动画的秘诀是让一个物体 - 在您的情况下，RW徽标 - 增长到覆盖整个屏幕区域。
-这听起来像是规模转换的工作！ 将以下内容添加到`animateTransition()`中：
+
+
+将以下内容添加到`animateTransition()`中：
 
 ```swift
 let animation = CABasicAnimation(keyPath: "transform")
@@ -577,12 +571,12 @@ animation.fromValue = NSValue(caTransform3D: CATransform3DIdentity)
 animation.toValue = NSValue(caTransform3D: 		CATransform3DConcat(CATransform3DMakeTranslation(0.0, -10.0, 0.0), CATransform3DMakeScale(150.0, 150.0, 1.0)))
 ```
 
-这个动画将徽标的大小增加了150倍，并同时向上移动了一点。 为什么？ 徽标的形状不均匀，您希望后面的视图控制器通过RW形状的“孔”显示。 将其向上移动意味着缩放图像的底部将更快地覆盖屏幕。
+这个动画将logo的大小增加了150倍，并同时向上移动了一点。 为什么？ logo的形状不均匀，我希望后面的视图控制器通过RW形状的“孔”显示。 将其向上移动意味着缩放图像的底部将更快地覆盖屏幕。
 
 
-如果你使用像圆形或椭圆形的对称形状，你就不会有这个问题，但你的动画不会那么酷。
+如果使用像圆形或椭圆形这种对称的logo，就不会有这种问题。
 
-现在将以下行添加到`animateTransition()`以稍微优化动画：
+现在将以下面代码添加到`animateTransition()`以稍微优化动画：
 
 ```swift
 animation.duration = animationDuration
@@ -592,9 +586,9 @@ animation.isRemovedOnCompletion = false
 animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
 ```
 
-首先，设置动画的持续时间以匹配转换持续时间。 然后，您将动画设置为委托，并配置动画模型以将动画保留在屏幕上; 这样可以避免在转换过程中出现故障，因为无论如何都会隐藏RW徽标。 最后，添加缓动以使揭示效果随着时间的推移而加速。 这些知识都在前面的章节学过 [qian]()
+这些都是前面章节的知识。
 
-RevealAnimator目前不是动画委托，记得要让`RevealAnimator`遵守`CAAnimationDelegate` 协议。
+`RevealAnimator`目前还不是动画代理，记得要让`RevealAnimator`遵守`CAAnimationDelegate` 协议。
 
 在`animateTransition()`中添加图层：
 
@@ -605,8 +599,7 @@ toVC.view.layer.mask = maskLayer
 maskLayer.add(animation, forKey: nil)
 ```
 
-这会创建一个应用于DestinationViewController的CAShapeLayer。 maskLayer与MasterViewController上的“RW”徽标位于相同的位置。 然后，您只需将maskLayer设置为视图控制器视图的掩码。
-然后将动画添加到遮罩层 - 这意味着您可以测试转换的当前状态。
+
 
 效果：
 
@@ -616,9 +609,9 @@ maskLayer.add(animation, forKey: nil)
 
 
 
-### Taking care of the rough edges
+### 优化细节
 
-你可能已经注意到你仍然可以看到缩放显示标志背后的原始标志。 处理此问题的最简单方法是在原始徽标上运行显示动画。 你已经有了动画，所以无论重复使用它。 这将使原始徽标与面具一起生长，完全匹配其形状，因此不会妨碍。
+细看上面的效果，会发现动画运行时，原来的logo还在那里，下面解决这个问题。
 
 在`animateTransition()`中添加：
 
@@ -632,9 +625,11 @@ fromVC.logo.add(animation, forKey: nil)
 
 
 
-现在，这是一个稍微难以解决的问题：在第一次推送转场后，导航不再工作的原因是什么？
-如果你看一下你到目前为止所做的事情，你会发现你从未真正完成转场。 你计划在动画结束时调用completeTransition（） - 但是从来没有开始实现该代码。
-RevealAnimator被设置为你的揭示动画的代表。 因此，您需要覆盖animationDidStop（_：finished :)并完成该方法中的转换。
+还有一个稍微复杂一点的问题：在第一次推送转场后，导航不再工作了？
+
+
+
+
 
 在 `RevealAnimator`中实现`CAAnimationDelegate`的`animationDidStop(_:finished:)`方法：
 
@@ -648,11 +643,11 @@ func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
 }
 ```
 
-在这里检查是否有存储的转换上下文; 如果是这样，你就可以调用`completeTransition()`。 这将球传回导航控制器以完成UIKit侧的转场。
-在方法结束时，您只需将转换上下文的引用设置为nil。
-由于揭示动画在完成后不会自动删除，因此您需要自己处理。
+在方法结束时，只需将转场上下文设置为`ni`l。
 
-使用以下内容替换位于`animationDidStop()`中的// reset logo注释：
+由于显示动画在完成后不会自动删除，因此需要自己处理。
+
+使用以下内容替换位于`animationDidStop()`中的`// reset logo`：
 
 ```swift
 let fromVC = context.viewController(forKey: .from) as! MasterViewController
@@ -660,25 +655,24 @@ let fromVC = context.viewController(forKey: .from) as! MasterViewController
 fromVC.logo.removeAllAnimations()
 ```
 
-由于您只需要在推送转场期间屏蔽视图控制器的内容，因此一旦视图控制器完成转换，您就可以安全地移除屏蔽。
-在animationDidStop（）中的removeAllAnimations（）下面添加以下代码：
+只需要在推送转场期间屏蔽视图控制器的内容，一旦视图控制器完成转场，就可以安全地移除屏蔽。
+
+接着上面的代码t添加：
 
 ```swift
 let toVC = context.viewController(forKey: .to) as! DetailViewController
 toVC.view.layer.mask = nil
 ```
 
-
-
-这将在视图出现并转换完成后删除掩码。
-应该这样做。 构建并运行您的项目; 将装箱单视图控制器推到屏幕上，然后点击开始返回原始视图。 以下引人注目的崩溃表明您正在调用自定义转换的证据：
+运行报错：
 
 ![image-20181203170902426](https://ws3.sinaimg.cn/large/006tNbRwgy1fxto5z7a9fj313y07kwgw.jpg)
 
-您正在尝试将“从”视图控制器转换为MasterViewController实例 - 这仅适用于推送转换，但不适用于弹出转换。哎呦。
-打开`RevealAnimator.swift`并找到animateTransition（）。 您需要在条件中包含大部分代码。 在设置storedContext的第一行之后添加以下行：
+这是因为，上面的代码只适用于推送，但不适用于弹出。
 
-把`RevealAnimator.swift`并找到`animateTransition()`中除了第一行`storedContext = transitionContext`的代码，都包含在if语句中：
+
+
+把`animateTransition()`中除了第一行`storedContext = transitionContext`的代码，都包含在if语句中：
 
 ```swift
 if operation == .push {
@@ -687,15 +681,10 @@ if operation == .push {
 ```
 
 
-在尝试强制转换之前，条件会检查您是否正在处理推送转换。 这应该照顾那段崩溃的代码。
-构建并运行以再次尝试。 您的推送转换正在运行，但是您的弹出转换将不会执行任何操作，因为您在animateTransition（）中没有任何代码来处理它。
-这是你弯曲忍者编码肌肉的地方; 你将在下面的挑战部分自己创建弹出转场 - 并为沿途的揭示动画添加一些优雅。
 
+### 淡入新视图控制器
 
-
-### Fade in the new view controller
-
- **Pack list**页面渐入的动画。
+转场时，给详情页面添加淡入的动画。
 
 在`animateTransition(using:)`的`if operation == .push {`语句中添加：
 
@@ -709,20 +698,28 @@ toVC.view.layer.add(fadeIn, forKey: nil)
 
 
 
-### Add pop transition
+### 弹出转场
 
-要创建弹出转场，您只需在RevealAnimator的animateTransition（）内的if语句中添加一个互补的else分支。在else分支中你可以添加你想要的任何动画，但是当你完成时不要忘记调用completeTransition（）。
-以下是创建简单收缩转场的方法：
+前面都是推送转场，现在添加是弹出转场。
 
-在animateTransition（）内部添加一个else分支。
+给在`animateTransition(using:)`的`if`语句添加一个`else` ：
 
-使用上下文中的viewForKey方法获取“from”和“to”视图。因为这次你没有对视图控制器的属性做任何事情，所以你可以单独获取视图。
+```swift
+else {
+    let fromView = transitionContext.view(forKey: .from)!
+    let toView = transitionContext.view(forKey: .to)!
 
-使用转换容器视图并从ViewView下面插入toView。提示：使用insertSubview（_：belowSubview：_）。
+    transitionContext.containerView.insertSubview(toView, belowSubview: fromView)
 
-使用动画从View缩放到0.01。不要使用0.0进行缩放 - 这会让UIKit感到困惑。对于此动画，您可以使用普通视图动画 - 无需创建图层动画。
+    UIView.animate(withDuration: animationDuration, delay: 0.0, options: .curveEaseIn, animations: {
+        fromView.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
+    }) { (_) in
+        transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+       }
+}
+```
 
-动画结束后，就像之前一样调用转换上下文中的completeTransition（）。
+
 
 最终效果会是：
 
@@ -732,33 +729,31 @@ toVC.view.layer.add(fadeIn, forKey: nil)
 
 
 
-## 19.Interactive UINavigationController Transitions
+## 19-交互式导航控制器转场
 
 
-
-你在前一章中创建的揭示转场看起来非常整洁，但自定义动画只是故事的一半。亲爱的朋友，你已经避开了真相，但没有了;作为你通往本书末尾的奖励，你即将了解iOS古人的秘密。
 
 您不仅可以为转换创建自定义动画 - 还可以使其交互并响应用户的操作。通常，您通过平移手势驱动此操作，这是您将在本章中采用的方法。
 当您完成后，您的用户将能够通过在屏幕上滑动手指来来回穿过显示转场。那会有多酷？
 是的，我以为你会感兴趣！继续阅读，了解它是如何完成的！
 
-关于手势处理，可看我一篇简单的小结 [iOS tutorial 13：手势处理](http://andyron.com/2017/ios-tutorial-13.html)
+关于手势处理，可看我的一篇简单的小结 [iOS tutorial 13：手势处理](http://andyron.com/2017/ios-tutorial-13.html)
 
 ### 创建交互式转场
 
-当导航控制器向其代表询问动画控制器时，可能会发生两件事。您可以返回nil，在这种情况下，导航控制器会运行标准转场动画。你已经知道了很多。
+当导航控制器向其代理询问动画控制器（就是之前提到Animator）时，可能会发生两件事。返回nil，在这种情况下，导航控制器会运行标准转场动画； 如果返回一个动画控制器，那么导航控制器除了会向其代理询问转场动画控制器，也会询问交互控制器，如下所示：
 
-但是 - 如果你确实返回一个动画控制器，那么导航控制器会向其代表询问交互控制器，如下所示：
-
-
-
-交互控制器根据用户的操作移动转场，而不是简单地从开始到结束动画更改。 交互控制器不一定需要是与动画控制器分开的类; 实际上，当两个控制器在同一个类中时，执行某些任务会更容易一些。 您只需要确保所述类符合UIViewControllerAnimatedTransitioning和UIViewControllerInteractiveTransitioning。
-
-UIViewControllerInteractiveTransitioning只有一个必需的方法 -  startInteractiveTransition（_ :)  - 它将转换上下文作为参数。 然后，交互控制器会定期调用updateInteractiveTransition（_ :)来移动转换。 首先，您需要更改处理用户输入的方式。
+![image-20181216165544709](https://ws1.sinaimg.cn/large/006tNbRwgy1fy8ou4nshrj30fm06lt9a.jpg)
 
 
 
-### Handing the pan gesture
+交互控制器根据用户的操作移动转场，而不是简单地从开始到结束动画更改。 交互控制器不一定需要是与动画控制器分开的类；实际上，当两个控制器在同一个类中时，执行某些任务会更容易一些。 您只需要确保所述类遵守`UIViewControllerAnimatedTransitioning`和`UIViewControllerInteractiveTransitioning`两个协议。
+
+`UIViewControllerInteractiveTransitioning`只有一个必需实现的方法 `startInteractiveTransition(_:)` ，它将转换上下文作为参数。 然后，交互控制器会定期调用updateInteractiveTransition（_ :)来移动转换。 首先，您需要更改处理用户输入的方式。
+
+
+
+### 处理平移手势
 
 首先，MasterViewController中的轻敲手势识别器不会再削减它了。 水龙头瞬间发生，然后就消失了; 您无法跟踪其进度并使用它来推动转换。 另一方面，平移手势具有转换的开始，进展和结束阶段的明确状态。
 打开本章的入门项目; 或者，您可以使用上一章中已完成的项目（包括挑战）。
@@ -766,15 +761,37 @@ UIViewControllerInteractiveTransitioning只有一个必需的方法 -  startInte
 
 
 
+这将反映您对用户的期望。
+
+接下来，在`MasterViewController.swift`的`viewDidAppear(_:)`中删除以下代码：
+
+```swift
+let tap = UITapGestureRecognizer(target: self, action: #selector(didTap))
+view.addGestureRecognizer(tap)
+```
+
+替代为平移手势识别代码：
+
+```swift
+let pan = UIPanGestureRecognizer(target: self, action: #selector(didPan(_:)))
+view.addGestureRecognizer(pan)
+```
+
+当用户在屏幕上滑动是，会被识别然后调用`didPan(_:)`方法。
+
+在`MasterViewController`中添加空`didPan(_:)`。
 
 
-### Using interactive animator classes
 
-为了管理你的转场，你将使用Apple内置的交互式动画师类之一：UIPercentDrivenInteractiveTransition。 此类符合UIViewControllerInteractiveTransitioning，并允许您将转换的进度设置为表示完成百分比的值。
+### 使用交互式动画师类
 
-这使您的生活更容易，因为您可以使用此类相应地调整percentComplete属性并调用update（）来设置转换的当前可见进度。 这将跳过转场动画到与计算的转场进度相对应的点。 在本章的其余部分中，您将了解有关UIPercentDrivenInteractiveTransition如何工作的更多信息。
+为了处理上面的转场，需要使用内置的交互式动画师类：`UIPercentDrivenInteractiveTransition`。 此类遵守`UIViewControllerInteractiveTransitioning`协议，并允许将转换的进度设置为表示完成百分比的值。
 
-打开RevealAnimator.swift并更新文件顶部的类定义，如下所示：
+这使您的生活更容易，因为您可以使用此类相应地调整percentComplete属性并调用update（）来设置转换的当前可见进度。 这将跳过转场动画到与计算的转场进度相对应的点。 
+
+在本章的其余部分中，您将了解有关`UIPercentDrivenInteractiveTransition`如何工作的更多信息。
+
+打开`RevealAnimator.swift`并更新文件顶部的类定义，如下所示：
 
 ```swift
 class RevealAnimator: UIViewControllerAnimatedTransitioning, CAAnimationDelegate, UIPercentDrivenInteractiveTransition {

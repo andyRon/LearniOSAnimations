@@ -46,7 +46,7 @@ class MasterViewController: UIViewController {
   @objc func didTap() {
     performSegue(withIdentifier: "details", sender: nil)
   }
-  
+  /// 平移手势
   @objc func didPan(_ recognizer: UIPanGestureRecognizer) {
     switch recognizer.state {
     case .began:

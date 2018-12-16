@@ -10,7 +10,7 @@
 
 
 
-### 视图 vs 图层
+**视图 vs 图层**
 
 由于以下原因，图层(Layers)与视图(Views)（对于动画）不同：
 
@@ -42,28 +42,22 @@
 
 
 
-#### 预览
+**预览**
 
 本文比较长，图片比较多，预警⚠️😀。
 
-在前四章中，您将重新创建和改进您在Bahama Air项目中本书前面所使用的一些视图动画：
+[8-图层动画入门](#8-图层动画入门)   —— 从最简单的图层动画开始，了解调试动画错误的方法。
+[9-动画的Keys和代理](#9-动画的Keys和代理) —— 怎么更好地控制当前运行的动画，并使用代理方法对动画事件做出响应。
+[10-动画组和时间控制](#10-动画组和时间控制) —— 组合许多简单的动画，并将它们作为一个组一起运行。
+[11-图层弹簧动画](#11-图层弹簧动画) —— 学习如何使用`CASpringAnimation`创建强大而灵活的弹簧图层动画。
+[12-图层关键帧动画和结构属性](#12-图层关键帧动画和结构属性) —— 学习图层关键帧动画， 动画结构属性的一些特殊处理。
 
-[8-图层动画入门](#8-图层动画入门)   将从最简单的图层动画开始，但也要了解调试动画错误的方法。
-第9章，动画键和委托：在这里，您可以更好地控制当前运行的动画，并使用委托方法对动画事件做出反应。
-第10章，组和高级计时：在本章中，您将组合了许多简单的动画，并将它们作为一个组一起运行。
-第11章，图层弹簧：在本章中，您将学习如何使用CASpringAnimation创建强大而灵活的弹簧图层动画。
-第12章，关键帧动画和结构属性：在这里，您将学习关键帧关键帧动画，这些动画功能强大，与视图关键帧动画略有不同。 有关动画结构属性的一些特殊处理，您也将了解它们。
-接下来，您将继续使用专门的图层：
+接下来，学习几个专门的图层：
 
-
-
-第13章，形状和蒙版：通过CAShapeLayer在屏幕上绘制形状，并为其特殊路径属性设置动画。
-第14章，渐变动画：了解如何使用CAGradientLayer来帮助您绘制渐变和动画渐变。
-第15章，笔画和路径动画：在这里，您将以交互方式绘制形状，并使用关键帧动画的一些强大功能。
-第16章，复制动画：您将学习如何创建图层内容的多个副本，然后同步动画它们。
-你正在寻找一个惊人的旅程 - 扣紧！：]
-
-
+[13-形状和蒙版](#13-形状和蒙版) —— 通过`CAShapeLayer`在屏幕上绘制形状，并为其特殊路径属性设置动画。
+[14-渐变动画](#14-渐变动画)  —— 了解如何使用`CAGradientLayer`来绘制渐变和动画渐变。
+[15-Stroke和路径动画](#15-Stroke和路径动画) ——  以交互方式绘制形状，并使用关键帧动画的一些强大功能。
+[16-复制动画](#16-复制动画) —— 学习如何创建图层内容的多个副本，然后利用副本制作动画。
 
 
 
@@ -294,7 +288,7 @@ delay(seconds: 5.0)
 
 并打断点后运行：
 
-![image-20181125123017131](/Users/andyron/Library/Application Support/typora-user-images/image-20181125123017131.png)
+![](https://ws3.sinaimg.cn/large/006tNbRwgy1fy7n2onqjqj309s02ldfv.jpg)
 
 进入**UI hierarchy** 窗口：
 
@@ -847,11 +841,11 @@ groupAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFuncti
 
 `kCAMediaTimingFunctionEaseIn`  开始时慢，结束时快
 
-![image-20181208205237371](/Users/andyron/Library/Application Support/typora-user-images/image-20181208205237371.png)
+![](https://ws2.sinaimg.cn/large/006tNbRwgy1fy7n0pfn7cj30b104n74h.jpg)
 
 `kCAMediaTimingFunctionEaseOut`  开始时快，结束时慢
 
-![image-20181208205327720](/Users/andyron/Library/Application Support/typora-user-images/image-20181208205327720.png)
+![](https://ws1.sinaimg.cn/large/006tNbRwgy1fy7n0fb9hrj309004174h.jpg)
 
 `kCAMediaTimingFunctionEaseInEaseOut`  开始结束都慢，中间快
 
@@ -1686,7 +1680,7 @@ if !self.isSquare {
 
 
 
-## 14.渐变动画
+## 14-渐变动画
 
 本章通过以前iOS的屏幕“滑动解锁”效果来学习**渐变动画(Gradient Animations)**。
 
@@ -2051,7 +2045,7 @@ airplaneOrientationAnimation.toValue = 2.0 * .pi
 
 
 
-## 16.复制动画
+## 16-复制动画
 
 本章节学习**复制动画(Replicating Animations)**。
 
@@ -2076,130 +2070,424 @@ airplaneOrientationAnimation.toValue = 2.0 * .pi
 
 可以使用这种方式来创建引人入胜且复杂的动画。
 
-在本章中，您将使用个人助理应用程序来“倾听”您的问题并回答。 作为Apple自己的私人助理Siri的眨眼，你的项目被命名为Iris。
-您将创建两个不同的复制。 首先，你将创建在Iris会话时播放的视觉反馈动画，它看起来很像一个迷幻的正弦波：
+在本章中，将创建一个模仿Siri，听到声音后，根据声音而产生波浪状的动画。这个[开始项目](Section.md#关于代码) 命名为**Iris**。
 
 
+这个项目将创建两个不同的复制。 首先，是在Iris会话时播放的视觉反馈动画，它看起来很像一个迷幻的正弦波：
 
-然后你将使用CAReplicatorLayer创建一个交互式麦克风驱动的音频波，当用户说话时，它将提供视觉反馈：
+![image-20181214235839247](https://ws1.sinaimg.cn/large/006tNbRwgy1fy6ptjrw7dj307m03yjrl.jpg)
 
+然后是一个交互式麦克风驱动的音频波，当用户说话时，它将提供视觉反馈：
 
+![image-20181214235912038](https://ws3.sinaimg.cn/large/006tNbRwgy1fy6pu3z3g5j3097035mxq.jpg)
 
-这两个动画将向您介绍CAReplicatorLayer的许多功能。 为了涵盖这一层提供的每个功能，它将自己填满整本书！
-但是你不需要听我说我喜欢用CAReplicatorLayer创建动画的程度; 是时候体验自己的魔力了。
-
-一个迷幻的正弦波
-
-plist文件中添加
+这两个动画覆盖了`CAReplicatorLayer`的大部分功能。 
 
 
 
 ### Replicating like rabbits
 
+#### 开始项目概述
+
+打开`Main.storyboard`：
+
+![image-20181215000456402](https://ws4.sinaimg.cn/large/006tNbRwgy1fy6q02u7wgj307208x3ye.jpg)
+
+只有一个视图控制器，它具有一个按钮和一个标签。 用户在按下按钮时询问问题; 当他们释放按钮时，Iris会做出回应。 标签用来显示麦克风输入和Iris的答案。
+
+在`ViewController.swift`中，按钮事件已连接到操作。当用户触摸按钮时，`actionStartMonitoring()`会触发；当用户抬起手指时，`actionEndMonitoring()`会触发。
 
 
+另外还有两个超出本章范围的类：
 
+`Assistant`：人工智能助理。它预定义的有趣答案列表，并根据用户的问题说出来。
+`MicMonitor`：监控iPhone麦克风上的输入，并反复调用您提供的闭包表达式。这是您有机会更新显示的地方。
 
+下面开始！
 
+#### 设置复制器层
 
-![](https://ws3.sinaimg.cn/large/006tNbRwgy1fx7onwmyoeg308q08rdkr.gif)
-
-
-
-
-
-### Replicating multiple animations
-
-注意按钮事件
-
-- Scale animation
+打开`ViewController.swift`并添加以下两个属性：
 
 ```swift
-        let scale = CABasicAnimation(keyPath: "transform")
-        scale.fromValue = NSValue(caTransform3D: CATransform3DIdentity)
-        scale.toValue = NSValue(caTransform3D: CATransform3DMakeScale(1.4, 15, 1.0))
-        scale.duration = 0.33
-        scale.repeatCount = .infinity
-        scale.autoreverses = true
-        scale.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
-        dot.add(scale, forKey: "dotScale")
+let replicator = CAReplicatorLayer()
+let dot = CALayer()
+```
+
+`dot`使用`CALayer`，用来绘制基本的简单形状。`replicator`作为复制器，用来之后复制`dot`。
+
+下面添加一些常量 属性：
+
+```swift
+let dotLength: CGFloat = 6.0
+let dotOffset: CGFloat = 8.0
+```
+
+`doLength`用作点图层的宽度和高度，`dotOffset`是每个点复制体之间的偏移量。
+
+
+
+将复制器层添加到视图控制器的视图中，在`viewDidLoad()`中添加：
+
+```swift
+replicator.frame = view.bounds
+view.layer.addSublayer(replicator)
 ```
 
 
+
+下一步是设置点图层。 在`viewDidLoad()`中添加：
+
+```swift
+dot.frame = CGRect(x: replicator.frame.size.width - dotLength, y: replicator.position.y, width: dotLength, height: dotLength)
+dot.backgroundColor = UIColor.lightGray.cgColor
+dot.borderColor = UIColor(white: 1.0, alpha: 1.0).cgColor
+dot.borderWidth = 0.5
+dot.cornerRadius = 1.5
+
+replicator.addSublayer(dot)
+```
+
+先将点图层定位到复制器的右边缘，然后设置图层的背景颜色并添加边框等，最后将点图层加入复制器图层。运行结果： 
+
+![image-20181215113735985](https://ws1.sinaimg.cn/large/006tNbRwgy1fy7a0ux659j308k04vt8m.jpg)
+
+在继续下面之前，先介绍`CAReplicatorLayer`的三个属性：
+`instanceCount`： 副本数
+`instanceTransform`： 副本之间的转换
+`instanceDelay`： 副本之间的动画延迟
+
+在`viewDidLoad()`中添加：
+
+```swift
+replicator.instanceCount = Int(view.frame.size.width / dotOffset)
+replicator.instanceTransform = CATransform3DMakeTranslation(-dotOffset, 0.0, 0.0)
+```
+
+屏幕宽度除以偏移量，根据不同屏幕宽度设置副本数。比如5.5英寸（宽度为414）的`instanceCount`是51，4.7英寸是46 。。。
+
+每个副本向左（`-dotOffset`）移动8 。结果为：
+
+![](https://ws4.sinaimg.cn/large/006tNbRwgy1fy7n1s0gotj30a302ba9w.jpg)
+
+
+
+#### 测试复制动画
+
+添加一个小测试动画，来了解`instanceDelay`的作用。 在`viewDidLoad()`的末尾添加：
+
+```swift
+let move = CABasicAnimation(keyPath: "position.y")
+move.fromValue = dot.position.y
+move.toValue = dot.position.y - 50.0
+move.duration = 1.0
+move.repeatCount = 10
+dot.add(move, forKey: nil)
+```
+
+这个动画很简单，只是把点向上重复移动10次。
+
+![](https://ws3.sinaimg.cn/large/006tNbRwgy1fy7ao51phfg308q06074k.gif)
+
+在上面代码的的末尾添加：
+
+```swift
+replicator.instanceDelay = 0.02
+```
+
+效果：
+
+![](https://ws4.sinaimg.cn/large/006tNbRwgy1fy7asendwmg308q060wfu.gif)
+
+
+
+在继续之前，需要删除上面的测试动画，除了`instanceDelay`。
+
+
+
+
+
+### 复制多个动画
+
+
+在本节中，您将学习在Iris讲话时播放的动画。 为此，您将结合使用具有不同延迟的多个简单动画来产生最终效果。
+
+#### 缩放动画
+
+首先，在`startSpeaking()`中添加以下动画：
+
+```swift
+let scale = CABasicAnimation(keyPath: "transform")
+scale.fromValue = NSValue(caTransform3D: CATransform3DIdentity)
+scale.toValue = NSValue(caTransform3D: CATransform3DMakeScale(1.4, 15, 1.0))
+scale.duration = 0.33
+scale.repeatCount = .infinity
+scale.autoreverses = true
+scale.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
+dot.add(scale, forKey: "dotScale")
+```
+
+这是一个简单的层动画，重点在`CATransform3DMakeScale`的几个参数选择。此处将点图层在垂直方向缩放15倍。
+
+运行，并点击灰色按钮，分别先后调用`actionStartMonitoring`，`actionEndMonitoring()`，最后调用`startSpeaking()`，效果：
 
 ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fx7p9fze8bg308o0cxgqy.gif)
 
+可以尝试修改`CATransform3DMakeScale`的几个参数和`duration`来看看有什么不同效果。
 
 
-- Opacity animation
 
-![](https://ws4.sinaimg.cn/large/006tNbRwgy1fx7pc183k6j308x02jwec.jpg)
+#### 透明动画
+在`startSpeaking()`添加淡出动画：
 
 ```swift
-        let fade = CABasicAnimation(keyPath: "opacity")
-        fade.fromValue = 1.0
-        fade.toValue = 0.2
-        fade.duration = 0.33
-        fade.beginTime = CACurrentMediaTime() + 0.33
-        fade.repeatCount = .infinity
-        fade.autoreverses = true
-        fade.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
-        dot.add(fade, forKey: "dotOpacity")
+let fade = CABasicAnimation(keyPath: "opacity")
+fade.fromValue = 1.0
+fade.toValue = 0.2
+fade.duration = 0.33
+fade.beginTime = CACurrentMediaTime() + 0.33
+fade.repeatCount = .infinity
+fade.autoreverses = true
+fade.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
+dot.add(fade, forKey: "dotOpacity")
+```
+
+与缩放动画的持续时间相同，但延迟0.33秒，透明度从1.0到0.2，当“波浪”充分移动后，开始淡出效果。
+
+当两个动画同时运行时，效果会更好一点：
+
+![](https://ws4.sinaimg.cn/large/006tNbRwgy1fy7c4qtgvyg308p03sq8m.gif)
+
+
+
+#### 色彩动画
+
+设置点背景颜色变化动画，在`startSpeaking()`添加：
+
+```swift
+let tint = CABasicAnimation(keyPath: "backgroundColor")
+tint.fromValue = UIColor.magenta.cgColor
+tint.toValue = UIColor.cyan.cgColor
+tint.duration = 0.66
+tint.beginTime = CACurrentMediaTime() + 0.28
+tint.fillMode = kCAFillModeBackwards
+tint.repeatCount = .infinity
+tint.autoreverses = true
+tint.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
+dot.add(tint, forKey: "dotColor")
+```
+
+三种动画的效果：
+
+![](https://ws1.sinaimg.cn/large/006tNbRwgy1fy7ce44tclg308p03pn29.gif)
+
+
+
+### CAReplicatorLayer的属性
+
+前面已经通过复制器层制作了很多令人眼花缭乱的效果。 由于`CAReplicatorLayer`本身就是一个图层，因此也可以为其自身的一些属性设置动画。
+
+可以为`CAReplicatorLayer`的基本属性（如`position`，`backgroundColor`或`cornerRadius`）设置动画，也可以通过其特殊的属性设置非常酷的动画。
+
+`CAReplicatorLayer`特有的可动画属性包括(前面已经介绍过三个)：
+
+`instanceDelay`：  副本之间的动画延迟
+`instanceTransform`：副本之间的转换
+`instanceColor`： 颜色
+`instanceRedOffset`，`instanceGreenOffset`，`instanceBlueOffset`：应用增量以应用于每个实例颜色组件
+`instanceAlphaOffset`： 透明度增量
+
+
+
+在`startSpeaking()`的末尾添加一个动画：
+
+```swift
+let initialRotation = CABasicAnimation(keyPath: "instanceTransform.rotation")
+initialRotation.fromValue = 0.0
+initialRotation.toValue = 0.01
+initialRotation.duration = 0.33
+initialRotation.isRemovedOnCompletion = false
+initialRotation.fillMode = kCAFillModeForwards
+initialRotation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
+replicator.add(initialRotation, forKey: "initialRotation")     
+```
+
+上面只是有一个微小的旋转，效果：
+
+![](https://ws1.sinaimg.cn/large/006tNbRwgy1fy7cvzuc3pg308q03oagg.gif)
+
+再需要一个上下扭动的效果，添加下面的动画以完成效果：
+
+```swift
+let rotation = CABasicAnimation(keyPath: "instanceTransform.rotation")
+rotation.fromValue = 0.01
+rotation.toValue   = -0.01
+rotation.duration = 0.99
+rotation.beginTime = CACurrentMediaTime() + 0.33
+rotation.repeatCount = .infinity
+rotation.autoreverses = true
+rotation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+replicator.add(rotation, forKey: "replicatorRotation")
+```
+
+这是在`instanceTransform.rotation`上运行第二个动画，它在之前第一个动画完成后启动。将旋转从0.01弧度（第一个动画的最终值）设置到-0.01弧度，这就有了扭到的效果（不同方向的旋转）。
+效果：
+
+![](https://ws2.sinaimg.cn/large/006tNbRwgy1fy7d9umm1tg308q03p486.gif)
+
+
+
+
+
+下面模拟语音助手，假装回单。`startSpeaking()`的开始处添加：
+
+```swift
+meterLabel.text = assistant.randomAnswer()
+assistant.speak(meterLabel.text!, completion: endSpeaking)
+speakButton.isHidden = true
+```
+
+从`Assistant`类中随机获得一个答案，然后在`meterLabel`上显示，并且读处答案，读完后调用`endSpeaking`方法。这是过程中按钮需要隐藏。
+
+之后，需要删除所有正在运行的动画，在`endSpeaking()`中添加：
+
+```swift
+replicator.removeAllAnimations()
 ```
 
 
 
-
-
-
-
-![](https://ws2.sinaimg.cn/large/006tNbRwgy1fx7pj4kg1hg308o0cxtcg.gif)
-
-
-
-- Tint animation
+接下来，需要将点图层“优雅”地设置为原始比例的动画， 在`endSpeaking()`继续中添加：
 
 ```swift
-        let tint = CABasicAnimation(keyPath: "backgroundColor")
-        tint.fromValue = UIColor.magenta.cgColor
-        tint.toValue = UIColor.cyan.cgColor
-        tint.duration = 0.66
-        tint.beginTime = CACurrentMediaTime() + 0.28
-        tint.fillMode = CAMediaTimingFillMode.backwards
-        tint.repeatCount = .infinity
-        tint.autoreverses = true
-        tint.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-        dot.add(tint, forKey: "dotColor")
+let scale = CABasicAnimation(keyPath: "transform")
+scale.toValue = NSValue(caTransform3D: CATransform3DIdentity)
+scale.duration = 0.33
+scale.isRemovedOnCompletion = false
+scale.fillMode = kCAFillModeForwards
+dot.add(scale, forKey: nil)
+```
+
+上面的动画，没有指定`fromValue` ，会从当前值开始动画，变换为`CATransform3DIdentiy`。
+
+
+
+最后，删除`dot`中当前正在运行的其余动画，并恢复说话按钮状态。 在`endSpeaking()`继续中添加：
+
+```swift
+dot.removeAnimation(forKey: "dotColor")
+dot.removeAnimation(forKey: "dotOpacity")
+dot.backgroundColor = UIColor.lightGray.cgColor
+speakButton.isHidden = false
+```
+
+本节的效果：
+
+![](https://ws2.sinaimg.cn/large/006tNbRwgy1fy7e4a4sfvg308q07oar3.gif)
+
+
+
+### 交互式复制动画
+
+前面这有Iris回答时，才会有对应波动动画。这一节要做的是，当用户按住按钮说话（问问题）时也就对应波动动画。
+
+
+
+在`actionStartMonitoring()`中添加：
+
+```swift
+    dot.backgroundColor = UIColor.green.cgColor
+    monitor.startMonitoringWithHandler { (level) in
+        self.meterLabel.text = String(format: "%.2f db", level)
+    }
+```
+
+当用户按下说话按钮时，触发`actionStartMonitoring`。为了表示“正在收听”，将点图层颜色更改为绿色。
+
+然后在监视器实例上调用`startMonitoringWithHandler()`，它的参数是一个闭包块，会被重复执行，获取麦克风分贝数(db)。
+
+这边的分贝数和我们平常见到分贝数范围有点不同， 它的值在-160.0 db到0.0 db的范围内，-160.0 db是最安静的，0.0 db意味着非常大的声音。
+
+向上面的闭包中添加一段代码，添加完如下：
+
+```swift
+    monitor.startMonitoringWithHandler { (level) in
+        self.meterLabel.text = String(format: "%.2f db", level)
+        let scaleFactor = max(0.2, CGFloat(level) + 50) / 2
+    }
+```
+
+`scaleFactor`将存储介于0.1和25.0之间的值。
+
+在`ViewController`新加一个属性：
+
+```swift
+var lastTransformScale: CGFloat = 0.0
+```
+
+对于缩放动画，比例不断变化的，`lastTransformScale`保存最后一个缩放值。
+
+在上面的麦克风处理闭包中添加用户声音动画：
+
+```swift
+let scale = CABasicAnimation(keyPath: "transform.scale.y")
+scale.fromValue = self.lastTransformScale
+scale.toValue = scaleFactor
+scale.duration = 0.1
+scale.isRemovedOnCompletion = false
+scale.fillMode = kCAFillModeForwards
+self.dot.add(scale, forKey: nil)
+```
+
+最后，保存`lastTransformScale`，接着上面的代码添加：
+
+```swift
+self.lastTransformScale = scaleFactor
+```
+
+当用户手指离开按钮时，需要重置动画并停止监听麦克风。 在`actionEndMonitoring()`开始处添加：
+
+```swift
+monitor.stopMonitoring()
+dot.removeAllAnimations()
+```
+
+这个时候，效果：
+
+
+
+![](https://ws3.sinaimg.cn/large/006tNbRwgy1fy7m6qgguag308o0881gt.gif)
+
+
+
+#### 平滑麦克风输入和Iris动画之间的过渡
+
+仔细之前的效果，我发现用户麦克风输入动画和Iris动画之间是没有过渡，是直接跳过。这是`actionEndMonitoring()`中的`dot.removeAllAnimations()`造成的。
+
+把`dot.removeAllAnimations()`替代为：
+
+```swift
+// 麦克风输入和Iris动画之间的过渡
+let scale = CABasicAnimation(keyPath: "transform.scale.y")
+scale.fromValue = lastTransformScale
+scale.toValue = 1.0
+scale.duration = 0.2
+scale.isRemovedOnCompletion = false
+scale.fillMode = kCAFillModeForwards
+dot.add(scale, forKey: nil)
+
+dot.backgroundColor = UIColor.magenta.cgColor
+
+let tint = CABasicAnimation(keyPath: "backgroundColor")
+tint.fromValue = UIColor.green.cgColor
+tint.toValue = UIColor.magenta.cgColor
+tint.duration = 1.2
+tint.fillMode = kCAFillModeBackwards
+dot.add(tint, forKey: nil)
 ```
 
 
 
+本章最后的效果：
 
-
-![](https://ws4.sinaimg.cn/large/006tNbRwgy1fx7pqcu6p9g308o0cx0zm.gif)
-
-
-
-### Animation CAReplicatorLayer properties
-
-```swift
-        let initialRotation = CABasicAnimation(keyPath:
-            "instanceTransform.rotation")
-        initialRotation.fromValue = 0.0
-        initialRotation.toValue   = 0.01
-        initialRotation.duration = 0.33
-        initialRotation.isRemovedOnCompletion = false
-        initialRotation.fillMode = CAMediaTimingFillMode.forwards
-        initialRotation.timingFunction = CAMediaTimingFunction(name:
-            CAMediaTimingFunctionName.easeOut)
-        replicator.add(initialRotation, forKey: "initialRotation")
-```
-
-
-
-![](https://ws3.sinaimg.cn/large/006tNbRwgy1fx7pvr18n8g308o0cxtjy.gif)
-
-
-
-??这一章暂停到p248
-
+![](https://ws4.sinaimg.cn/large/006tNbRwgy1fy7mgff62bg308o0811bi.gif)
