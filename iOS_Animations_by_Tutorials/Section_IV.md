@@ -8,9 +8,15 @@ iOS中最容易识别的动画之一是将新视图控制器推入导航堆栈�
 
 
 
-在本节中，您将学习如何使用动画创建自己的自定义视图控制器转换。
+在本文中，将学习如何使用动画创建自己的自定义视图控制器转换。
 
-Chapter 17   了解如何通过自定义动画转场**呈现**视图控制器 - 作为奖励，您将创建动画转场以处理设备方向更改。
+[17-视图控制器转场和屏幕旋转转场](#17-视图控制器转场和屏幕旋转转场)   了解如何通过自定义动画转场**呈现**视图控制器 - 作为奖励，您将创建动画转场以处理设备方向更改。
+
+[18-导航控制器转场](#18-导航控制器转场)
+
+[19-交互式导航控制器转场](#19-交互式导航控制器转场)
+
+
 
 Chapter 18-19 学习如何创建自定义导航控制器转换，包括一个很酷的效果，在该效果中，徽标会逐渐显示，以显示下一个屏幕的内容
 
@@ -147,7 +153,7 @@ var originFrame = CGRect.zero
 
 `duration` 是动画持续时间。
 
-`presenting` 是用判断当前是**呈现**还是**解除*。
+`presenting` 是用判断当前是**呈现**还是**解除**。
 
 `originFrame`用来存储用户点击的图像的原始 *frame* —— **呈现**动画就是需要它从原始*frame*到全屏图像*frame*，对应的**解除**动画正好相反。 
 
@@ -737,7 +743,9 @@ else {
 当您完成后，您的用户将能够通过在屏幕上滑动手指来来回穿过显示转场。那会有多酷？
 是的，我以为你会感兴趣！继续阅读，了解它是如何完成的！
 
-关于手势处理，可看我的一篇简单的小结 [iOS tutorial 13：手势处理](http://andyron.com/2017/ios-tutorial-13.html)
+关于手势处理，可看我的一篇简单的小结 [iOS tutorial 13：手势处理](http://andyron.com/2017/ios-tutorial-13.html)。
+
+本章[开始项目](README.md#关于代码)使用上一章节完成的项目。
 
 ### 创建交互式转场
 
@@ -755,13 +763,13 @@ else {
 
 ### 处理平移手势
 
-首先，MasterViewController中的轻敲手势识别器不会再削减它了。 水龙头瞬间发生，然后就消失了; 您无法跟踪其进度并使用它来推动转换。 另一方面，平移手势具有转换的开始，进展和结束阶段的明确状态。
-打开本章的入门项目; 或者，您可以使用上一章中已完成的项目（包括挑战）。
-打开Main.storyboard; 转到主视图控制器并将标签的文本更改为屏幕底部的“**Slide to start**”，如下所示：
 
 
+把点击手势修改成平移手势。平移手势可观察到转场的开始、过程和结束的状态。
 
-这将反映您对用户的期望。
+先把底部的标签的文本修改成 **Slide to start**。
+
+
 
 接下来，在`MasterViewController.swift`的`viewDidAppear(_:)`中删除以下代码：
 
@@ -785,35 +793,38 @@ view.addGestureRecognizer(pan)
 
 ### 使用交互式动画师类
 
-为了处理上面的转场，需要使用内置的交互式动画师类：`UIPercentDrivenInteractiveTransition`。 此类遵守`UIViewControllerInteractiveTransitioning`协议，并允许将转换的进度设置为表示完成百分比的值。
+为了处理上面的转场，需要使用内置的交互式动画师类：`UIPercentDrivenInteractiveTransition`。 此类遵守`UIViewControllerInteractiveTransitioning`协议，并可以将转场的进度表示为完成百分比。
 
-这使您的生活更容易，因为您可以使用此类相应地调整percentComplete属性并调用update（）来设置转换的当前可见进度。 这将跳过转场动画到与计算的转场进度相对应的点。 
 
-在本章的其余部分中，您将了解有关`UIPercentDrivenInteractiveTransition`如何工作的更多信息。
 
-打开`RevealAnimator.swift`并更新文件顶部的类定义，如下所示：
+打开**RevealAnimator.swift**，并更新文件顶部的类定义，如下所示：
 
 ```swift
-class RevealAnimator: UIViewControllerAnimatedTransitioning, CAAnimationDelegate, UIPercentDrivenInteractiveTransition {
+class RevealAnimator: UIPercentDrivenInteractiveTransition, UIViewControllerAnimatedTransitioning, CAAnimationDelegate {
+    
 ```
 
+请注意，`UIPercentDrivenInteractiveTransition`是一个类，而不是其他协议，所以需要处于第一位置。 
 
+添加一个属性，来表示是否已交互方式驱动转场动画：
 
 ```swift
 var interactive = false
 ```
 
-
+添加方法到`RevealAnimator`中：
 
 ```swift
-    func handlePan(_ recognizer: UIPanGestureRecognizer) {
-        
-    }
+func handlePan(_ recognizer: UIPanGestureRecognizer) {
+
+}
 ```
 
-当用户在屏幕上平移时，您将把识别器传递给RevealAnimator中的handlePan（_ :)，此时您将更新当前的转场进度。 你将在一点点填充handlePan（_ :)，但首先你需要设置手势处理。
+当用户在屏幕上平移时，识别器将被传递给`RevealAnimator`中的`handlePan(_:)`处理，来更新当前的转场进度。 
 
-打开MasterViewController.swift并添加以下委托方法，为该文件中的MasterViewController扩展提供交互控制器：
+
+
+在**MasterViewController.swift**中添加委托方法：
 
 ```swift
 func navigationController(_ navigationController: UINavigationController, interactionControllerFor animationController: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
@@ -824,25 +835,23 @@ func navigationController(_ navigationController: UINavigationController, intera
 }
 ```
 
+当希望转场为交互式时，只需返回交互式控制器，否则返回`nil`。
 
-
-当您希望转换为交互式时，您只返回交互式控制器。 例如，在您的Logo Reveal项目中，显示转换是交互式的，但自定义弹出转换将保持原样。
-现在，您需要将平移手势识别器连接到交互控制器。 在MasterViewController中找到didPan（_ :)并替换为：
+现在，需要将平移手势识别器连接到交互控制器。 在`didPan(_:)`中添加：
 
 ```swift
 switch recognizer.state {
     case .began:
-    transition.interactive = true
-    performSegue(withIdentifier: "details", sender: nil)
+    	transition.interactive = true
+    	performSegue(withIdentifier: "details", sender: nil)
     default:
-    transition.handlePan(recognizer)
+    	transition.handlePan(recognizer)
 }
 ```
 
+当平移手势开始时，确保交互设置为`true`，然后通过 *segue* 连接到下一个视图控制器。 执行segue将启动转场，这时动画控制器和交互控制器的委托方法将返回转场动画。
 
-
-当平移手势开始时，您确保交互设置为true，然后开始segue到下一个视图控制器。 执行segue将启动转场，如前一章所述; 您为动画控制器和交互控制器添加的委托方法返回转换。
-在所有情况下，如果手势已经开始，您只需将操作交给交互控制器，如下图所示：
+如果手势已经开始，只需将操作交给交互控制器，如下图所示：
 
 ![image-20181203233104113](https://ws4.sinaimg.cn/large/006tNbRwgy1fxtz7gpuxxj30bh06zdgi.jpg)
 
@@ -850,9 +859,11 @@ switch recognizer.state {
 
 
 
-### Calculating your animation's progress
+### 计算转场动画的进度
 
+平移手势处理程序中最重要的一点是要弄清楚转场的进度。
 
+打开**RevealAnimator.swift**，并将以下代码添加到`handlePan`中：
 
 ```swift
 let translation = recognizer.translation(in: recognizer.view!.superview!)
@@ -860,39 +871,33 @@ var progress: CGFloat = abs(translation.x / 200.0)
 progress = min(max(progress, 0.01), 0.99)
 ```
 
+通过平移手势识别器计算转场的经度。从逻辑上讲，用户离开初始位置越远，转场的进度就越大。
 
+`200.0`是一个合理的任意数字，来表示转场完成所需要的距离。
 
-首先，你从平移手势识别器获得翻译;翻译让您知道用户在X轴和Y轴上移动手指/手写笔/附件/任何内容的点数。从逻辑上讲，用户从初始位置越远，转换的进度就越大。
-要计算当前进度，请在X轴上进行平移并将其除以200点。例如，如果用户的手指距离初始平移位置100个点，则转换将完成50％。 200点是一个任意数字，但它是用户需要平移以完成转换的总距离的良好起点。您不应该关心用户是向右还是向左平移 - 这就是您使用abs（）获取平移距离的绝对值的原因。
-最后，将进度变量限制在0.01和0.99之间;我的测试显示，如果你不让用户完成或仅仅从平移手势恢复转换，交互控制器会表现得更好。
-
-“现在您已了解转场动画的进度，您也可以更新转场动画。
-将以下代码添加到handlePan（）：
+下面更新转场动画的进度，将以下代码添加到`handlePan()`中：
 
 ```swift
 switch recognizer.state {
     case .changed:
-    update(progress)
+    	update(progress)
     default:
-    break
+    	break
 }
 ```
 
-
-
 `update()` 是来自`UIPercentDrivenInteractiveTransition`的方法，它设置转场动画的当前进度。
-当用户在屏幕上平移时，手势识别器在MasterViewController中重复调用didPan（），然后在RevealAnimator中将识别器转发到handlePan（）。
 
-不幸的是，如果你在这个时候建立和运行，你会看到一些动画似乎跟随你的手势而其他动画只是按照自己的节奏运行。 UIPercentDrivenInteractiveTransition与图层动画的效果不如查看动画，所以你必须做一些额外的工作。
-首先，将此属性添加到RevealAnimator：
+当用户在屏幕上平移时，手势识别器会重复调用`MasterViewController`中`didPan()`，从而不停的调用`RevealAnimator`中 的`handlePan()`来更新转场进度。
+
+
+在`RevealAnimator`中添加属性：
 
 ```swift
 private var pausedTime: CFTimeInterval = 0
 ```
 
-
-
-在：
+现在，通过将以下代码添加到`animateTransition(using:)`来控制图层：
 
 ```swift
 if interactive {
@@ -903,7 +908,9 @@ if interactive {
 }
 ```
 
-你在这里做的是阻止图层运行自己的动画。 这将冻结所有子图层动画。 现在覆盖update（_ :)以将图层与动画一起移动：
+这里做的是阻止图层运行自己的动画。 这将冻结所有子图层动画。 
+
+重写`update(_:)`，以将图层与动画一起移动：
 
 ```swift
 override func update(_ percentComplete: CGFloat) {
@@ -914,39 +921,64 @@ override func update(_ percentComplete: CGFloat) {
 }
 ```
 
-在这里，您要计算动画的距离并相应地设置图层的timeOffset，这会将动画移动到时间轴中的适当点。
-
-构建并运行您的项目; 在屏幕上平移，看看你的转场是什么样的：
 
 
+运行效果：
 
-由于您的转换不是很完整，因此只要您抬起手指，整个导航就会中断。 但是，您可以看到揭示动画跟随您的平移手势 - 您即将完成交互式转换！
+![](https://ws3.sinaimg.cn/large/006tNbRwgy1fy9iqrfex0g308q0fogwz.gif)
 
------------
-
-### Handling early termination
-
-在这里你面临一个全新的问题：用户可能会在他们在X轴上平移200点之前抬起手指。 这使得转场处于未完成状态。
-幸运的是，UIPercentDrivenInteractiveTransition为您提供了几种免费方法，您可以根据用户的操作来恢复或完成转换。
-在上面添加的switch语句中添加以下两种情况，就在默认情况之前：
+这边出现问题，就是手指离开屏幕后，动画立即停止，再次滑动时也没有反应。
 
 
 
-就你的项目而言，.cancelled和.ended案件实际上是相同的。 在任何一种情况下，如果用户在发布之前平移得足够远，则完全呈现新的视图控制器; 如果没有，您想要回滚动画进度。
-如果用户平移的距离小于所需距离的50％，则调用cancel（） - 一种继承的方法 - 将转换设置为回到其初始状态的动画。 如果用户平移了超过50％的距离，则调用finish（），在剩下的时间内播放动画。 这两种状态如下图所示：
+### 处理提前终止
+
+处理上面的问题。
+
+在`handlePan()`的switch语句中添加`case`：
+
+```swift
+case .cancelled, .ended:
+    if progress < 0.5 {
+        cancel()
+    } else {
+        finish()
+    }
+```
+
+在用户手指离开屏幕之前，如果平移得足够远，就表示转场完成，呈现新的视图控制器；相反，就滚回原来的视图控制器。
+![](https://ws2.sinaimg.cn/large/006tNbRwgy1fy9kfeum2qj30db04zaae.jpg)
+
+重写`cancel()` 和 `finish()`方法：
+
+```swift
+override func cancel() {
+    restart(forFinishing: false)
+    super.cancel()
+}
+
+override func finish() {
+    restart(forFinishing: true)
+    super.finish()
+}
+
+private func restart(forFinishing: Bool) {
+    let transitionLayer = storedContext?.containerView.layer
+    transitionLayer?.beginTime = CACurrentMediaTime()
+    transitionLayer?.speed = forFinishing ? 1 : -1
+}
+```
 
 
 
-“取消时，您需要将图层设置为向后运行，因此速度设置为-1。
-构建并运行应用程序，并尝试部分平移和大部分方式来查看差异。
-您是否注意到当您浏览揭示动画时，您无法返回列表？ 那是因为你在handlePan（_ :)中将interactive设置为true，你永远不会将它重置为false！ 因此，当您弹出视图控制器时，您将从委托方法返回一个永远不会更新的交互控制器 - 并且您的弹出转换将停留在0％进度。
-重置交互属性的正确位置是平移手势结束时。
-将以下代码添加到.cancelled，.ended案例中：
+在`.cancelled，.ended`的`case`中添加：
+
+```swift
 interactive = false
-这应该让你回弹到初始屏幕。
-建立并再次运行，你应该能够来回移动。
+```
 
 
 
-### Make the pop transition interactive
+本章最后的效果：
 
+![](https://ws1.sinaimg.cn/large/006tNbRwgy1fy9krwbad6g308q0fogzr.gif)

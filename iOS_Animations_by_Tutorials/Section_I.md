@@ -135,7 +135,9 @@ UIView.animate(withDuration: 0.5, delay: 0.4, options: [],
 
 
 
-#### 动画缓动(Animation easing)
+#### 动画缓动
+
+Animation easing，我暂且把它叫做 **动画缓动**。
 
 > curve:弯曲；使弯曲。ease：减轻，缓和。
 
@@ -144,7 +146,7 @@ UIView.animate(withDuration: 0.5, delay: 0.4, options: [],
 为了使动画看起来更逼真，可以在开始时慢慢加速，在结束前放慢速度，一般称为**缓入(ease-in)**和**缓出(ease-out)**。
 
 `.curveLinear` ：不对动画应用加速或减速。
-`.curveEaseIn` ：动画的开始时加速。
+`.curveEaseIn` ：动画的开始时慢，结束时快。
 
 ```
 UIView.animate(withDuration: 1, delay: 0.6, options: [.repeat, .autoreverse, .curveEaseIn], animations: {
@@ -152,7 +154,7 @@ UIView.animate(withDuration: 1, delay: 0.6, options: [.repeat, .autoreverse, .cu
 }, completion: nil)
 ```
 
-`.curveEaseOut` ：动画结尾时减速。 
+`.curveEaseOut` ：动画开始时快，结束时慢。 
 
 ```swift
 UIView.animate(withDuration: 1, delay: 0.6, options: [.repeat, .autoreverse, .curveEaseOut], animations: {
@@ -166,7 +168,7 @@ UIView.animate(withDuration: 1, delay: 0.6, options: [.repeat, .autoreverse, .cu
 
 
 
- `.curveEaseInOut`  ：动画开始时加速结束时减速
+ `.curveEaseInOut`  ：动画开始结束都慢，中间快
 
 
 

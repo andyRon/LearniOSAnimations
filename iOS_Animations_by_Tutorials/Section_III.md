@@ -42,7 +42,7 @@
 
 
 
-**预览**
+**预览：**
 
 本文比较长，图片比较多，预警⚠️😀。
 
@@ -825,7 +825,7 @@ loginButton.layer.add(groupAnimation, forKey: nil)
 
 
 
-### 动画缓动(Animation easing) 
+### 动画缓动
 
 图层动画中的动画缓动与[1-视图动画入门](Section_I.md#动画缓动(Animation easing))中介绍的视图动画的动画选项的，在概念上是相同的， 只是语法有所不同。
 

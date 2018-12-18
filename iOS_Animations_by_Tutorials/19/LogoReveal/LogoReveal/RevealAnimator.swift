@@ -91,7 +91,7 @@ class RevealAnimator: UIPercentDrivenInteractiveTransition, UIViewControllerAnim
         }
         storedContext = nil
     }
-    
+    /// 处理平移手势
     func handlePan(_ recognizer: UIPanGestureRecognizer) {
         let translation = recognizer.translation(in: recognizer.view!.superview!)
         var progress: CGFloat = abs(translation.x / 200.0)
@@ -100,17 +100,40 @@ class RevealAnimator: UIPercentDrivenInteractiveTransition, UIViewControllerAnim
         switch recognizer.state {
         case .changed:
             update(progress)
+        case .cancelled, .ended:
+            if progress < 0.5 {
+                cancel()
+            } else {
+                finish()
+            }
+            interactive = false
         default:
             break
         }
     }
     
     //MARK: - UIPercentDrivenInteractiveTransition
-    
+    /// 更新转场进度
     override func update(_ percentComplete: CGFloat) {
         super.update(percentComplete)
         
         let animationProgress = TimeInterval(animationDuration) * TimeInterval(percentComplete)
         storedContext?.containerView.layer.timeOffset = pausedTime + animationProgress
+    }
+    
+    override func cancel() {
+        restart(forFinishing: false)
+        super.cancel()
+    }
+    
+    override func finish() {
+        restart(forFinishing: true)
+        super.finish()
+    }
+    
+    private func restart(forFinishing: Bool) {
+        let transitionLayer = storedContext?.containerView.layer
+        transitionLayer?.beginTime = CACurrentMediaTime()
+        transitionLayer?.speed = forFinishing ? 1 : -1
     }
 }

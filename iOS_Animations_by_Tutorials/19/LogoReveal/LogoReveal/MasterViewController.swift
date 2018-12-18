@@ -40,14 +40,15 @@ class MasterViewController: UIViewController {
     view.layer.addSublayer(logo)
   }
   
-  //
+  
   // MARK: Gesture recognizer handler
-  //
+  
   @objc func didTap() {
     performSegue(withIdentifier: "details", sender: nil)
   }
   /// 平移手势
   @objc func didPan(_ recognizer: UIPanGestureRecognizer) {
+    
     switch recognizer.state {
     case .began:
         transition.interactive = true

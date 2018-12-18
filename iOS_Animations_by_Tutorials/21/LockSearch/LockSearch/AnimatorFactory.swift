@@ -57,6 +57,7 @@ class AnimatorFactory {
     }, completion: nil)
   }
   
+  // 自动布局动画
   @discardableResult
   static func animateConstraint(view: UIView, constraint: NSLayoutConstraint, by: CGFloat) -> UIViewPropertyAnimator {
     let spring = UISpringTimingParameters(dampingRatio: 0.55)

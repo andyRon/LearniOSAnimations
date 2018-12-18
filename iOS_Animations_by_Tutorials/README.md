@@ -1,33 +1,51 @@
 系统学习iOS动画之零：说明和目录
 ---------
 
-之前也做过一些iOS动画，但一直没有系统学习过，这次我用[RW网站](https://www.raywenderlich.com)的书 [《iOS Animations by Tutorials》](https://store.raywenderlich.com/products/ios-animations-by-tutorials) 来系统地学习iOS动画。这本书示例项目不是太复杂但很完善。
+动画制作很有趣，可以为用户界面注入活力。 如果使用得当，动画可以向用户传达信息，并将用户注意力吸引到界面的重要部分。
 
-这个系列的几篇文章是我学习  的几篇笔记。
+之前也做过一些iOS动画，但一直没有系统学习过，这次我用[RW网站](https://www.raywenderlich.com)的书 [《iOS Animations by Tutorials》](https://store.raywenderlich.com/products/ios-animations-by-tutorials) 来系统地学习iOS动画。这本书的内容和项目不复杂但很全，基本上iOS动画的各个方面都介绍了。
 
-动画制作很有趣，可以为用户界面注入活力。 打开菜单或向右滑动时，谁不喜欢有一点视觉刺激的应用程序呢😏？
+ [《iOS Animations by Tutorials》](https://store.raywenderlich.com/products/ios-animations-by-tutorials) 全书分为7个部分，27小章节，内容非常丰富，我对应7个部分分别总结为7篇文章，有几篇文章可能比较长，特别是动图比较多，用手机看的小伙伴请慎重，对自己温柔一点🥴。
 
-如果使用得当，动画可以向用户传达信息，并将用户注意力吸引到界面的重要部分。
+开发环境：**Xcode 10.1, Swift 4.2, macOS Mojave 10.14.1**
 
-**Xcode 10.1, Swift 4.2, macOS Mojave 10.14.1**
 
-本书的每一章都包含一个入门项目，并详细介绍了少量动画技术; 这使您可以按任何顺序完成本书中的章节。
-但是，对于初学者，我们建议您按顺序完成各章，因为这些概念是相互依赖的。 另外，如果您按照教程并执行动手操作，请记住，您将充分利用本书。
-对于高级开发人员，由于您可能还不熟悉这些熟悉的动画API的Swift语法，因此在前面的章节中仍然有价值，因为它涵盖了基础知识。 但是，如果您对此感到满意，请随时跳到您最感兴趣的主题。
+
+## 目录
+
+目录可以很好看清整体脉络，每一篇文章的开始我也列出了小章节的题目，这样可以系统的学习iOS动画，那边有问题也好及时发先并对应到系统点上。要不可能越学越乱，这方面我自己深有体会的😕🤔。
+
+[系统学习iOS动画之一：视图动画](Section_I.md)
+[系统学习iOS动画之二：自动布局动画](Section_II.md)
+[系统学习iOS动画之三：图层动画](Section_III.md)
+[系统学习iOS动画之四：视图控制器的转场动画](Section_IV.md)
+[系统学习iOS动画之五：使用UIViewPropertyAnimator](Section_V.md)
+[系统学习iOS动画之六：3D动画](Section_VI.md)
+[系统学习iOS动画之七：其它类型的动画](Section_VII.md)
+
+
 
 
 
 ## 关于代码
 
-原书提供的代码，每章都会有*开始项目*和*最终完成项目*代码（这应该是RW网站的惯例了😀），有的章节还有有*挑战项目*。建议按顺序阅读，因为前后章节知识点有一定关联。
+我完成每一章节代码放在GitHub上 [andyRon/LearniOSAnimations](https://github.com/andyRon/LearniOSAnimations)，代码中加一些中文注释便于理解。
+
+
+
+原书提供的代码，每章都会有**开始项目**和**最终完成项目**代码（这应该是RW网站的惯例了😀），有的章节还有有**挑战项目**。建议按顺序阅读，因为前后章节知识点有一定关联。
 
 **开始项目**都是相对简单项目或者是前一个章节的项目，可以直接使用原书提供的，也可以自己从头创建一下（我自己就是这么干的🤓🤓）。
 
-我完成每一章节代码放在GitHub上 [andyRon/LearniOSAnimations](https://github.com/andyRon/LearniOSAnimations)，代码中加一些中文注释便于理解。
+> 悄悄地说，如果小伙伴暂时手头没有多余💰购买正版，可以私信我获取电子书+代码。
 
-> 悄悄地说，如果暂时手头没有多余💰购买正版，可以私信我获取电子书+代码。
 
-### 项目预览和对应章节
+
+
+
+## 项目预览和对应章节
+
+
 
 
 - **BahamaAirLoginScreen**  1 2 3    8 9 10 11 12 
@@ -66,7 +84,7 @@
 
 - **LogoReveal**          18 19
 
-![](https://ws1.sinaimg.cn/large/006tNbRwgy1fxtxbxrvowg308s0fqan5.gif)
+![](https://ws1.sinaimg.cn/large/006tNbRwgy1fy9krwbad6g308q0fogzr.gif)
 
 - **LockSearch** 		20 21 22 23 
 
@@ -93,20 +111,6 @@
 
 
 
-## 目录
-
- [《iOS Animations by Tutorials》](https://store.raywenderlich.com/products/ios-animations-by-tutorials) 全书分为7个部分，27小章节，内容非常丰富，我对应7个部分分别总结为7篇文章，有几篇文章可能比较长，特别是动图比较多，用手机看的小伙伴请慎重，对自己温柔一点🥴。
-
-之所以把目录结构列出了，是我认为系统的学习很重要，每个知识点对应在系统点上，这样那边出问题也好及时发现，要不可能越学越乱，这方面我自己深有体会的😕🤔。
-
-[系统学习iOS动画之一：视图动画](Section_I.md)
-[系统学习iOS动画之二：自动布局](Section_II.md)
-[系统学习iOS动画之三：图层动画](Section_III.md)
-[系统学习iOS动画之四：视图控制器的转场动画](Section_IV.md)
-[系统学习iOS动画之五：使用UIViewPropertyAnimator](Section_V.md)
-[系统学习iOS动画之六：3D动画](Section_VI.md)
-[系统学习iOS动画之七：其它类型的动画](Section_VII.md)
-
 
 
 ## 关于英文
@@ -131,12 +135,6 @@ snappy
 
 
 
-GIF很多都使用**Slow Animations(+T)**，所以看上去比较慢。
-
-添加持续时间
-
-
-
 ## 动画相关的类总结
 
 UIKit
@@ -148,8 +146,6 @@ UIKit
 ​	
 
 QuartzCore
-
-
 
 CAAnimation
 
