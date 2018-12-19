@@ -113,25 +113,6 @@
 
 
 
-## 关于英文
-
-有的英文不怎么好翻译，为了不让我的翻译产生歧义，我尽量在使用专业词汇时，也把英文给出。
-
-英语水平有限，勉强能看懂和理解书籍，但有的部分翻译成中文，就有点尴尬了，所以遇到一些不好翻译的词时，我就把英文原文也列出来。
-
-另外加一个学到英语词汇😊
-wrangle  	争吵，口角
-thrill		(使)兴奋
-convey	  表达，运输
-subtle
-elaborate
-stiff
-mimic
-keen
-acceleration
-deceleration
-oscillation
-snappy
 
 
 
@@ -173,7 +154,25 @@ CALayer  CAEmitterLayer
 
 
 
+## 关于英文
 
+有的英文不怎么好翻译，为了不让我的翻译产生歧义，我尽量在使用专业词汇时，也把英文给出。
+
+英语水平有限，勉强能看懂和理解书籍，但有的部分翻译成中文，就有点尴尬了，所以遇到一些不好翻译的词时，我就把英文原文也列出来。
+
+另外加一个学到英语词汇😊
+wrangle  	争吵，口角
+thrill		(使)兴奋
+convey	  表达，运输
+subtle
+elaborate
+stiff
+mimic
+keen
+acceleration
+deceleration
+oscillation
+snappy
 
 
 

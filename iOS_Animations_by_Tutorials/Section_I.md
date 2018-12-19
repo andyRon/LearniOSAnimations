@@ -2,38 +2,34 @@
 
 这个部分介绍**UIKit动画API**，这些API专门用于轻松制作**视图动画(View Animations)**，同时避免**核心动画(Core Animation)**(见[系统学习iOS动画之三：图层动画](Section_III))的复杂性。
 
-**UIKit动画API**动画API不仅易于使用，而且提供了大量灵活性和强大功能，可以处理大多数（当然不是全部）动画要求。
+**UIKit动画**API不仅易于使用，而且提供了大量灵活性和强大功能，可以处理大多数（当然不是全部）动画要求。
 
-**UIKit动画API**可以在屏幕上为最终继承自`UIView`的任何对象设置动画，例如：`UILabel`，`UIImageView`，`UIButton`等等，也可以是自己创建的任何自定义最终继承自`UIView`类。
+**UIKit动画**API可以在屏幕上为最终继承自`UIView`的任何对象设置动画，例如：`UILabel`，`UIImageView`，`UIButton`等等，也可以是自己创建的任何自定义最终继承自`UIView`类。
 
-在本节关于视图动画的五个章节中，您将学习如何使用动画来改进虚构的航空公司应用程序Bahama Air，为其UI元素添加各种动画。
+
 
 本文包括五个章节，完成两个项目**BahamaAirLoginScreen**和**Flight Info**。
 
 *BahamaAirLoginScreen* 是一个登录页面项目，1、2、3章节为这个项目的一些UI添加各种动画。
 
-[1-视图动画入门](#1-视图动画入门) —— 学习如何移动，缩放和淡化视图等基本的UIKit API。
-[2-弹簧动画](#2-弹簧动画) —— 在线性动画的概念基础上，使用弹簧动画创造出更引人注目的效果。😊
-[3-过渡动画](#3-过渡动画) 
+[1-视图动画入门](#1-视图动画入门) —— 学习如何移动，缩放和淡化视图等基本的UIKit API。  
+[2-弹簧动画](#2-弹簧动画) —— 在线性动画的概念基础上，使用弹簧动画创造出更引人注目的效果。😊  
+[3-过渡动画](#3-过渡动画) —— 视图的出现和消失。      
 
-*Flight Info* 是一个航班状态变化项目，4、5章节用一些高级一点动画来完成这个项目
+*Flight Info* 是一个航班状态变化项目，4、5章节用一些高级一点动画来完成这个项目。
 
-[4-练习视图动画](#4-练习视图动画) —— 练习前面学到的动画技术。
-[5-关键帧动画](#5-关键帧动画) —— 您将使用关键帧动画来解锁令人印象深刻的UI的最终成就：创建从许多不同阶段构建的精细动画序列。
+[4-练习视图动画](#4-练习视图动画) —— 练习前面学到的动画技术。  
+[5-关键帧动画](#5-关键帧动画) —— 使用关键帧动画来创建由许多不同阶段组成的复杂动画。  
 
 
 
 ## 1-视图动画入门
 
-最终效果
-
-![](https://ws2.sinaimg.cn/large/006tNbRwgy1fw6k7jrgdmg30900fuwhz.gif)
-
 
 
 ### 第一个动画
 
-这一章的[开始项目](README.md#关于代码)是一个简单的登录页面，有两个TextField，一个Label，一个Button，4个云图片和一个背景图片，效果如下，**BahamaAirLoginScreen**：
+[开始项目](README.md#关于代码) **BahamaAirLoginScreen**是一个简单的登录页面，有两个TextField，一个Label，一个Button，4个云图片和一个背景图片，效果如下：
 
 ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fx9ypkbsm2j307r07e746.jpg)
 
@@ -71,7 +67,7 @@ UIView.animate(withDuration: 0.5, delay: 0.4, options: [],
 
 这样heading和TextField就有了前后分别进入屏幕的动画。
 
-类似`UIView.animate(...)`的方法根据参数的不同有好几个，不同参数的意义：
+类似`UIView.animate(...)`的方法，根据参数的不同有好几个，不同参数的意义：
 
  `withDuration` ：动画持续时间。
 
@@ -220,9 +216,7 @@ UIView.animate(withDuration: 0.5, delay: 1.1, options: [], animations: {
 
 视图从A点到B点，在B点来回递减振荡，直到视图在B点停止。这是一个很好的效果， 让我们的动画添加了一种活泼，真实的感觉。 
 
-使用上一章节[1-视图动画入门](#1-视图动画入门)完成的项目 **BahamaAirLoginScreen**或者本章节的[开始项目](README.md#开始项目)。
-
-
+本章的[开始项目](README.md#关于代码) **BahamaAirLoginScreen**是上一章节的完成项目。
 
 在`viewWillAppear()`中添加:
 
