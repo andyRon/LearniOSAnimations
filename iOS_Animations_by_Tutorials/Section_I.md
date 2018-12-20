@@ -331,17 +331,9 @@ UIView.animate(withDuration: 0.5, delay: 0.4, usingSpringWithDamping: 0.6, initi
 
 **过渡动画(Transitions)**
 
-向您展示如何使用过渡为您的视图的任何更改设置动画
-
-过渡是您可以应用于视图的预定义动画。 这些预定义的动画不会尝试在视图的开始和结束状态之间进行插值。 相反，你将设计动画，以便状态的各种变化看起来很自然。
 
 
-
-
-
-`transition(with:duration: options:animations:completion:) `
-
-使用上一章节[2-弹簧动画](#2-弹簧动画)完成的项目 **BahamaAirLoginScreen**或者本章节的[开始项目](README.md#开始项目)。
+本章节的[开始项目](README.md#开始项目) 是前一章节的完成项目。
 
 ### 过渡的例子
 
@@ -350,7 +342,7 @@ UIView.animate(withDuration: 0.5, delay: 0.4, usingSpringWithDamping: 0.6, initi
 #### 添加视图
 
 要在屏幕上添加新视图的动画，可以调用类似于前面章节中使用的方法。 这次的不同之处在于，需要预先选择一个预定义的过渡效果，并为动画容器视图设置动画。
-过渡动画是设置在容器视图上，因此动画为作用在添加到容器视图的所有子视图。
+过渡动画是设置在容器视图上，因此动画作用在添加到容器视图的所有子视图。
 
 下面做一个测试（结束后，删除相应代码继续之后内容）：
 
@@ -619,20 +611,7 @@ animateCloud(cloud: cloud4)
 
 ## 4-练习视图动画
 
-你将在本章中稍作休息，学习一些技巧，结合你已经获得的技能，产生一些新的和令人印象深刻的效果。
-话虽如此，请注意本章是可选的。 如果您想继续学习新的API，请随意跳到下一章 - 没有难过的感觉！
-但是，如果你想弯曲你的动画肌肉并学习一些新的提示和技巧，那么你肯定会喜欢在本章的项目中工作，这将使您的彩妆航空公司Bahama Air的应用程序提升到一个新的水平。。
-在本章中，您将添加一些很酷的动画来装扮航班摘要屏幕，如下所示：
-
-本章中有一些新的效果基于您在前几章中学到的动画基础：
-
-
-
-`CAEmitterCell`
-
-Crossfade Animation  			同时淡出淡入
-Cube transition animation  		立体转换
-Fade and bounce transition   	对于简单的动画，辅助视图和你到目前为止学到的所有其他内容的组合略有不同。
+本章是练习之前学习的动画。
 
 
 
@@ -658,7 +637,7 @@ Fade and bounce transition   	对于简单的动画，辅助视图和你到目�
   }
 ```
 
-其中雪花❄️将在后面的章节[26.粒子发射器](Section_VII.md#粒子发射器)学习，效果为：
+其中雪花❄️将在后面的章节[26-粒子发射器](Section_VII.md#26-粒子发射器)学习，效果为：
 
 ![开始项目图示](https://ws2.sinaimg.cn/large/006tNbRwgy1fxb39hzhp8g308s0fp474.gif) 
 
@@ -669,7 +648,7 @@ Fade and bounce transition   	对于简单的动画，辅助视图和你到目�
 
 ### 淡出淡入动画(Crossfading animations) 
 
-首先需要让两个背景图像之间平滑过渡。 第一直觉可能是简单地淡出当前的图像然后淡入新的图像（透明度的变化）。 但是当alpha接近零时，这种方法会显示图像背后的内容，效果看上去不好。如下所示：
+首先需要让两个背景图像之间平滑过渡。 第一直觉可能是简单地淡出当前的图像然后淡入新的图像（透明度的变化）。 但是当`alpha`接近零时，这种方法会显示图像背后的内容，效果看上去不好。如下所示：
 
 ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fxb3n4t33fj30cw06pjrd.jpg)
 
@@ -935,8 +914,10 @@ cubeTransition(label: flightStatus, text: data.flightStatus, direction: directio
 
 
 
-很多时候，需要多个连续的动画。 前面的章节，已经使用动画闭包和completion闭包包含两个动画效果。
-这种方法适用于链接两个简单的动画，但是当你想要将三个，四个或更多动画组合在一起时，就会导致一些令人难以置信的混乱和复杂的代码。
+很多时候，需要多个连续的动画。 前面的章节，已经使用动画闭包和完成闭包包含两个动画效果。
+
+这种方法适用于连接两个简单的动画，但是当我们想要将三个，四个或更多动画组合在一起时，就会导致一些令人难以置信的混乱和复杂的代码。
+
 让我们看看如果想将多个动画链接在一起并以矩形模式移动视图，它会是什么样子：
 
 假设实现如下效果：
@@ -978,7 +959,7 @@ UIView.animate(withDuration: 0.5,
 
 看上去复杂繁琐，这个时候就需要，使用本章节将要学习的**关键帧动画(Keyframe Animations)**，它可以代替上面繁琐的嵌套。
 
-[开始项目](READM.md#关于代码)使用上一章节的完成项目**Flight Info**，通过用让✈️“飞机来”，学习关键帧动画。
+[开始项目](READM.md#关于代码)使用上一章节的完成项目**Flight Info**，通过让✈️“飞机来”，学习关键帧动画。
 
 
 
@@ -1119,13 +1100,11 @@ UIView.addKeyframe(withRelativeStartTime: 0.55, relativeDuration: 0.45, animatio
 
 
 
-关键帧动画不支持标准视图动画中可用的内置[缓动曲线](#缓动动画(Animation easing))。 这是设计好的; 关键帧应该在特定时间开始和结束并相互流动。
+关键帧动画不支持标准视图动画中可用的内置[动画缓动](#动画缓动)。 这是设计好的; 关键帧应该在特定时间开始和结束并相互流动。
 
 如果上面动画的每个阶段都有一个缓动曲线，那么飞机就会抖动，而不是从一个动画平稳地移动到下一个动画。 
 
 上面没有提到[`animateKeyframes(withDuration:delay:options:animations:completion:)`](https://developer.apple.com/documentation/uikit/uiview/1622552-animatekeyframes)方法，这方法有一个`options`参数（`UIViewKeyframeAnimationOptions`），可以提供几种计算模式的选择，每种模式提供了一种不同的方法来计算动画的中间帧以及不同的优化器，以实现帧之前的转化， 有关更多详细信息，可查看文档[`UIViewKeyframeAnimationOptions`](https://developer.apple.com/documentation/uikit/uiviewkeyframeanimationoptions?language=objc)。
-
-
 
 
 
