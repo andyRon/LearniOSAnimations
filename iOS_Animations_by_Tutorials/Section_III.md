@@ -1424,11 +1424,11 @@ balloon.position = CGPoint(x: -50.0, y: loginButton.center.y)
 
 
 
-本章节将使用的新的示例项目，来实现多层效果。
+
 
 本章学习`CALayer`的一个子类`CAShapeLayer`，它可以在屏幕上绘制各种形状，从非常简单到非常复杂都可以。
 
-本章的[开始项目](Section.md#关于代码) **MultiplayerSearch**模拟了正在搜索在线对手的战斗游戏的起始屏幕。其中一个视图控制器显示一个漂亮的背景图像，一些标签，一个”Search Again“按钮(默认是透明的)，和两个头像图像，其中一个将是空的，直到应用程序”找到“一个对手。
+本章的[开始项目](README.md#关于代码) **MultiplayerSearch** 模拟了正在搜索在线对手的战斗游戏的起始屏幕。其中一个视图控制器显示一个漂亮的背景图像，一些标签，一个”Search Again“按钮(默认是透明的)，和两个头像图像，其中一个将是空的，直到应用程序”找到“一个对手。
 
 ![image-20181214163442348](https://ws1.sinaimg.cn/large/006tNbRwgy1fy6czphh8ij30a608ngmp.jpg)
 
@@ -1686,7 +1686,7 @@ if !self.isSquare {
 
 ![image-20181214171411641](https://ws4.sinaimg.cn/large/006tNbRwgy1fy6e4pohpmj307m01vq2r.jpg)
 
-[开始项目](Section.md#关于代码)  **SlideToReveal**是一个简单的单页面项目，只有一个显示时间的`UILabel`，和一个之后用于渐变动画的自定义`UIView`子类`AnimateMaskLabel`。
+[开始项目](README.md#关于代码)  **SlideToReveal**是一个简单的单页面项目，只有一个显示时间的`UILabel`，和一个之后用于渐变动画的自定义`UIView`子类`AnimateMaskLabel`。
 
 ### 第一个渐变图层
 
@@ -1905,7 +1905,7 @@ gradientAnimation.toValue = [0.65, 0.8, 0.85, 0.9, 0.95, 1.0]
 
 > **注：** stroke 可翻译成 笔画，但好像又不当恰当，就干脆不翻译😏。
 
-[开始项目](Section.md#关于代码)  **PullToRefresh**
+[开始项目](README.md#关于代码)  **PullToRefresh**
 
 ![image-20181214182311997](https://ws3.sinaimg.cn/large/006tNbRwgy1fy6g4ixk82j309606m0t6.jpg)
 
@@ -2053,10 +2053,10 @@ airplaneOrientationAnimation.toValue = 2.0 * .pi
 
 ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fx7m9wkg4dj30bb05g74a.jpg)
 
-“为什么我需要复制形状或图像？”
+**为什么需要复制形状或图像？**
 
 `CAReplicatorLayer`的超级强大之处，在于可以让每个复制体与母体略有不同。
-例如，可以逐步更改每个副本的色调。 原始图层可能是洋红色，而在创建每个副本时，将色调向青色方向改变：
+例如，可以逐步更改每个副本的颜色。 原始图层可能是洋红色，而在创建每个副本时，将颜色向青色方向改变：
 
 ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fx7maaq340j30a2043a9u.jpg)
 
