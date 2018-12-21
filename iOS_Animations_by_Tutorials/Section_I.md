@@ -1,6 +1,6 @@
 # 系统学习iOS动画之一：视图动画
 
-这个部分介绍**UIKit动画API**，这些API专门用于轻松制作**视图动画(View Animations)**，同时避免**核心动画(Core Animation)**(见[系统学习iOS动画之三：图层动画](Section_III))的复杂性。
+这个部分介绍**UIKit动画API**，这些API专门用于轻松制作**视图动画(View Animations)**，同时避免**核心动画(Core Animation)**(见[系统学习iOS动画之三：图层动画](Section_III.md))的复杂性。
 
 **UIKit动画**API不仅易于使用，而且提供了大量灵活性和强大功能，可以处理大多数（当然不是全部）动画要求。
 

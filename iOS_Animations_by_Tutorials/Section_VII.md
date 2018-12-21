@@ -611,7 +611,7 @@ penguin.startAnimating()
 
 
 首先，需要在播放任何动画之前设置所需的图像视图帧; 这可以确保框架在屏幕上可见时尺寸正确。
-将以下代码添加到`actionSlide(_:)，就在您开始动画的位置之前：
+将以下代码添加到`actionSlide(_:)`，就在您开始动画的位置之前：
 
 ```swift
 penguin.frame = CGRect(x: penguin.frame.origin.x,
