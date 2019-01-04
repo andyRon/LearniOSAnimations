@@ -375,7 +375,7 @@ func toggleBlur(_ blurred: Bool) {
 
 
 
-### 防止重叠动画
+### 防止动画重叠
 
 **如何检查动画师当前是否正在执行其动画？**
 
@@ -417,7 +417,7 @@ func toggleBlur(_ blurred: Bool) {
 
 上一章节学习了`UIViewPropertyAnimator`的基本使用，这一章节学习更多关于`UIViewPropertyAnimator`的知识。
 
-本章的[开始项目](README.md#关于代码) 使用上一章节完成的项目。
+>  本章的[开始项目](README.md#关于代码) 使用上一章节完成的项目。
 
 
 
@@ -720,99 +720,110 @@ toggleHeightAnimator?.addAnimations(textTransition, delayFactor: 0.5)
 
 
 
-## 22-UIViewPropertyAnimator进行交互式动画
+## 22-用UIViewPropertyAnimator进行交互式动画
 
 
 
-你已经介绍了许多UIViewPropertyAnimator API，例如基本动画，自定义时序和弹簧，以及动画的抽象。但是，与旧式的“即发即忘”API相比，你尚未研究使这个类真正有趣的原因。
+前面两个章节介绍了许多`UIViewPropertyAnimator` 的使用，例如基本动画，自定义计时和弹簧动画，以及动画的提取。但是，与以前视图动画 **“即发即忘”**("fire-and-forget")API相比，尚未研究使`UIViewPropertyAnimator`真正有趣的地方。
 
-`UIView.animate(withDuration: ...)`提供了一种在屏幕上为视图设置动画的方法，但是一旦定义了所需的结束状态，就会发送动画以进行渲染，并且控制权无法控制。
+`UIView.animate(withDuration:...)`提供了动画的设置方法，但是一旦定义动画结束状态，那么动画就会开始执行，而无法控制。 
 
-但是如果你想与动画互动怎么办？或者创建动画，这些动画不是静态的，而是由用户手势或麦克风输入驱动的，就像你在书中涉及图层动画的那部分一样？
+**但是如果我们想在动画运行时与之交互，怎么办？** 细说，就是动画不是静态的，而是由用户手势或麦克风输入驱动的，就像在前面图层动画 [系统学习iOS动画之三：图层动画](Section_III.md) 所学的一样。
 
-这是UIViewPropertyAnimator在动画视图方面真正实现的地方。使用此类创建的动画是完全交互式的：您可以启动，暂停它们并改变它们的速度。最后，您可以通过直接设置当前进度来简单地“擦除”动画。
+使用`UIViewPropertyAnimator` 创建的动画是完全交互式的：可以启动，暂停，改变速度，甚至可以直接调整进度。
 
-由于UIViewPropertyAnimator可以同时驱动预设动画和交互式动画，因此在讲述动画师目前的状态时，事情会变得有点复杂。本章的下一部分将教你如何处理动画师状态。
+由于`UIViewPropertyAnimator`可以同时驱动预设动画和交互式动画，因而在描述动画师当前的状态时，就有点复杂了😵。下面就看看如何处理动画师的状态。
 
 
 
-如果您已完成上一章中的挑战，请继续处理您的Xcode项目;如果您跳过挑战，请打开本章提供的入门项目。
-您应该让项目具有不同的动画，当您在搜索栏中输入文本，点击图标或展开小部件视图时，这些动画会启动。
+> 本章的[开始项目](README.md#关于代码) 使用上一章节完成的项目。
+
+
 
 ### 动画状态机
 
-除了处理您的动画外，UIViewPropertyAnimator还展示了状态机的行为，并且可以为我们提供有关动画当前状态的许多不同方面的信息。
 
-您可以检查动画是否已启动，是否已暂停或完全停止，或动画是否已反转。最后，您可以检查动画“完成”的位置，例如从所需的最终状态开始，或者介于两者之间的某个位置。
 
-`UIViewPropertyAnimator`有三个属性可帮助您找出当前状态：
+`UIViewPropertyAnimator`可以检查动画是否已启动(`isRunning`)，是否已暂停或完全停止(`state`)，或动画是否已颠倒(`isReversed`)。
+
+<!--最后，您可以检查动画“完成”的位置，例如从所需的最终状态开始，或者介于两者之间的某个位置。-->
+
+`UIViewPropertyAnimator`有三个描述当前状态的属性：
 
 ![image-20181204183027143](https://ws4.sinaimg.cn/large/006tNbRwgy1fxuw4ytvcqj30et02eaa7.jpg)
 
 
 
-`isRunning`属性（只读）告诉您动画师的动画当前是否处于运动状态。 默认情况下该属性为`false`，并在调用`startAnimation()`时变为`true`。 如果您暂停或停止动画，或者您的动画自然完成，它将再次变为`false`。
+`isRunning`（只读）：动画当前是否处于运动状态。 默认为`false`，在调用`startAnimation()`时变为`true`，如果暂停或停止动画，或者动画自然完成，它将再次变为`false`。
 
-`isReversed`属性默认为false，因为您总是以向前方向开始动画，即动画从其开始状态播放到结束状态。 如果将此属性更改为`true`，则动画将反转方向并回放到其初始状态。
+`isReversed`：默认为`false`，因为我们总是向前开始动画，即动画从开始状态播放到结束状态。 如果更改为`true`，则动画将颠倒，即从介绍状态到开始状态。
 
-`state` 属性（只读）确定动画师是否处于活动状态并且当前是动画还是处于某种其他被动状态。
-
-默认情况下，状态为非活动状态这通常意味着你刚刚创建了动画师，并且还没有调用任何方法。请注意，这与将isRunning设置为false不同：isRunning实际上只关注正在播放的动画，而当状态处于非活动状态时，这实际上意味着动画师还没有做任何事情。
-
-当你要么：状态变得活跃：
-调用`startAnimation()`来启动动画
-
-在没有开始动画的情况下调用`pauseAnimation()`，
-
-设置`fractionComplete`属性以将动画“倒回”到某个位置。
+`state` （只读）：
 
 
 
-动画自然完成后，`state`切换回`inactive`。
+`state`默认为`inactive`，这通常意味着刚刚创建了动画师，并且还没有调用任何方法。请注意，这与将`isRunning`设置为`false`不同，`isRunning`实际上只关注正在进行的动画，而当`state`处于`inactive`时，这实际上意味着动画师还没有做任何事情。
 
-如果在动画师上调用`stopAnimation()`，它会将其state属性设置为停止。在这种状态下，你唯一能做的就是完全放弃动画师或者调用`finishAnimation(at:)`来完成动画并让动画师回到无效状态。
+`state` 变成 `active`的情况有：
 
-正如你可能想到的那样，`UIViewPropertyAnimator`只能按特定顺序在状态之间切换。 它不能直接从非活动状态到停止状态，也不能从停止状态直接转为活动状
+- 调用`startAnimation()`来启动动画
 
-在您的控制下还有一个选项：如果您设置了名为pausesOnCompletion的属性，一旦动画师完成了动画的运行而不是自动停止，它将暂停。 这将使您有机会在暂停状态下继续使用它。
+- 在没有开始动画的情况下调用`pauseAnimation()`
 
-如果您有疑问，可以随时回到本章的这一部分，并参考下面的状态流程图：
+- 设置`fractionComplete`属性以将动画“倒回”到某个位置
+
+
+
+动画自然完成后，`state`切换回`.inactive`。
+
+如果在动画师上调用`stopAnimation()`，它会将其`state`属性设置为`.stopped`。在这种状态下，你唯一能做的就是完全放弃动画师或者调用`finishAnimation(at:)`来完成动画并让动画师回到`.inactive`。
+
+正如你可能想到的那样，`UIViewPropertyAnimator`只能按特定顺序在状态之间切换。 它不能直接从`inactive`到`stopped`，也不能从`stopped`直接转为`active`。
+
+如果设置了`pausesOnCompletion`，一旦动画师完成了动画的运行而不是自动停止，而是暂停。 这将使我们有机会在暂停状态下继续使用它。
+
+状态流程图：
 
 ![image-20181204183357332](https://ws4.sinaimg.cn/large/006tNbRwgy1fxuw8m1813j30fj05iwf8.jpg)
 
-如果使用UIViewPropertyAnimator管理状态起初听起来有点复杂，请不要担心。 如果你打电话给一个你不允许在当前状态下打电话的方法，你的应用程序会立即崩溃，这样你就有机会找出出错的地方。
+可能有点绕，之后的使用中，如果有疑问，可以再回到这个部分查看。
+
+
 
 ### 交互式3D touch动画
 
-在本章的这一部分中，您将在iPhone主屏幕上创建类似于3D触摸交互的交互式动画：
+从这个部分开始，将学习创建类似于3D touch交互的交互式动画：
+
+![image-20190101223452030](/Users/andyron/Library/Application Support/typora-user-images/image-20190101223452030.png)
 
 
 
-> 注意：对于本节，您需要兼容3D触摸的iOS设备或用于模拟器的Force Touch触控板。 设备更好，因为3D触摸可以让您获得更好的控制。
+> 注意：对于本章项目，需要兼容3D touch的iOS设备（没记错的话是6S+）。 
+>
+> 听闻👂，3D touch这个技术会被在iPhone上取消，好吧，这边是学习类似3D touch 的动画，它的未来如何，就不过问了。
 
-当您继续按下主屏幕图标时，您将看到动画在您的手指下交互式进展; 背景越来越模糊，图标中出现了一个光线模糊框架。
+3D touch的动画，可以这样描述：当我们手指按压屏幕上的图标时，动画交互式开始，背景越来越模糊，从图标旁渐渐呈现一个菜单，这个过程会随着手指按压的力度变化而前后变化。
 
-这两个动画告诉用户他们正在通过手势进行操作，并通过该动画向他们提供有关他们进度的反馈。当您用力按压时，图标框会从图标上分离并变为菜单：
+放慢的效果为：
+
+![ScreenRecording_01-04-2019 11-13-10.2019-01-04 11_24_37](/Users/andyron/Downloads/ScreenRecording_01-04-2019 11-13-10.2019-01-04 11_24_37.gif)
 
 
 
-这是一个整洁的小型交互式动画，您将在本章中重现。
+`WidgetView.swift`中，`WidgetView`通过扩展遵守`UIPreviewInteractionDelegate`协议。这个协议中就包括了3D touch过程中一些委托方法。
 
-> 注意：您将不会了解有关使用UIPreviewInteractionDelegate处理3D触摸的详细信息，因为本章是关于创建动画的。如果您想了解有关UIPreviewInteractionDelegate的更多信息，请查看我们的关于raywenderlich.com的iOS 10 by Tutorials书籍。
-
-打开`WidgetView.swift`并在WidgetView上找到符合`UIPreviewInteractionDelegate`的扩展。这些是当用户按下窗口小部件视图时UIKit调用的委托方法。
-为了让您开始开发动画本身，UIPreviewInteractionDelegate方法已经连接到LockScreenViewController上调用相关方法。
+为了让您开始开发动画本身，`UIPreviewInteractionDelegate`方法已经连接到LockScreenViewController上调用相关方法。
 WidgetView中的代码如下：
 
-- 3D触摸开始时调用LockScreenViewController.startPreview（for :)。
+- 3D Touch开始时调用`LockScreenViewController.startPreview(for:)`。
 
-- 当用户按下更硬（或更柔和）时，反复调用LockScreenViewController.updatePreview（百分比:)。
+- 当用户按下的过程中，可能更硬（或更柔和）时，反复调用`LockScreenViewController.updatePreview(percent:)`。
 
-- 当peek交互成功完成时，调用LockScreenViewController.finishPreview（）。
+- 当peek交互成功完成时，调用`LockScreenViewController.finishPreview()`。
 
-- 最后，如果用户在未完成预览手势的情况下抬起手指，则调用LockScreenViewController.cancelPreview（）。
+- 最后，如果用户在未完成预览手势的情况下抬起手指，则调用`LockScreenViewController.cancelPreview()`。
 
-不用多说了，让我们来编码吧！
+
 
 在`LockScreenViewController`中添加这三个属性，您需要这些属性来创建窥视交互：
 
@@ -827,17 +838,19 @@ var previewAnimator: UIViewPropertyAnimator?
  `previewView`  图标的快照视图，动画期间暂时使用它。
 `previewAnimator`  将成为驱动预览动画的交互式动画师。
 
-再添加一个属性以保持模糊效果以显示图标框（如上面的屏幕截图所示）：
+
+
+再添加一个属性以保持模糊效果以显示图标框：
 
 ```swift
 let previewEffectView = IconEffectView(blur: .extraLight)
 ```
 
-`IconEffectView`是自定义`UIVisualEffectView`的子类。 这是一个包含单个标签的简单模糊视图，使用它来模拟从按下的图标弹出的菜单：
+`IconEffectView`是自定义的`UIVisualEffectView`的子类，它包含单个标签的简单模糊视图，使用它来模拟从按下的图标弹出的菜单：
 
 ![image-20181219112216359](/Users/andyron/Library/Application Support/typora-user-images/image-20181219112216359.png)
 
-在`LockScreenViewController`遵守`WidgetsOwnerProtocol`协议的扩展中插入一个新方法：
+在`LockScreenViewController`遵守`WidgetsOwnerProtocol`协议的扩展中，实现`startPreview(for:)`方法：
 
 ```swift
 func startPreview(for forView: UIView) {
@@ -849,14 +862,19 @@ func startPreview(for forView: UIView) {
 
 `WidgetsOwnerProtocol`协议是一个自定义协议。
 
-如前所述，只要用户开始按下图标，WidgetView就会调用`startPreview(for:)`。 forView参数是用户开始手势的集合单元格图像。
-
-首先删除任何现有的previewView视图，以防万一在屏幕上留下文物。 然后，您可以创建集合视图图标的快照，最后将其添加到模糊效果视图上方的屏幕上。
-您可以立即运行该应用程序并开始按下图标。 您将在左上角看到图标弹出窗口的副本！
+只要用户开始按下图标，`WidgetView`就会调用`startPreview(for:)`。 参数`for`是用户开始手势的集合单元格图像。
 
 
 
-当然，图标并未覆盖现有图标，因为您尚未设置其位置。 让我们继续构建动画：
+首先删除任何现有的`previewView`视图，以防万一在屏幕上留下之前的视图。 然后，您可以创建集合视图图标的快照，最后将其添加到模糊效果视图上方的屏幕上。
+
+运行，按压图标。发现图标出现在左上角！😰
+
+![](https://ws3.sinaimg.cn/large/006tNc79gy1fyupp9utvjg309o0ag0tk.gif)
+
+
+
+因为尚未设置其位置。 继续添加：
 
 ```swift
 previewView?.frame = forView.convert(forView.bounds, to: view)
@@ -864,8 +882,9 @@ startFrame = previewView?.frame
 addEffectView(below: previewView!)
 ```
 
-您在图标副本上设置了正确的位置，以便它完全覆盖现有图标。 然后存储该起始位置和大小以供将来在startFrame中引用。 最后，调用addEffectView（下面:)来添加图标快照下方的模糊框。
-使用下面的代码片段将addEffectView（下面:)的实现添加到LockScreenViewController，以在图标快照下面插入效果：
+现在图标副本位置正确了，完全覆盖在原有图标上。 `startFrame`用来存储起始`frame`，以供之后使用。
+
+ 函数`addEffectView(below:)`添加图标快照下方的模糊框。代码为：
 
 ```swift
 func addEffectView(below forView: UIView) {
@@ -878,8 +897,7 @@ func addEffectView(below forView: UIView) {
 
 
 
-这样就完成了动画的设置阶段。 恭喜你通过！
-接下来切换到AnimatorFactory.swift以创建动画本身。 将以下方法添加到AnimatorFactory：
+下面创建动画本身，在`AnimatorFactory`中添加类方法：
 
 ```swift
 static func grow(view: UIVisualEffectView, blurView: UIVisualEffectView) -> UIViewPropertyAnimator {
@@ -893,17 +911,9 @@ static func grow(view: UIVisualEffectView, blurView: UIVisualEffectView) -> UIVi
 }
 ```
 
+两个参数，`view`是动画视图，`blurView` 是动画的模糊背景。
 
-
-您的新工厂方法有两个参数：
-`view`：动画视图
-`blurView` ：将在主动画旁边设置动画的模糊背景。
-
-然后执行以下操作：
-首先，它通过淡出视图内容（这是标记“Customize Actions ...”）并重置视图上的变换来基本化视图的当前状态。
-然后创建一个新的动画师，持续时间为0.5秒，并具有易于进入的时间曲线。
-
-现在，在线返回动画师之前，您可以为此动画师添加动画和完成。 为此，请插入以下内容：
+在返回动画师之前，为动画师添加动画和完成闭包：
 
 ```swift
 animator.addAnimations {
@@ -916,24 +926,15 @@ animator.addCompletion { (_) in
 }
 ```
 
+动画代码为`blurView`创建了模糊过渡，为`view`创建一个普通的转换。
 
-
-1.在此处添加的动画中，在模糊视图上设置效果属性将创建一个很好的模糊过渡。您已经在前面的章节中完成了这一点，但这次模糊将以交互方式发生，具体取决于用户按下屏幕的难度。最后，通过简单地调整其变换属性，可以在图标框上放大模糊。
-2.完成方法显式设置模糊视图的最终状态。这些带有UIViewPropertyAnimator的交互式动画有时会有些错误，所以只要你的动画完成，UIKit就会调用你的完成，其中的代码将确保你的UI处于你想要的状态。
-
-你几乎准备好了你的成长动画。当用户按下图标时，您只需要以交互方式擦洗它。
-
-返回LockScreenViewController.swift并将以下内容追加到startPreview（）：
+之后，在`LockScreenViewController.swift`的`startPreview()`中完成调用：
 
 ```swift
 previewAnimator = AnimatorFactory.grow(view: previewEffectView, blurView: blurView)
 ```
 
-
-
-请注意，与前几章不同，您可以创建和配置动画师，但是您不会启动动画。这一次，您将基于3D触摸输入以交互方式驱动动画进度。
-
-为了完成动画，请实现updatePreview（percent :)方法。这是WidgetView将使用当前触摸力重复调用的一个：
+现在运行，还没有效果，还需要实现`updatePreview(percent:)`方法：
 
 ```swift
 func updatePreview(percent: CGFloat) {
@@ -941,20 +942,18 @@ func updatePreview(percent: CGFloat) {
 }
 ```
 
-要理解的重要方面是限制fractionComplete在0.01和0.99范围内。如果将fractionComplete设置为0.0或1.0，则动画师将完成，您不希望在updatePreview中发生这种情况。您将从指定的方法完成或取消动画。
-您现在可以尝试交互式动画！
-运行应用程序，然后轻轻按下其中一个图标。当您开始按下时，您将看到模糊框架开始“生长”图标。模糊效果在背景中显得微妙：
+当`WidgetView`被按压时，上面个方法会被重复调用。`fractionComplete`在0.01和0.99范围内，因为我不希望在动画才这段结束，我另外指定的方法完成或取消动画。
 
-当你更加努力地按压时，框架会不断增长，模糊变得更加突出：
+运行，效果（放慢）：
 
-一旦您施加足够的力来完成预览手势，您将感受到手指下的触觉反馈，动画将停止在此状态。
+![ScreenRecording_01-04-2019 18-29-21.2019-01-04 18_40_04](/Users/andyron/Downloads/ScreenRecording_01-04-2019 18-29-21.2019-01-04 18_40_04.gif)
 
-为什么动画会停止？不，这不是你的错 - 窥视手势完成，一旦它这样做，它就会停止发送更新;也就是说，它停止调用updatePreview（percent :)方法。
-接下来，您将实现取消或完成交互的方法。
+
 
 你会（惊喜！）需要更多的动画师。 打开AnimatorFactory.swift并添加一个动画师，它可以解除你的“成长”动画师所做的一切。
 您需要此动画师的一种情况是用户取消手势。 当您需要清理UI时，另一个是成功交互的最后阶段。
-添加新工厂方法：
+
+在`AnimatorFactory`中添加方法：
 
 ```swift
 static func reset(frame: CGRect, view: UIVisualEffectView, blurView: UIVisualEffectView) -> UIViewPropertyAnimator {
@@ -969,10 +968,9 @@ static func reset(frame: CGRect, view: UIVisualEffectView, blurView: UIVisualEff
 }
 ```
 
+此方法的三个参数分别是原始动画的起始帧，动画视图和背景模糊视图。 动画块将重置交互开始之前状态中的所有属性。
 
-
-此方法包含原始动画的起始帧，动画视图和背景模糊视图。 动画块将重置交互开始之前状态中的所有属性。
-切换回LockScreenViewController.swift并在WidgetsOwnerProtocol扩展中添加一个新方法：
+在`LockScreenViewController.swift`中，实现`WidgetsOwnerProtocol`协议的另一个方法：
 
 ```swift
 func cancelPreview() {
@@ -983,31 +981,36 @@ func cancelPreview() {
 }
 ```
 
+`cancelPreview()`是`WidgetView`被按压后，突然抬起手指时调用的方法，取消正在进行的手势。
 
 
-这是WidgetView将在用户突然抬起手指时调用的方法，或者如果FaceTime调用在屏幕上弹出，并取消正在进行的手势。
-到目前为止，你还没有开始你的动画师。 您一直在重复设置fractionComplete，这会以交互方式驱动动画。
-但是，一旦用户取消交互，您就无法继续以交互方式驱动动画，因为您没有更多输入。 相反，通过将isReversed设置为true并调用startAnimation（），可以将动画播放到其初始状态。 现在这是`UIView.animate(withDuration: ...)`无法做到的事情！
 
-再试一次互动。按下动画的一半，然后开始测试cancelPreview（）。
+
+
+
+
+到目前为止，你还没有开始你的动画师。 您一直在重复设置`fractionComplete`，这会以交互方式驱动动画。
+但是，一旦用户取消交互，您就无法继续以交互方式驱动动画，因为您没有更多输入。 相反，通过将`isReversed`设置为`true`并调用`startAnimation()`，可以将动画播放到其初始状态。 现在这是`UIView.animate(withDuration: ...)`无法做到的事情！
+
+再试一次互动。按下动画的一半，然后开始测试`cancelPreview()`。
+
+
 
 当您抬起手指时动画会正确播放，但最终黑暗模糊会突然重新出现。
 
 这个问题植根于你的成长动画师的代码。切换回AnimatorFactory.swift并查看grow中的代码（view：UIVisualEffectView，blurView：UIVisualEffectView） - 更具体地说，这部分：
 
 ```swift
-    animator.addCompletion { (_) in
-      blurView.effect = UIBlurEffect(style: .dark)
-    }
+animator.addCompletion { (_) in
+	blurView.effect = UIBlurEffect(style: .dark)
+}
 ```
 
+动画可以向前或向后播放，需要在完成闭包中处理。
 
+`addCompletion()` 的闭包的参数用`_`省略掉了，它其实是一个枚举类型`UIViewAnimatingPosition`，表示动画当前进行的情况。它的值可有三个，可以是`.start`，`.end`或`.current`。
 
-既然动画可以向前或向后播放，你需要在完成块中处理这个问题。
-addCompletion（）的闭包所采用的参数是UIViewAnimatingPosition类型。它的值可以是.start，.end或.current。
-如果您的动画自然完成，或者以其他方式达到其结束状态，您将在完成闭包中获得.end值。如果您反转动画，它将在.start位置完成。最后，如果你在中途停止动画并在那里完成，你的完成块将获得.current值。
-
-“因此，要处理完成或取消预览手势的可能性，请删除现有的完成块并将其替换为：
+将完成闭包替代为：
 
 ```swift
 animator.addCompletion { (position) in
@@ -1022,13 +1025,14 @@ animator.addCompletion { (position) in
 }
 ```
 
+如果动画被返回，则删除模糊效果。 如果成功完成，则明确将效果调整为暗模糊效果。
 
 
-如果动画被反转，则删除模糊效果。 如果成功完成，则明确将效果调整为暗模糊。
-尝试几次调整动画; 确保一切按预期进行。 它应该主要是这样做的。
-现在有一个新问题。 如果您取消某个图标上的按键，则无法再按下它！
-这是因为图标快照仍然位于原始图标上方，并且它会吞下所有触摸。 要解决该问题，您需要在重置动画制作完成后立即删除快照。
-让我们将这个代码添加到LockScreenViewController.swift中的cancelPreview（），就在previewAnimator.startAnimation（）下面：
+
+现在有一个新问题。 *如果取消对某个图标上的按压，则无法再按下它！*
+这是因为图标快照仍然位于原始图标上方，挡住按压手势操作。 要解决该问题，值需要在重置动画完成后立即删除快照。
+
+在`LockScreenViewController.swift`的`cancelPreview()`中继续添加：
 
 ```swift
 previewAnimator.addCompletion { (position) in
@@ -1042,9 +1046,10 @@ previewAnimator.addCompletion { (position) in
 }
 ```
 
-请记住，对addCompletion（_ :)的调用不会替换现有的完成块，而是添加第二个。
-目标是检查动画是否已被反转; 如果是这样，请从视图层次结构中删除快照和图标框。 这就是为什么你感兴趣的唯一案例是当职位是.start。
-再次尝试该应用程序，您将看到取消手势后图标再次交互。万岁！ 你快到了。
+**注意：**，`addCompletion(_:)`可以调用多次，不会被下一个替代。
+
+
+
 让我们再添加一个动画师来显示图标菜单。 切换到AnimatorFactory.swift并添加到它：
 
 ```swift
@@ -1062,14 +1067,17 @@ static func complete(view: UIVisualEffectView) -> UIViewPropertyAnimator {
 ```
 
 这一次你创建了一个简单的弹簧动画师。 对于动画师，您可以执行以下操作：
-淡入“自定义操作”菜单项。
-重置转换。
-将视图框架直接设置为图标正上方的位置。
+
+- 淡入“自定义操作”菜单项。
+
+- 重置转换。
+- 将视图框架直接设置为图标正上方的位置。
 
 菜单的位置根据用户按下的图标而变化。
-您将水平位置设置为view.frame.minX  -  view.frame.minX / 2.5，如果图标位于屏幕左侧，则显示右侧菜单，如果图标位于左侧，则显示左侧菜单在屏幕的右侧。请参阅以下差异：
 
+您将水平位置设置为 `view.frame.minX - view.frame.minX/2.5`，如果图标位于屏幕左侧，则显示右侧菜单，如果图标位于左侧，则显示左侧菜单在屏幕的右侧。请参阅以下差异：
 
+![image-20190102115412511](/Users/andyron/Library/Application Support/typora-user-images/image-20190102115412511.png)
 
 动画师准备好了，所以打开LockScreenViewController.swift并在WidgetsOwnerProtocol扩展中添加最后一个必需的方法：
 
@@ -1085,8 +1093,10 @@ func finishPreview() {
 ```
 
 当您感觉到触觉反馈时，用户按下3D触摸手势时会调用finishPreview（）。
-1.stopAnimation（_ :)停止当前在屏幕上运行的动画，并根据您传入的布尔参数有两种不同的行为。
-2.当你调用stopAnimation（false）时，你将动画师置于停止状态。等待你稍后再调用finishAnimation（at :)。如果你调用stopAnimations（true），这将清除所有动画并将动画师置于非活动状态而不调用你的完成块。使用此选项可完全取消动画制作者的当前动画。
+
+`stopAnimation(_:)`是停止当前在屏幕上运行的动画。参数为`false`，动画师状态为`stopped`；参数为`true`，动画师状态为`inactive`并清除所有动画，而且不调用完成闭包。
+
+
 
 
 
@@ -1095,10 +1105,14 @@ func finishPreview() {
 此手势不再需要previewAnimator，因此您可以将其删除。
 
 您可以使用以下方法之一调用finishAnimation（at :)：
-start：将动画重置为初始状态。
-current：从动画的当前进度更新视图的属性并完成。
 
-调用finishAnimation（at :)后，您的动画师处于非活动状态。
+`start`：将动画重置为初始状态。
+`current`：从动画的当前进度更新视图的属性并完成。
+
+
+
+调用`finishAnimation(at:)`后，您的动画师处于`inactive`。
+
 回到Widgets项目。由于你摆脱了预览动画师，你可以运行完整的动画师来显示菜单。将以下内容附加到finishPreview（）的末尾：
 
 ```swift
@@ -1107,20 +1121,17 @@ AnimatorFactory.complete(view: previewEffectView).startAnimation()
 
 
 
-这将完成效果。只要您运行应用程序并按下图标，您就会看到其菜单以交互方式弹出：
+运行，按压图标：
 
-当动画结束时，菜单会很好地沿着图标定位：
-
-恭喜你 - 你应该轻拍一下。 这是一个复杂的发展效应！ 但要支撑自己 - 这只是一个开始！ 在下一章中，您将开始使用交互式视图控制器转换动画！
-同时，通过本章提供的挑战，您可以获得更多添加和重新使用动画制作者的经验，以及使用交互式关键帧动画！
+![image-20190102115643202](/Users/andyron/Library/Application Support/typora-user-images/image-20190102115643202.png)
 
 
 
-### 允许用户关闭菜单
+### 关闭模糊视图
 
-一旦用户看到显示菜单的完整动画，他们就无法对该应用程序执行任何其他操作。
-在此挑战中，如果用户点击模糊视图或菜单项，您将重置UI。 这将允许他们“关闭”菜单并进一步与应用程序进行交互。
-在finishPreview（）中添加以下代码以准备交互式模糊：
+目前，菜单弹出，模糊视图显示后，还没有回到原来视图的操作，下面添加这个操作。
+
+在`finishPreview()`中添加以下代码,以准备交互式模糊：
 
 ```swift
 blurView.effect = UIBlurEffect(style: .dark)
@@ -1128,39 +1139,31 @@ blurView.isUserInteractionEnabled = true
 blurView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissMenu)))
 ```
 
+先确保将模糊效果设置为`.dark`，然后模糊视图本身上启用用户交互，并未模糊视图添加点击手势操作，允许用户点击图标周围的任何位置用来关闭菜单。
 
-
-在上方，您确保将模糊效果设置为暗，并在模糊视图本身上启用用户交互。这将允许用户点击图标周围的任何位置以关闭菜单。最后，添加一个触摸识别器并将其连接到一个名为dismissMenu（）的方法。
-下一步 - 自己添加dismissMenu（）：
-使用AnimatorFactory.reset（frame：，view：，blurView :)动画来解散动画。
-将startFrame属性用于AnimatorFactory.reset的frame参数（frame：，view：，blurView :)。
-在启动动画师之前，添加一个完成块，从屏幕上删除previewEffectView和previewView。还禁用模糊视图上的用户交互性，以便它不会吞下任何其他触摸。
-最后，在viewDidLoad（）中，在previewEffectView上添加一个tap识别器，也连接到dismissMenu（）。这将允许用户点击自定义操作...以关闭菜单。
+`dismissMenu()`代码为：
 
 ```swift
-  @objc func dismissMenu() {
+@objc func dismissMenu() {
     let reset = AnimatorFactory.reset(frame: startFrame!, view: previewEffectView, blurView: blurView)
     reset.addCompletion { (_) in
-      self.previewEffectView.removeFromSuperview()
-      self.previewView?.removeFromSuperview()
-      self.blurView.isUserInteractionEnabled = false
-    }
+                         self.previewEffectView.removeFromSuperview()
+                         self.previewView?.removeFromSuperview()
+                         self.blurView.isUserInteractionEnabled = false
+                        }
     reset.startAnimation()
-  }
+}
 ```
-
-
-
-运行该应用程序并尝试打开并解除菜单几次。那不是很开心吗？
 
 
 
 ### 交互式关键帧动画
 
-在第20章中，您了解了向动画师添加关键帧动画是多么容易。 如果您有一个带关键帧的动画师，您仍然可以使用它来创建交互式动画。 您的用户可以来回擦洗关键帧。
+在[20-UIViewPropertyAnimator入门](#基础关键帧动画)学习了 用`UIViewPropertyAnimator`制作关键帧动画，现在再给关键帧动画添加交互式操作。
 
 为了尝试一下，你将为成长动画添加一个额外的元素 - 在用户按下图标时以交互方式擦洗的元素。
-打开AnimatorFactory.swift并找到增长中的位置`grow(view: UIVisualEffectView, blurView: UIVisualEffectView)  `，向动画师添加动画：
+
+删除`AnimatorFactory`的`grow()`方法中的代码：
 
 ```swift
 animator.addAnimations {
@@ -1169,9 +1172,7 @@ animator.addAnimations {
 }
 ```
 
-
-
-删除整个代码块并将其替换为：
+替换为：
 
 ```swift
 animator.addAnimations {
@@ -1190,16 +1191,10 @@ animator.addAnimations {
 }
 ```
 
+第一个关键帧运行您之前的相同动画。
+第二个关键帧是简单旋转，效果：
 
-
-您创建了一个包含两个关键帧的动画：
-第一个关键帧用于动画的总持续时间，并运行您之前的相同动画。
-第二个关键帧在总持续时间的后半部分踢，并略微旋转视图。
-动画中的新元素将有助于在用户完成手势时向用户提供反馈。 就在他们用力按压之前，他们会看到图标框架倾斜：
-
-这也将为显示菜单的完整动画添加一些趣味性：
-
-通过完整的交互和所有动画，您现在可以继续学习下一章，并尝试使用UIViewPropertyAnimator创建视图控制器转换。
+![ScreenRecording_01-04-2019 23-29-27.2019-01-04 23_32_31](/Users/andyron/Downloads/ScreenRecording_01-04-2019 23-29-27.2019-01-04 23_32_31.gif)
 
 
 

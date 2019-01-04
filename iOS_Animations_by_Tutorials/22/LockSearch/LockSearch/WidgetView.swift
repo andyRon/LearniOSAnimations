@@ -37,9 +37,9 @@ class WidgetView: UIView {
   }
 }
 
-//
-// MARK: - Peak delegate methods
-//
+
+// MARK: - UIPreviewInteractionDelegate
+// 当用户按下图标时的，一些代理方法
 extension WidgetView: UIPreviewInteractionDelegate {
   
   public func previewInteractionDidCancel(_ previewInteraction: UIPreviewInteraction) {
@@ -65,9 +65,9 @@ extension WidgetView: UIPreviewInteractionDelegate {
   }
 }
 
-//
+
 // MARK: - Collection View data source
-//
+
 extension WidgetView: UICollectionViewDataSource {
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return expanded ? 8 : 4

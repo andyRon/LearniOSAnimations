@@ -21,10 +21,13 @@ class LockScreenViewController: UIViewController {
 
   var settingsController: SettingsViewController!
   
+  // 跟踪动画的开始位置
   var startFrame: CGRect?
   var previewView: UIView?
+  // 驱动预览动画的交互式动画师
   var previewAnimator: UIViewPropertyAnimator?
   
+  // 模糊效果
   let previewEffectView = IconEffectView(blur: .extraLight)
 
   override func viewDidLoad() {
@@ -105,14 +108,14 @@ extension LockScreenViewController: WidgetsOwnerProtocol {
     previewView?.frame = forView.convert(forView.bounds, to: view)
     startFrame = previewView?.frame
     addEffectView(below: previewView!)
-    
+
     previewAnimator = AnimatorFactory.grow(view: previewEffectView, blurView: blurView)
   }
   
   func updatePreview(percent: CGFloat) {
     previewAnimator?.fractionComplete = max(0.01, min(0.99, percent))
   }
-  
+
   func cancelPreview() {
     if let previewAnimator = previewAnimator {
       previewAnimator.isReversed = true
@@ -120,7 +123,7 @@ extension LockScreenViewController: WidgetsOwnerProtocol {
       
       previewAnimator.addCompletion { (position) in
         switch position {
-        case .start:
+        case .start:  // 动画完成后立即删除快照，不要挡住原始图标
           self.previewView?.removeFromSuperview()
           self.previewEffectView.removeFromSuperview()
         default:
@@ -130,7 +133,7 @@ extension LockScreenViewController: WidgetsOwnerProtocol {
       
     }
   }
-  
+
   func finishPreview() {
     
     previewAnimator?.stopAnimation(false)

@@ -83,16 +83,16 @@ class AnimatorFactory {
 //    }
     animator.addAnimations {
       UIView.animateKeyframes(withDuration: 0.5, delay: 0.0, animations: {
-        
+
         UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1.0, animations: {
           blurView.effect = UIBlurEffect(style: .dark)
           view.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
         })
-        
+
         UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5, animations: {
           view.transform = view.transform.rotated(by: -.pi/8)
         })
-        
+
       })
     }
     
