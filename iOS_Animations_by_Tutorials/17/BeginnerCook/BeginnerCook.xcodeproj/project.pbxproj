@@ -109,7 +109,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0900;
-				ORGANIZATIONNAME = "Razeware LLC";
+				ORGANIZATIONNAME = "Andy Ron";
 				TargetAttributes = {
 					9CC38A461A04DC6A00000B57 = {
 						CreatedOnToolsVersion = 6.1;

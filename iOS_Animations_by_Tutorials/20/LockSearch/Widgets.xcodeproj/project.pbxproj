@@ -151,7 +151,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0800;
 				LastUpgradeCheck = 0900;
-				ORGANIZATIONNAME = "Underplot ltd";
+				ORGANIZATIONNAME = "Andy Ron";
 				TargetAttributes = {
 					9C9E23F11DAD251B004749FD = {
 						CreatedOnToolsVersion = 8.0;

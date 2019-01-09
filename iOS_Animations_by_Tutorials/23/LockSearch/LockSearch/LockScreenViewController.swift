@@ -73,9 +73,9 @@ class LockScreenViewController: UIViewController {
     
     settingsController = storyboard?.instantiateViewController(withIdentifier: "SettingsViewController") as! SettingsViewController
     settingsController.transitioningDelegate = self
-    settingsController.didDismiss = { [unowned self] in
-      self.toggleBlur(false)
-    }
+//    settingsController.didDismiss = { [unowned self] in
+//      self.toggleBlur(false)
+//    }
     present(settingsController, animated: true, completion: nil)
   }
   

@@ -22,16 +22,18 @@ class PresentTransition: UIPercentDrivenInteractiveTransition, UIViewControllerA
   }
   
   func transitionAnimator(using transitionContext: UIViewControllerContextTransitioning) -> UIViewImplicitlyAnimating {
+    // 为转场做准备
     let duration = transitionDuration(using: transitionContext)
-    
     let container = transitionContext.containerView
     let to = transitionContext.view(forKey: .to)!
     
     container.addSubview(to)
     
+    //
     to.transform = CGAffineTransform(scaleX: 1.33, y: 1.33).concatenating(CGAffineTransform(translationX: 0.0, y: 200))
     to.alpha = 0
     
+    // 添加动画师来运行转换
     let animator = UIViewPropertyAnimator(duration: duration, curve: .easeOut)
     
     animator.addAnimations({

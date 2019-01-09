@@ -1204,48 +1204,41 @@ animator.addAnimations {
 
 
 
-在完成第17章到第19章的过程中，您学习了如何创建自定义视图控制器转换。 你看到了它们的灵活性和强大性，所以你可能很想知道如何使用UIViewPropertyAnimator来创建它们。
+在[系统学习iOS动画之四：视图控制器的转场动画](#Section_IV.md)中，学习了如何创建自定义视图控制器转场。这个部分学习使用`UIViewPropertyAnimator`来自定义视图控制器转场。 你看到了它们的灵活性和强大性，所以你可能很想知道如何使用来创建它们。
 
-好消息 - 使用动画师进行过渡很容易，而且几乎没有惊喜。
-
-在本章中，您将查看构建自定义过渡动画并为Widgets项目创建静态和交互式过渡。
-
-完成本章后，您的用户将能够通过下拉窗口小部件表来显示设置视图控制器。
-
-如果您参与了上一章的挑战，请继续研究同一个项目; 如果您跳过了挑战，请打开本章提供的入门项目。
+本章的[开始项目](README.md#关于代码) 使用上一章节完成的项目。
 
 
 
 ### 静态视图控制器转场
 
-目前，当用户点击”编辑“按钮时，体验非常陈旧。 该按钮在当前按钮上显示一个新的视图控制器，只要您点击该第二个屏幕中的任何可用选项，它就会消失。
+现在，点击**”Edit“**按钮时，体验非常糟糕😰。 该按钮在当前按钮上显示一个新的视图控制器，只要您点击该第二个屏幕中的任何可用选项，它就会消失。
 让我们调高一点！
-创建一个新文件并将其命名为PresentTransition.swift。 将其默认内容替换为：
+
+创建一个新文件`PresentTransition.swift`。 将其默认内容替换为：
 
 ```swift
 import UIKit
 
 class PresentTransition: NSObject, UIViewControllerAnimatedTransitioning {
-  
-  func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-    return 0.75
-  }
-  
-  func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-    
-  }
+
+    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+        return 0.75
+    }
+
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+
+    }
 }
 ```
 
 
 
-您熟悉UIViewControllerAnimatedTransitioning协议，因此您应该熟悉这段代码。
+`UIViewControllerAnimatedTransitioning`协议已经在[系统学习iOS动画之四：视图控制器的转场动画](#Section_IV.md)中学过。
 
-> 注意：如果您跳过本书的View Controller Transitions部分，我建议您退一步，至少完成第17章“自定义演示控制器和设备方向动画”。
+将创建一个过渡动画，动画模糊图层并在其上移动新的视图控制器。
 
-在本章的这一部分中，您将创建一个过渡动画，动画模糊图层并在其上移动新的视图控制器。
-
-在已打开的同一文件中添加以下方法，为转换创建动画制作工具：
+在`PresentTransition`中添加一个新方法，为转换创建动画制作工具：
 
 ```swift
 func transitionAnimator(using transitionContext: UIViewControllerContextTransitioning) -> UIViewImplicitlyAnimating {
@@ -1258,8 +1251,9 @@ func transitionAnimator(using transitionContext: UIViewControllerContextTransiti
 }
 ```
 
-在上面的代码中，您为视图控制器转换做了所有必要的准备工作。 首先获取动画持续时间，然后获取目标视图控制器的视图，最后将此视图添加到过渡容器中。
-接下来，您可以设置动画并运行它。 将此代码添加到transitionAnimator（使用:)以准备过渡动画的UI：
+在上面的代码中，为视图控制器转场做了所有必要的准备工作。 首先获取动画持续时间，然后获取目标视图控制器的视图，最后将此视图添加到过渡容器中。
+
+接下来，您可以设置动画并运行它。 将下面代码添加到上面的方法`transitionAnimator(using:)`中：
 
 ```swift
 to.transform = CGAffineTransform(scaleX: 1.33, y: 1.33).concatenating(CGAffineTransform(translationX: 0.0, y: 200))
@@ -1267,7 +1261,8 @@ to.alpha = 0
 ```
 
 这会向上扩展并向下移动目标视图控制器的视图并将其淡出。 现在它已经准备好在屏幕上动画了。
-在to.alpha = 0之后添加动画师来运行转换：
+
+在`to.alpha = 0`之后添加动画师来运行转换：
 
 ```swift
 let animator = UIViewPropertyAnimator(duration: duration, curve: .easeOut)
@@ -1281,26 +1276,20 @@ animator.addAnimations({
 }, delayFactor: 0.5)
 ```
 
-“在此代码中，您将创建一个包含两个动画块的动画师：
-第一个动画将目标视图控制器的视图移动到其最终位置。
-第二个动画将内容从0到1的alpha中淡化。
-与前面的章节一样，您永远不应忘记完成转换。 向动画师添加完成：
+动画师中有两个动画：将目标视图控制器的视图移动到最终位置和淡入。
+
+最后添加完成闭包：
 
 ```swift
-    animator.addCompletion { (_) in
-      transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-    }
-    
-    return animator
+animator.addCompletion { (_) in                    			  
+  transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+}
+
+return animator
 
 ```
 
-
-
-
-动画完成后，让UIKit知道您已完成转换。 在您的方法结束时，只需返回动画师：
-
-现在您已经拥有了动画工厂方法，您还必须使用它。 向上滚动到animateTransition（使用:)并插入以下代码：
+在`animateTransition(using:)`中调用上面的方法`transitionAnimator(using:)`：
 
 ```swift
 transitionAnimator(using: transitionContext).startAnimation()
@@ -1308,16 +1297,17 @@ transitionAnimator(using: transitionContext).startAnimation()
 
 
 
-这将获取一个准备好的动画师，并通过startAnimation（）开始。
+那应该暂时做到。 让我们将视图控制器连接到过渡动画师并尝试动画。
 
-“那应该暂时做到。 让我们将视图控制器连接到过渡动画师并尝试动画。
-打开LockScreenViewController并定义以下常量属性：
+在`LockScreenViewController`中定义常量属性：
 
 ```swift
 let presentTransition = PresentTransition()
 ```
 
-当UIKit要求您提供演示动画和交互控制器时，您将向UIKit提供此对象。 为此，请向LockScreenViewController添加UIViewControllerTransitioningDelegate一致性：
+当UIKit要求您提供演示动画和交互控制器时，您将向UIKit提供此对象。 
+
+让`LockScreenViewController`遵守`UIViewControllerTransitioningDelegate`协议：
 
 ```swift
 // MARK: - UIViewControllerTransitioningDelegate
@@ -1329,9 +1319,11 @@ extension LockScreenViewController: UIViewControllerTransitioningDelegate {
 }
 ```
 
-animationController（forPresented：presents：source :)方法是您有机会告诉UIKit您计划生成新的自定义视图控制器转换的地方。 您从该方法返回presentTransition，UIKit使用它来跟随动画。
-现在进行最后一步 - 您需要将LockScreenViewController设置为演示文稿委托。 滚动到presentSettings（_ :)，然后在调用present（_：animated：completion :)之前将self设置为转换委托。
-完成的代码应如下所示：
+`UIViewControllerTransitioningDelegate`协议在 [系统学习iOS动画之四：视图控制器的转场动画](#Section_IV.md) 中都学习过，可查看。
+
+`animationController(forPresented:presents:source:)`方法是告诉UIKit，我想自定义视图控制器转场。
+
+点击**Edit**按钮的操作，在`presentSettings(_:)`中添加代码：
 
 ```swift
 settingsController = storyboard?.instantiateViewController(withIdentifier: "SettingsViewController") as! SettingsViewController
@@ -1358,16 +1350,15 @@ present(settingsController, animated: true, completion: nil)
 看起来这种过渡可以用更多的动画来做。 例如，淡化小部件顶部的模糊，以便用户可以更好地看到顶部的模态视图控制器，这不是很好吗？
 既然你已经是专业人士，那就让我们做一些新的事 - “动画注入”！ （无需查看该术语 - 我刚刚为本章提出了这个问题）。
 您将向动画师添加一个新属性，允许您将任何自定义动画注入过渡。 这将允许您使用相同的过渡类来生成略有不同的动画。
-切换到PresentTransition.swift并添加两个新属性：
+
+在`PresentTransition`中添加两个新属性：
 
 ```swift
 var auxAnimations: (() -> Void)?
 var auxAnimationsCancel: (() -> Void)?
 ```
 
-
-
-在返回之前将其附加到transitionAnimator（使用:)的底部：
+在`transitionAnimator(using:)`方法中动画师返回之前添加：
 
 ```swift
 if let auxAnimations = auxAnimations {
@@ -1375,9 +1366,8 @@ if let auxAnimations = auxAnimations {
 }
 ```
 
-
-
 如果您已向对象添加任意任意动画块，则会将其添加到动画制作者动画的其余部分。 取消块允许您在取消转换时执行可能需要的任何展开。
+
 这允许您根据具体情况在转换中添加自定义动画。 例如，让我们为当前转换添加模糊动画。
 打开LockScreenViewController并在presentSettings（）的顶部插入以下内容：
 
