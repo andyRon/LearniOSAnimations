@@ -13,6 +13,10 @@ class PresentTransition: UIPercentDrivenInteractiveTransition, UIViewControllerA
   var auxAnimations: (() -> Void)?
   var auxAnimationsCancel: (() -> Void)?
   
+  var context: UIViewControllerContextTransitioning?
+  var animator: UIViewPropertyAnimator?
+  
+  //MARK: - UIViewControllerAnimatedTransitioning
   func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
     return 0.75
   }
@@ -44,18 +48,43 @@ class PresentTransition: UIPercentDrivenInteractiveTransition, UIViewControllerA
       to.alpha = 1.0
     }, delayFactor: 0.5)
     
-    animator.addCompletion { (_) in
-      transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+//    animator.addCompletion { (_) in
+//      transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+//    }
+    animator.addCompletion { (position) in
+      switch position {
+      case .end:
+        transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+      default:
+        transitionContext.completeTransition(false)
+        self.auxAnimationsCancel?()
+      }
     }
     
     if let auxAnimations = auxAnimations {
       animator.addAnimations(auxAnimations)
     }
     
+    self.animator = animator
+    self.context = transitionContext
+    
+    animator.addCompletion { [unowned self] _  in
+      self.animator = nil
+      self.context = nil
+    }
+    
+    animator.isUserInteractionEnabled = true
+    
     return animator
   }
-  
+  // 可中断动画师
   func interruptibleAnimator(using transitionContext: UIViewControllerContextTransitioning) -> UIViewImplicitlyAnimating {
     return transitionAnimator(using: transitionContext)
+  }
+  
+  func interruptTransition() {
+    guard let context = context else { return }
+    context.pauseInteractiveTransition()
+    pause()
   }
 }

@@ -1238,7 +1238,7 @@ class PresentTransition: NSObject, UIViewControllerAnimatedTransitioning {
 
 将创建一个过渡动画，动画模糊图层并在其上移动新的视图控制器。
 
-在`PresentTransition`中添加一个新方法，为转换创建动画制作工具：
+在`PresentTransition`中添加一个新方法，为转场创建动画制作工具：
 
 ```swift
 func transitionAnimator(using transitionContext: UIViewControllerContextTransitioning) -> UIViewImplicitlyAnimating {
@@ -1251,16 +1251,16 @@ func transitionAnimator(using transitionContext: UIViewControllerContextTransiti
 }
 ```
 
-在上面的代码中，为视图控制器转场做了所有必要的准备工作。 首先获取动画持续时间，然后获取目标视图控制器的视图，最后将此视图添加到过渡容器中。
+在上面的代码中，为视图控制器转场做了必要的准备工作。 首先获取动画持续时间，然后获取目标视图控制器的视图，最后将此视图添加到过渡容器中。
 
-接下来，您可以设置动画并运行它。 将下面代码添加到上面的方法`transitionAnimator(using:)`中：
+接下来，可以设置动画并运行它。 将下面代码添加到上面的方法`transitionAnimator(using:)`中：
 
 ```swift
 to.transform = CGAffineTransform(scaleX: 1.33, y: 1.33).concatenating(CGAffineTransform(translationX: 0.0, y: 200))
 to.alpha = 0
 ```
 
-这会向上扩展并向下移动目标视图控制器的视图并将其淡出。 现在它已经准备好在屏幕上动画了。
+这会向上伸展，然后向下移动目标视图控制器的视图，最后将其淡出。 现在它已经准备好在屏幕上动画了。
 
 在`to.alpha = 0`之后添加动画师来运行转换：
 
@@ -1319,11 +1319,11 @@ extension LockScreenViewController: UIViewControllerTransitioningDelegate {
 }
 ```
 
-`UIViewControllerTransitioningDelegate`协议在 [系统学习iOS动画之四：视图控制器的转场动画](#Section_IV.md) 中都学习过，可查看。
+`UIViewControllerTransitioningDelegate`协议在 [系统学习iOS动画之四：视图控制器的转场动画](#Section_IV.md) 中学习过，可查看。
 
 `animationController(forPresented:presents:source:)`方法是告诉UIKit，我想自定义视图控制器转场。
 
-点击**Edit**按钮的操作，在`presentSettings(_:)`中添加代码：
+在`LockScreenViewController`中，找到点击**Edit**按钮的Action`presentSettings(_:)`，添加代码：
 
 ```swift
 settingsController = storyboard?.instantiateViewController(withIdentifier: "SettingsViewController") as! SettingsViewController
@@ -1331,15 +1331,14 @@ settingsController.transitioningDelegate = self
 present(settingsController, animated: true, completion: nil)
 ```
 
-这应该是它！ 运行应用程序并点击“编辑”按钮尝试转换。
-最初的结果并非令人兴奋（至少还没有！）。 设置控制器似乎有点偏：
+运行，点击**Edit**按钮，设置控制器似乎有点偏：
 
 ![IMG_1035E53ABC83-1](https://ws3.sinaimg.cn/large/006tNbRwgy1fyc6z0vsfjj309q07cwfz.jpg)
 
 你会想要处理一些粗糙的边缘，但你的工作几乎已经完成。
-要纠正的第一件事是目标视图控制器不需要纯色背景。 打开Main.storyboard（它在Assets项目文件夹中）并选择设置视图控制器视图。
+要纠正的第一件事是目标视图控制器不需要纯色背景。 打开`Main.storyboard`（它在Assets项目文件夹中）并选择设置视图控制器视图。
 
-将视图的背景更改为清除颜色，您应该看到故事板反映了这样的变化：
+将视图的背景更改为**Clear Color**
 
 
 
@@ -1369,23 +1368,23 @@ if let auxAnimations = auxAnimations {
 如果您已向对象添加任意任意动画块，则会将其添加到动画制作者动画的其余部分。 取消块允许您在取消转换时执行可能需要的任何展开。
 
 这允许您根据具体情况在转换中添加自定义动画。 例如，让我们为当前转换添加模糊动画。
-打开LockScreenViewController并在presentSettings（）的顶部插入以下内容：
+打开`LockScreenViewController`并在presentSettings（）的顶部插入以下内容：
 
 ```swift
 presentTransition.auxAnimations = blurAnimations(true)
 ```
 
-
-
 这会将你在很多章节前创建的模糊动画添加到视图控制器转换中！
 再试一次过渡，看看这一行如何改变它：
+
+![image-20190111123452428](/Users/andyron/Library/Application Support/typora-user-images/image-20190111123452428.png)
 
 重复使用动画简直太神奇了吗？
 
 
 
-现在，当用户解除显示的控制器时，您还需要隐藏模糊。 SettingsViewController已经有一个didDismiss属性，所以你只需要将该属性设置为一个动画模糊的块。
-在settingsController出现之前的倒数第二行的presentSettings（_ :)中，插入：
+现在，当用户解除显示的控制器时，您还需要隐藏模糊。`SettingsViewController`已经有一个`didDismiss`属性，所以你只需要将该属性设置为一个动画模糊的块。
+在`settingsController`出现之前的倒数第二行的`presentSettings(_:)`中，插入：
 
 ```swift
     settingsController.didDismiss = { [unowned self] in
@@ -1404,33 +1403,39 @@ presentTransition.auxAnimations = blurAnimations(true)
 ### 交互视图控制器转场
 
 作为本书UIViewPropertyAnimator部分的最后一个主题，您将创建一个交互式视图控制器转换。 您的用户将通过下拉窗口小部件表来推动转换。
-首先，让我们使用强大的UIPercentDrivenInteractionTransition类来启用视图控制器转换的交互性。
-打开PresentTransition.swift并替换：
 
+首先，让我们使用强大的`UIPercentDrivenInteractionTransition`类来启用视图控制器转换的交互性。
+打开`PresentTransition.swift`把下面：
 
+```swift
+class PresentTransition: NSObject, UIViewControllerAnimatedTransitioning
+```
 
-有：
+替换为：
 
 ```swift
 class PresentTransition: UIPercentDrivenInteractiveTransition, UIViewControllerAnimatedTransitioning {
 ```
 
+`UIPercentDrivenInteractiveTransition`是一个定义基于“百分比”的转换方法的类，例如：
+
+`update(_:)` 以回退过渡。
+`cancel() ` 取消视图控制器转换。
+`finish()`  播放转换直到完成。
 
 
-UIPercentDrivenInteractiveTransition是一个定义基于“百分比”的转换方法的类，例如：
-更新（_ :)以回退过渡。
-cancel（）取消视图控制器转换。
-finish（）播放转换直到完成。
 
-您可能还记得第19章“交互式UINavigationController过渡”中的这些内容，但您没有看到一些专门用于使用UIViewPropertyAnimator的高级API。
+您可能还记得[19-交互式导航控制器转场](Section_IV.md#19-交互式导航控制器转场)中的这些内容，但您没有看到一些专门用于使用UIViewPropertyAnimator的高级API。
 
 为使动画过渡更容易实现的一些新功能包括：
 
-timingCurve：如果您的用户以交互方式驱动转换，并且在需要播放转换时直到结束，您可以通过设置此属性为动画提供自定义时序曲线。 这可以是立方体，弹簧或其他自定义时序提供者。
-wantsInteractiveStart：默认情况下这是真的，因为您可能主要将此类用于交互式转换。 但是，如果将该属性设置为false，则转换将以非交互方式启动，您可以暂停它并稍后转到交互模式。
-pause（）：调用此方法暂停非交互式转换并切换到交互模式。
+`timingCurve`：如果您的用户以交互方式驱动转换，并且在需要播放转换时直到结束，您可以通过设置此属性为动画提供自定义时序曲线。 这可以是立方体，弹簧或其他自定义时序提供者。
 
-向PresentTransition添加一个新方法：
+`wantsInteractiveStart`：默认情况下这是真的，因为您可能主要将此类用于交互式转换。 但是，如果将该属性设置为false，则转换将以非交互方式启动，您可以暂停它并稍后转到交互模式。
+
+`pause()` ：调用此方法暂停非交互式转换并切换到交互模式。
+
+向`PresentTransition`添加一个新方法：
 
 ```swift
   func interruptibleAnimator(using transitionContext: UIViewControllerContextTransitioning) -> UIViewImplicitlyAnimating {
@@ -1440,39 +1445,67 @@ pause（）：调用此方法暂停非交互式转换并切换到交互模式。
 
 
 
-这是UIViewControllerAnimatedTransitioning协议上的一个方法。 它允许您向UIKit提供可中断的动画师，它将用于您的过渡动画。
+这是`UIViewControllerAnimatedTransitioning`协议上的一个方法。 它允许您向UIKit提供可中断的动画师，它将用于您的过渡动画。
 
-您的过渡动画师课程现在有两种不同的行为：
+您的过渡动画师类现在有两种不同的行为：
 
-1.如果以非交互方式使用它（当用户按下编辑按钮时），UIKit将调用animateTransition（使用:)来设置转换动画。
-2.如果以交互方式使用它，UIKit将调用interruptibleAnimator（使用:)，获取动画师，并使用它来推动这种转换。
+1. 如果以非交互方式使用它（当用户按下编辑按钮时），UIKit将调用`animateTransition(using:)`来设置转换动画。
+2. 如果以交互方式使用它，UIKit将调用`interruptibleAnimator(using:)`，获取动画师，并使用它来推动这种转场。
+
+![image-20190111124837379](/Users/andyron/Library/Application Support/typora-user-images/image-20190111124837379.png)
 
 
 
 切换到LockScreenViewController.swift并在UIViewControllerTransitioningDelegate扩展中添加这个新方法：
 
-
-
-
+```swift
+  func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+    return presentTransition
+  }
+```
 
 这将让UIKit知道您在视图控制器演示期间计划一些有趣的交互性。
+
 接下来，仍然在您打开的文件中，添加两个新属性; 您将需要它们来跟踪用户的手势：
 
+```swift
+  var isDragging = false
+  var isPresentingSettings = false
+```
 
 
-当用户拉下表时，你会将isDragging标志设置为true，一旦用户拉得足够远，你将依次将isPresentingSettings设置为true。
 
-“要跟踪用户拉出表视图的距离，您需要实现一些滚动视图委托方法。 添加新扩展并插入第一个方法：
+当用户拉下表时，你会将`isDragging`标志设置为`true`，一旦用户拉得足够远，你将依次将`isPresentingSettings`设置为`true`。
 
+要跟踪用户拉出表视图的距离，您需要实现一些滚动视图委托方法。 添加新扩展并插入第一个方法：
+
+```swift
+func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+    isDragging = true
+}
+```
 
 
 
 这可能看起来有点多余，因为UITableView已经有一个属性来跟踪它当前是否被拖动，但这次你要自己做一些自定义跟踪。
 接下来添加委托方法以跟踪用户的进度：
 
+```swift
+func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    guard isDragging else { return }
+
+    if !isPresentingSettings && scrollView.contentOffset.y < -30 {
+        isPresentingSettings = true
+        presentTransition.wantsInteractiveStart = true
+        presentSettings()
+        return
+    }
+}
+```
 
 
-首先，检查是否启用了isDragging标志; 你不想跟踪表视图的偏移量。 然后检查用户是否已经拉得足够远以开始转换。
+
+首先，检查是否启用了`isDragging`标志; 你不想跟踪表视图的偏移量。 然后检查用户是否已经拉得足够远以开始转换。
 如果两个条件都为真，则准备转换设置。 将isPresentingSettings设置为true，将过渡动画设置为交互模式，最后调用presentSettings（）。
 presentSettings（）负责在交互模式下启动视图控制器转换，因为您事先将wantsInteractiveStart设置为true。
 
@@ -1480,23 +1513,57 @@ presentSettings（）负责在交互模式下启动视图控制器转换，因�
 
 接下来，您需要添加代码以交互方式更新它。 将以下内容追加到scrollViewDidScroll（_ :)的末尾：
 
+```swift
+if isPresentingSettings {
+    let progess = max(0.0, min(1.0, ((-scrollView.contentOffset.y) - 30) / 90.0))
+    presentTransition.update(progess)
+}
+```
 
 
 
 您可以根据用户拉出表视图的距离计算0.0到1.0范围内的进度，并在过渡动画师上调用update（_ :)以将动画定位到当前进度。
 立即尝试过渡，当您向下拖动时，您将看到表格视图逐渐模糊。
 
+![2019-01-11 13-16-13.2019-01-11 13_22_39](/Users/andyron/myfield/temporary/backup image/iOS动画/2019-01-11 13-16-13.2019-01-11 13_22_39.gif)
+
 您还需要注意完成和取消过渡。 添加到与以前相同的扩展名：
 
+```swift
+func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+    let progress = max(0.0, min(1.0, ((-scrollView.contentOffset.y) - 30) / 90.0))
+
+    if progress > 0.5 {
+        presentTransition.finish()
+    } else {
+        presentTransition.cancel()
+    }
+
+    isPresentingSettings = false
+    isDragging = false
+}
+```
 
 
 
-“这段代码应该看起来很相似;它与您在第19章“交互式UINavigationController过渡”中使用的方法相同。如果用户已经超过距离的一半（您决定“足够远”），则认为转换成功并将动画播放到最后。如果用户未拖动超过一半的距离，则取消转换。无论哪种方式，您重置两个标志的值，并且转换的交互部分结束。
+这段代码应该看起来很相似;它与您在第19章“交互式UINavigationController过渡”中使用的方法相同。如果用户已经超过距离的一半（您决定“足够远”），则认为转换成功并将动画播放到最后。如果用户未拖动超过一半的距离，则取消转换。无论哪种方式，您重置两个标志的值，并且转换的交互部分结束。
 然而，这种转变尚未完成 - 在生产准备就绪之前，还有很多事情要做好准备。
+
+
+
 切换到PresentTransition.swift并找到transitionAnimator（使用:)。在完成块中，忽略该参数并始终使用相同的值调用completeTransition（_ :)。
 您可以通过检查动画师完成的位置并提供相关值来帮助UIKit。将现有的addCompletion（...）替换为：
 
-
+```swift
+    animator.addCompletion { (position) in
+      switch position {
+      case .end:
+        transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+      default:
+        transitionContext.completeTransition(false)
+      }
+    }
+```
 
 
 
@@ -1505,82 +1572,162 @@ presentSettings（）负责在交互模式下启动视图控制器转换，因�
 
 尝试上下摆动桌子，然后转换开始，但随后取消。 迟早你会看到像这样可怕的东西：
 
-注意：此错误似乎已在iOS11中修复，但您仍需要对仍在使用iOS10的所有用户使用下面介绍的修复程序。
+![image-20190111133132818](/Users/andyron/Library/Application Support/typora-user-images/image-20190111133132818.png)
+
+>  注意：此错误似乎已在iOS11中修复，但您仍需要对仍在使用iOS10的所有用户使用下面介绍的修复程序。
 
 
 
-“这是与视觉效果视图相关的问题。在动画块中设置效果时，如果动画被反转或取消，它似乎无法正确删除，因此您最终会弄得一团糟。还记得你添加到PresentTransition的auxAnimationsCancel属性吗？是时候使用它了。
+这是与视觉效果视图相关的问题。在动画块中设置效果时，如果动画被反转或取消，它似乎无法正确删除，因此您最终会弄得一团糟。还记得你添加到PresentTransition的auxAnimationsCancel属性吗？是时候使用它了。
 找到对animator.addCompletion的调用，并在默认值后添加以下行：case：
+
+```swift
+self.auxAnimationsCancel?()
+```
 
 
 
 如果动画师没有完成，你将运行存储在该块中的任何内容。切换回LockScreenViewController.swift并找到presentSettings。在设置auxAnimations属性后，添加以下行：
 
+```swift
+presentTransition.auxAnimationsCancel = blurAnimations(false)
+```
+
 
 
 再次构建和运行，你的像素化问题应该已经消失。但是还有另一个问题。想想你的非交互式过渡。点击编辑。出了点问题！
 只要用户点击按钮，您就需要更改代码以将视图控制器转换显式设置为非交互式。
+
 切换回LockScreenViewController.swift并找到小部件表数据源方法tableView（_：cellForRowAt :)。您将看到代码为“编辑”按钮指定了一个闭包，如下所示：
+
+```swift
+
+```
 
 
 
 就在self.presentSettings（）行之前，插入：
 
+```swift
+self.presentTransition.wantsInteractiveStart = false
+```
+
 
 
 这可确保您以非交互方式呈现设置视图控制器。 再试一次应用程序，试试过渡。
+
+![2019-01-11 13-40-54.2019-01-11 13_41_51](/Users/andyron/myfield/temporary/backup image/iOS动画/2019-01-11 13-40-54.2019-01-11 13_41_51.gif)
+
+
 
 
 
 ### 可中断的转场动画
 
+接下来，您将考虑在转场期间在非交互模式和交互模式之间切换。
 
-
-接下来，您将考虑在过渡期间在非交互模式和交互模式之间切换。
 UIViewPropertyAnimator与视图控制器转换的集成旨在解决用户开始转换到另一个控制器的情况，但在中途改变他们的想法。
+
 在本章的这一部分中，您将添加代码以在点击编辑后开始显示设置控制器，但如果用户在动画期间再次点击屏幕，则暂停转换。
+
 切换到PresentTranstion.swift。您需要稍微改变动画师，不仅要分别处理交互式和非交互式模式，还要同时处理相同的过渡。
 再添加两个属性：
 
-
+```swift
+  var context: UIViewControllerContextTransitioning?
+  var animator: UIViewPropertyAnimator?
+```
 
 您将使用这些来跟踪动画的当前背景以及动画师处理其动画。
-向下滚动到transitionAnimator（使用:)，并在返回动画线之前的底部，插入以下内容：
+向下滚动到transitionAnimator（使用:)，并在`return animator`之前的底部，插入以下内容：
 
-
+```swift
+    self.animator = animator
+    self.context = transitionContext
+```
 
 每次为转换创建新的动画师时，您也会存储对它的引用。
 
 转换完成后释放这些资源也很重要。 在之前插入的两行之后添加一个新的完成块：
 
+```swift
+animator.addCompletion { [unowned self] _  in
+	self.animator = nil
+	self.context = nil
+}
+```
+
 
 
 现在，您可以向类中添加一个方法来中断转换：
+
+```swift
+func interruptTransition() {
+    guard let context = context else { return }
+    context.pauseInteractiveTransition()
+    pause()
+}
+```
 
 
 
 您可以调用pauseInteractiveTransitioning（）来暂停动画师，并在转换动画师上暂停（）以使其处于交互模式。
 要在非交互式转换期间允许触摸，您必须明确将动画设置为能够处理用户活动。 滚动回transitionAnimator（使用:)并将此行插入底部：
 
-
+```swift
+animator.isUserInteractionEnabled = true
+```
 
 您确保过渡动画是交互式的，这样用户可以在暂停后继续与屏幕进行交互。
+
+
+
 您将允许用户向上或向下滚动以分别完成或取消转换。 为此，切换回LockScreenViewController.swift并添加一个新属性：
 
-
-
-
+```swift
+var touchesStartPointY: CGFloat? 
+```
 
 如果用户在转换期间触摸屏幕，您可以将其暂停并存储第一次触摸的位置：
+
+```swift
+  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    guard presentTransition.wantsInteractiveStart == false, presentTransition.animator != nil else {
+      return
+    }
+    
+    touchesStartPointY = touches.first!.location(in: view).y
+    presentTransition.interruptTransition()
+  }
+```
 
 
 
 您检查触摸是否在非交互式转换期间发生，并且转换的动画师当前正在运行。 在这种情况下，您存储当前触摸位置，然后调用自定义方法interruptTransition（）。 这将暂停转换并使其保持交互模式。
 运行应用程序，点击编辑，然后再次快速再次点击。 转换将在屏幕上冻结，如下所示：
 
+
+
 现在，您需要跟踪用户触摸并查看用户是向上还是向下平移。 添加以下内容：
 
-
+```swift
+ override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+  guard let startY = touchesStartPointY else { return }
+  
+  let currentPoint = touches.first!.location(in: view).y
+  if currentPoint < startY - 40 {
+    touchesStartPointY = nil
+    presentTransition.animator?.addCompletion({ (_) in
+      self.blurView.effect = nil
+    })
+    presentTransition.cancel()
+    
+  } else if currentPoint > startY + 40 {
+    touchesStartPointY = nil
+    presentTransition.finish()
+  }
+}
+```
 
 
 
@@ -1588,5 +1735,6 @@ UIViewPropertyAnimator与视图控制器转换的集成旨在解决用户开始�
 你观察了两种不同的情况。 首先，如果用户将其触摸向下移动超过40点，则取消转换并重置模糊效果。 如果用户向上移动触摸超过40点，则表示您已成功完成转换。
 最后一次尝试应用程序。 点击编辑，再次点击以暂停转换，并根据您平移的方向取消或完成转换。
 这就是本书的这一部分！
+
 你已经学到了很多关于UIViewPropertyAnimator以及如何充分利用它的知识。 你已经完成了相当冗长的四章，但是你取得了很多成就，而且项目看起来很棒：
 
