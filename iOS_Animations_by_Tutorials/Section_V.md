@@ -4,33 +4,27 @@
 
 `UIViewPropertyAnimator`是从iOS10开始引入，它能够创建易于交互，可中断和/或可逆的视图动画。
 
-前面部分已经学习了核心动画的大部分功能，视图动画不会有太大的惊喜。
+这个类让某些类型的视图动画更容易创建，值得学习。
 
-但是这个类让某些类型的视图动画更容易创建，值得学习。
+`UIViewPropertyAnimator`可以在同一个类中方便地将许多API包装在一起，这样更容易使用。
+
+此外，这个新类不能完全取代了`UIView.animate(withDuration...)`API集。
 
 
 
-最值得注意的是，当您通过动画师运行动画时，您可以动态调整这些动画 - 您可以暂停，停止，反转和更改已经运行的动画的速度。
+**内容预览：**
 
-如上所述，你可以通过使用图层和视图动画的组合来完成上面提到的所有事情，但是`UIViewPropertyAnimator`可以在同一个类中方便地将许多API包装在一起，这样更容易使用。
+[20-UIViewPropertyAnimator入门](#20-UIViewPropertyAnimator入门) 
 
-此外，这个新类完全取代了`UIView.animate(withDuration...)`API集，也没有使用`CAAnimation`替换您创建的动画，因此您仍然需要经常将这些与`UIViewPropertyAnimator`动画结合使用。
+[21-深入UIViewPropertyAnimator](#21-深入UIViewPropertyAnimator)  
 
-在本书的这一部分中，您将开发一个具有大量不同视图动画的项目，您将使用`UIViewPropertyAnimator`实现这些动画。
+[22-用UIViewPropertyAnimator进行交互式动画](#22-用UIViewPropertyAnimator进行交互式动画)  
 
-**预览：**
+[23-用UIViewPropertyAnimator自定义视图控制器转场](#23-用UIViewPropertyAnimator自定义视图控制器转场)  
 
-[20-UIViewPropertyAnimator入门](#20-UIViewPropertyAnimator入门) —— 了解如何创建基本视图动画和关键帧动画。您将研究使用超出内置缓动曲线的自定义时序。
 
-第21章，使用UIViewPropertyAnimator的中级动画 - 在本章中，您将学习如何使用具有自动布局的动画师。此外，您将学习如何反转动画或制作添加动画，以便在此过程中实现更平滑的变化。
 
-第22章，使用UIViewPropertyAnimator进行交互式动画 - 了解如何根据用户的输入以交互方式驱动动画。为了获得额外的乐趣，您将了解基本和关键帧动画的交互性。
-
-第23章，UIViewPropertyAnimator视图控制器转换 - 使用UIViewPropertyAnimator创建自定义视图控制器转换以驱动转换动画。您将创建静态和交互式过渡。
-
-完成所有这些章节后，您肯定会在家中使用UIViewPropertyAnimator为您的应用程序中的所有类型的动画！
-
-本文的四个章节都是使用同一个项目
+> 本文的四个章节都是使用同一个项目 **LockSearch**
 
 
 
@@ -72,8 +66,6 @@ override func viewDidAppear(_ animated: Bool) {
     }
 }
 ```
-
-
 
 在这里，您使用`UIViewPropertyAnimator`的一个[便利构造器](http://andyron.com/2017/swift-14-initialization.html#5-类的继承和构造过程)：`UIViewPropertyAnimator.init(duration:curve:animations:)`。
 
@@ -525,7 +517,7 @@ func toggleBlur(_ blurred: Bool) {
 
 可以使用网站：http://cubic-bezier.com。 这是计算机科学研究员和演讲者Lea Verou的非常方便的网站。 它可以拖动立方Bézier的两个控制点并查看即时动画预览，非常nice😊😊。
 
-![image-20181204155438660](https://ws4.sinaimg.cn/large/006tNbRwgy1fxurmuxor9j31br0i5n0t.jpg)
+![](https://ws4.sinaimg.cn/large/006tNbRwgy1fxurmuxor9j31br0i5n0t.jpg)
 
 > 上面贝塞尔的原理说的不够深刻🤦‍♀️，现在只需了解曲线，通过两个控制点可以画曲线。
 
@@ -794,7 +786,7 @@ toggleHeightAnimator?.addAnimations(textTransition, delayFactor: 0.5)
 
 从这个部分开始，将学习创建类似于3D touch交互的交互式动画：
 
-![image-20190101223452030](/Users/andyron/Library/Application Support/typora-user-images/image-20190101223452030.png)
+![image-20190101223452030](https://ws1.sinaimg.cn/large/006tNc79gy1fz4852t7l1j30eg055jvh.jpg)
 
 
 
@@ -806,7 +798,7 @@ toggleHeightAnimator?.addAnimations(textTransition, delayFactor: 0.5)
 
 放慢的效果为：
 
-![ScreenRecording_01-04-2019 11-13-10.2019-01-04 11_24_37](/Users/andyron/Downloads/ScreenRecording_01-04-2019 11-13-10.2019-01-04 11_24_37.gif)
+![ScreenRecording_01-04-2019 11-13-10.2019-01-04 11_24_37](https://ws4.sinaimg.cn/large/006tNc79gy1fz4859kx1gg309q0ha7my.gif)
 
 
 
@@ -848,7 +840,7 @@ let previewEffectView = IconEffectView(blur: .extraLight)
 
 `IconEffectView`是自定义的`UIVisualEffectView`的子类，它包含单个标签的简单模糊视图，使用它来模拟从按下的图标弹出的菜单：
 
-![image-20181219112216359](/Users/andyron/Library/Application Support/typora-user-images/image-20181219112216359.png)
+![image-20181219112216359](https://ws2.sinaimg.cn/large/006tNc79gy1fz485fxzrwj307l04jdgg.jpg)
 
 在`LockScreenViewController`遵守`WidgetsOwnerProtocol`协议的扩展中，实现`startPreview(for:)`方法：
 
@@ -946,7 +938,7 @@ func updatePreview(percent: CGFloat) {
 
 运行，效果（放慢）：
 
-![ScreenRecording_01-04-2019 18-29-21.2019-01-04 18_40_04](/Users/andyron/Downloads/ScreenRecording_01-04-2019 18-29-21.2019-01-04 18_40_04.gif)
+![ScreenRecording_01-04-2019 18-29-21.2019-01-04 18_40_04](https://ws2.sinaimg.cn/large/006tNc79gy1fz485pn1f7g309q0ewart.gif)
 
 
 
@@ -1077,7 +1069,7 @@ static func complete(view: UIVisualEffectView) -> UIViewPropertyAnimator {
 
 您将水平位置设置为 `view.frame.minX - view.frame.minX/2.5`，如果图标位于屏幕左侧，则显示右侧菜单，如果图标位于左侧，则显示左侧菜单在屏幕的右侧。请参阅以下差异：
 
-![image-20190102115412511](/Users/andyron/Library/Application Support/typora-user-images/image-20190102115412511.png)
+![image-20190102115412511](https://ws3.sinaimg.cn/large/006tNc79gy1fz48605cgfj30eq068ta7.jpg)
 
 动画师准备好了，所以打开LockScreenViewController.swift并在WidgetsOwnerProtocol扩展中添加最后一个必需的方法：
 
@@ -1123,7 +1115,7 @@ AnimatorFactory.complete(view: previewEffectView).startAnimation()
 
 运行，按压图标：
 
-![image-20190102115643202](/Users/andyron/Library/Application Support/typora-user-images/image-20190102115643202.png)
+![image-20190102115643202](https://ws2.sinaimg.cn/large/006tNc79gy1fz48675dazj30f9049mz0.jpg)
 
 
 
@@ -1194,28 +1186,31 @@ animator.addAnimations {
 第一个关键帧运行您之前的相同动画。
 第二个关键帧是简单旋转，效果：
 
-![ScreenRecording_01-04-2019 23-29-27.2019-01-04 23_32_31](/Users/andyron/Downloads/ScreenRecording_01-04-2019 23-29-27.2019-01-04 23_32_31.gif)
+![ScreenRecording_01-04-2019 23-29-27.2019-01-04 23_32_31](https://ws1.sinaimg.cn/large/006tNc79gy1fz486eupoyg309b08njzk.gif)
 
 
 
 
 
-## 23-UIViewPropertyAnimator视图控制器转场
+## 23-用UIViewPropertyAnimator自定义视图控制器转场
 
 
 
-在[系统学习iOS动画之四：视图控制器的转场动画](#Section_IV.md)中，学习了如何创建自定义视图控制器转场。这个部分学习使用`UIViewPropertyAnimator`来自定义视图控制器转场。 你看到了它们的灵活性和强大性，所以你可能很想知道如何使用来创建它们。
+在[系统学习iOS动画之四：视图控制器的转场动画](Section_IV.md)中，学习了如何创建自定义视图控制器转场。这个章节学习使用`UIViewPropertyAnimator`来自定义视图控制器转场。 
 
-本章的[开始项目](README.md#关于代码) 使用上一章节完成的项目。
+
+
+>  本章的[开始项目](README.md#关于代码) 使用上一章节完成的项目。
 
 
 
 ### 静态视图控制器转场
 
-现在，点击**”Edit“**按钮时，体验非常糟糕😰。 该按钮在当前按钮上显示一个新的视图控制器，只要您点击该第二个屏幕中的任何可用选项，它就会消失。
-让我们调高一点！
+现在，点击**”Edit“**按钮时，体验非常糟糕😰。
 
-创建一个新文件`PresentTransition.swift`。 将其默认内容替换为：
+
+
+首先创建一个新文件`PresentTransition.swift`，从名字也能看出这个类是用来转场的。 将其默认内容替换为：
 
 ```swift
 import UIKit
@@ -1236,9 +1231,9 @@ class PresentTransition: NSObject, UIViewControllerAnimatedTransitioning {
 
 `UIViewControllerAnimatedTransitioning`协议已经在[系统学习iOS动画之四：视图控制器的转场动画](#Section_IV.md)中学过。
 
-将创建一个过渡动画，动画模糊图层并在其上移动新的视图控制器。
+我将创建一个转场动画：原视图逐渐模糊图，新视图慢慢移动出来。
 
-在`PresentTransition`中添加一个新方法，为转场创建动画制作工具：
+在`PresentTransition`中添加一个新方法：
 
 ```swift
 func transitionAnimator(using transitionContext: UIViewControllerContextTransitioning) -> UIViewImplicitlyAnimating {
@@ -1251,7 +1246,7 @@ func transitionAnimator(using transitionContext: UIViewControllerContextTransiti
 }
 ```
 
-在上面的代码中，为视图控制器转场做了必要的准备工作。 首先获取动画持续时间，然后获取目标视图控制器的视图，最后将此视图添加到过渡容器中。
+在上面的代码中，为视图控制器转场做了一些必要的准备工作。 首先获取动画持续时间，然后获取目标视图控制器的视图，最后将此视图添加到过渡容器中。
 
 接下来，可以设置动画并运行它。 将下面代码添加到上面的方法`transitionAnimator(using:)`中：
 
@@ -1260,7 +1255,7 @@ to.transform = CGAffineTransform(scaleX: 1.33, y: 1.33).concatenating(CGAffineTr
 to.alpha = 0
 ```
 
-这会向上伸展，然后向下移动目标视图控制器的视图，最后将其淡出。 现在它已经准备好在屏幕上动画了。
+这会向上伸展，然后向下移动目标视图控制器的视图，最后将其淡出。 
 
 在`to.alpha = 0`之后添加动画师来运行转换：
 
@@ -1297,7 +1292,7 @@ transitionAnimator(using: transitionContext).startAnimation()
 
 
 
-那应该暂时做到。 让我们将视图控制器连接到过渡动画师并尝试动画。
+
 
 在`LockScreenViewController`中定义常量属性：
 
@@ -1305,7 +1300,9 @@ transitionAnimator(using: transitionContext).startAnimation()
 let presentTransition = PresentTransition()
 ```
 
-当UIKit要求您提供演示动画和交互控制器时，您将向UIKit提供此对象。 
+
+
+
 
 让`LockScreenViewController`遵守`UIViewControllerTransitioningDelegate`协议：
 
@@ -1319,7 +1316,7 @@ extension LockScreenViewController: UIViewControllerTransitioningDelegate {
 }
 ```
 
-`UIViewControllerTransitioningDelegate`协议在 [系统学习iOS动画之四：视图控制器的转场动画](#Section_IV.md) 中学习过，可查看。
+`UIViewControllerTransitioningDelegate`协议在 [系统学习iOS动画之四：视图控制器的转场动画](#Section_IV.md) 中学习过。
 
 `animationController(forPresented:presents:source:)`方法是告诉UIKit，我想自定义视图控制器转场。
 
@@ -1331,24 +1328,19 @@ settingsController.transitioningDelegate = self
 present(settingsController, animated: true, completion: nil)
 ```
 
-运行，点击**Edit**按钮，设置控制器似乎有点偏：
+运行，点击**Edit**按钮，`SettingsViewController`有点问题：
 
-![IMG_1035E53ABC83-1](https://ws3.sinaimg.cn/large/006tNbRwgy1fyc6z0vsfjj309q07cwfz.jpg)
+![](https://ws3.sinaimg.cn/large/006tNbRwgy1fyc6z0vsfjj309q07cwfz.jpg)
 
-你会想要处理一些粗糙的边缘，但你的工作几乎已经完成。
-要纠正的第一件事是目标视图控制器不需要纯色背景。 打开`Main.storyboard`（它在Assets项目文件夹中）并选择设置视图控制器视图。
+在`Main.storyboard`中将视图的背景更改为**Clear Color**。
 
-将视图的背景更改为**Clear Color**
+运行，变成：
+
+![](https://ws4.sinaimg.cn/large/006tNbRwgy1fyc7232ygoj309q09z78p.jpg)
 
 
 
-再试一次这种转变。 这次您应该看到设置视图控制器的内容直接显示在锁定屏幕上：
-
-![IMG_AB757FD312C4-1](https://ws4.sinaimg.cn/large/006tNbRwgy1fyc7232ygoj309q09z78p.jpg)
-
-看起来这种过渡可以用更多的动画来做。 例如，淡化小部件顶部的模糊，以便用户可以更好地看到顶部的模态视图控制器，这不是很好吗？
-既然你已经是专业人士，那就让我们做一些新的事 - “动画注入”！ （无需查看该术语 - 我刚刚为本章提出了这个问题）。
-您将向动画师添加一个新属性，允许您将任何自定义动画注入过渡。 这将允许您使用相同的过渡类来生成略有不同的动画。
+下面向动画师添加新属性，为了可以将任何自定义动画注入转场动画， 使用相同的转场类来生成略有不同的动画。
 
 在`PresentTransition`中添加两个新属性：
 
@@ -1365,26 +1357,26 @@ if let auxAnimations = auxAnimations {
 }
 ```
 
-如果您已向对象添加任意任意动画块，则会将其添加到动画制作者动画的其余部分。 取消块允许您在取消转换时执行可能需要的任何展开。
+这样可以根据具体情况在转换中添加自定义动画。 例如，要为当前转场添加模糊动画。
 
-这允许您根据具体情况在转换中添加自定义动画。 例如，让我们为当前转换添加模糊动画。
-打开`LockScreenViewController`并在presentSettings（）的顶部插入以下内容：
+打开`LockScreenViewController`并在`presentSettings()`的开始处插入：
 
 ```swift
 presentTransition.auxAnimations = blurAnimations(true)
 ```
 
-这会将你在很多章节前创建的模糊动画添加到视图控制器转换中！
+
 再试一次过渡，看看这一行如何改变它：
 
-![image-20190111123452428](/Users/andyron/Library/Application Support/typora-user-images/image-20190111123452428.png)
+![image-20190111123452428](https://ws4.sinaimg.cn/large/006tNc79gy1fz486tm602j309505zgm8.jpg)
 
-重复使用动画简直太神奇了吗？
+模糊动画重复使用了。
 
 
 
-现在，当用户解除显示的控制器时，您还需要隐藏模糊。`SettingsViewController`已经有一个`didDismiss`属性，所以你只需要将该属性设置为一个动画模糊的块。
-在`settingsController`出现之前的倒数第二行的`presentSettings(_:)`中，插入：
+另外，当用户解除控制器时，还需要隐藏模糊视图。
+
+在`presentSettings(_:)`中的`present(_:animated:completion:)`前添加：
 
 ```swift
     settingsController.didDismiss = { [unowned self] in
@@ -1392,19 +1384,20 @@ presentTransition.auxAnimations = blurAnimations(true)
     }
 ```
 
-现在点击设置屏幕中的一个选项将忽略它。 然后模糊将消失，用户将成功恢复到第一个视图控制器：
+现在，运行，点击`SettingsViewController`视图中的**Cancel**或其他选项，先有的模糊视图，然后恢复到第一个视图控制器：
 
 ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fyc7kqfivvg309q0ha45w.gif)
-
-本章的这一部分到此结束。 您的视图控制器转换准备就绪！
 
 
 
 ### 交互视图控制器转场
 
-作为本书UIViewPropertyAnimator部分的最后一个主题，您将创建一个交互式视图控制器转换。 您的用户将通过下拉窗口小部件表来推动转换。
+这个部分通过下拉的手势来时学习实现交互视图控制器转场。
 
-首先，让我们使用强大的`UIPercentDrivenInteractionTransition`类来启用视图控制器转换的交互性。
+
+
+首先，让我们使用强大的`UIPercentDrivenInteractionTransition`类来启用视图控制器转场的交互性。
+
 打开`PresentTransition.swift`把下面：
 
 ```swift
@@ -1417,23 +1410,22 @@ class PresentTransition: NSObject, UIViewControllerAnimatedTransitioning
 class PresentTransition: UIPercentDrivenInteractiveTransition, UIViewControllerAnimatedTransitioning {
 ```
 
-`UIPercentDrivenInteractiveTransition`是一个定义基于“百分比”的转换方法的类，例如：
+`UIPercentDrivenInteractiveTransition`是一个定义基于“百分比”的转场方法的类，例如有三个方法：
 
-`update(_:)` 以回退过渡。
-`cancel() ` 取消视图控制器转换。
-`finish()`  播放转换直到完成。
+- `update(_:)`  回退转场。
+- `cancel() ` 取消视图控制器转场。
+- `finish()`  播放转场直到完成。
+
+之前学习的[19-交互式导航控制器转场](Section_IV.md#19-交互式导航控制器转场)中也提到相关内容。
+
+`UIPercentDrivenInteractiveTransition`的一些属性：
+
+- `timingCurve`：如果以交互方式驱动转场，并且是播放转场时直到结束，就可以通过设置此属性为动画提供自定义时序曲线。 
+- `wantsInteractiveStart`：默认是`true`，是否使用交互式转场。
+
+- `pause()` ：调用此方法暂停非交互式转场并切换到交互模式。
 
 
-
-您可能还记得[19-交互式导航控制器转场](Section_IV.md#19-交互式导航控制器转场)中的这些内容，但您没有看到一些专门用于使用UIViewPropertyAnimator的高级API。
-
-为使动画过渡更容易实现的一些新功能包括：
-
-`timingCurve`：如果您的用户以交互方式驱动转换，并且在需要播放转换时直到结束，您可以通过设置此属性为动画提供自定义时序曲线。 这可以是立方体，弹簧或其他自定义时序提供者。
-
-`wantsInteractiveStart`：默认情况下这是真的，因为您可能主要将此类用于交互式转换。 但是，如果将该属性设置为false，则转换将以非交互方式启动，您可以暂停它并稍后转到交互模式。
-
-`pause()` ：调用此方法暂停非交互式转换并切换到交互模式。
 
 向`PresentTransition`添加一个新方法：
 
@@ -1443,41 +1435,35 @@ class PresentTransition: UIPercentDrivenInteractiveTransition, UIViewControllerA
   }
 ```
 
+这是`UIViewControllerAnimatedTransitioning`协议的一个方法。 它允许我们UIKit提供可中断的动画师。
 
+转场动画师类现在有两种不同的行为：
 
-这是`UIViewControllerAnimatedTransitioning`协议上的一个方法。 它允许您向UIKit提供可中断的动画师，它将用于您的过渡动画。
-
-您的过渡动画师类现在有两种不同的行为：
-
-1. 如果以非交互方式使用它（当用户按下编辑按钮时），UIKit将调用`animateTransition(using:)`来设置转换动画。
+1. 如果以非交互方式使用它（当用户按下编辑按钮时），UIKit将调用`animateTransition(using:)`来设置转场动画。
 2. 如果以交互方式使用它，UIKit将调用`interruptibleAnimator(using:)`，获取动画师，并使用它来推动这种转场。
 
-![image-20190111124837379](/Users/andyron/Library/Application Support/typora-user-images/image-20190111124837379.png)
+![image-20190111124837379](https://ws3.sinaimg.cn/large/006tNc79gy1fz48719aayj30ek0a3wfo.jpg)
 
 
 
-切换到LockScreenViewController.swift并在UIViewControllerTransitioningDelegate扩展中添加这个新方法：
+切换到`LockScreenViewController.swift`， 在`UIViewControllerTransitioningDelegate`扩展中添新方法：
 
 ```swift
-  func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
     return presentTransition
-  }
+}
 ```
 
-这将让UIKit知道您在视图控制器演示期间计划一些有趣的交互性。
-
-接下来，仍然在您打开的文件中，添加两个新属性; 您将需要它们来跟踪用户的手势：
+接下来，在`LockScreenViewController`中添加两个新属性，用来跟踪用户的手势：
 
 ```swift
   var isDragging = false
   var isPresentingSettings = false
 ```
 
+当用户向下拉时，将`isDragging`标志设置为`true`，当拉得足够远，也将将`isPresentingSettings`设置为`true`。
 
-
-当用户拉下表时，你会将`isDragging`标志设置为`true`，一旦用户拉得足够远，你将依次将`isPresentingSettings`设置为`true`。
-
-要跟踪用户拉出表视图的距离，您需要实现一些滚动视图委托方法。 添加新扩展并插入第一个方法：
+实现`UISearchBarDelegate`的一个方法：
 
 ```swift
 func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
@@ -1485,10 +1471,9 @@ func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
 }
 ```
 
+这可能看起来有点多余，因为`UITableView`已经有一个属性来跟踪它当前是否被拖动，但现在要自己做一些自定义跟踪。
 
-
-这可能看起来有点多余，因为UITableView已经有一个属性来跟踪它当前是否被拖动，但这次你要自己做一些自定义跟踪。
-接下来添加委托方法以跟踪用户的进度：
+接下来继续实现`UISearchBarDelegate`协议的另一个方法，用来跟踪用户的进度：
 
 ```swift
 func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -1505,13 +1490,7 @@ func scrollViewDidScroll(_ scrollView: UIScrollView) {
 
 
 
-首先，检查是否启用了`isDragging`标志; 你不想跟踪表视图的偏移量。 然后检查用户是否已经拉得足够远以开始转换。
-如果两个条件都为真，则准备转换设置。 将isPresentingSettings设置为true，将过渡动画设置为交互模式，最后调用presentSettings（）。
-presentSettings（）负责在交互模式下启动视图控制器转换，因为您事先将wantsInteractiveStart设置为true。
-
-
-
-接下来，您需要添加代码以交互方式更新它。 将以下内容追加到scrollViewDidScroll（_ :)的末尾：
+接下来，需要添加代码以交互方式更新。 将以下内容追加到上面方法的末尾：
 
 ```swift
 if isPresentingSettings {
@@ -1520,14 +1499,14 @@ if isPresentingSettings {
 }
 ```
 
+根据拉出TableView的距离计算0.0到1.0范围内的进度，并在转场动画师上调用`update(_:)`以将动画定位到当前进度。
+运行，当向下拖动时，将看到表格视图逐渐模糊。
+
+![2019-01-11 13-16-13.2019-01-11 13_22_39](https://ws1.sinaimg.cn/large/006tNc79gy1fz4876589cg308o0fh1f2.gif)
 
 
-您可以根据用户拉出表视图的距离计算0.0到1.0范围内的进度，并在过渡动画师上调用update（_ :)以将动画定位到当前进度。
-立即尝试过渡，当您向下拖动时，您将看到表格视图逐渐模糊。
 
-![2019-01-11 13-16-13.2019-01-11 13_22_39](/Users/andyron/myfield/temporary/backup image/iOS动画/2019-01-11 13-16-13.2019-01-11 13_22_39.gif)
-
-您还需要注意完成和取消过渡。 添加到与以前相同的扩展名：
+还需要注意完成取消转场，实现`UISearchBarDelegate`协议的另一个方法：
 
 ```swift
 func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
@@ -1544,15 +1523,11 @@ func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity
 }
 ```
 
-
-
-这段代码应该看起来很相似;它与您在第19章“交互式UINavigationController过渡”中使用的方法相同。如果用户已经超过距离的一半（您决定“足够远”），则认为转换成功并将动画播放到最后。如果用户未拖动超过一半的距离，则取消转换。无论哪种方式，您重置两个标志的值，并且转换的交互部分结束。
-然而，这种转变尚未完成 - 在生产准备就绪之前，还有很多事情要做好准备。
+这段代码看起来与[19-交互式导航控制器转场](Section_IV.md)中相似。如果用户下拉已经超过距离的一半，则认为转场成功；如果用户未下拉超过一半，则取消转场。
 
 
 
-切换到PresentTransition.swift并找到transitionAnimator（使用:)。在完成块中，忽略该参数并始终使用相同的值调用completeTransition（_ :)。
-您可以通过检查动画师完成的位置并提供相关值来帮助UIKit。将现有的addCompletion（...）替换为：
+把`transitionAnimator(using:)`方法中的`addCompletion`代码块替换为：
 
 ```swift
     animator.addCompletion { (position) in
@@ -1565,58 +1540,44 @@ func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity
     }
 ```
 
+运行，上下拉动，可能会出现下面这种像素化问题情况（iOS10可能会出现，iOS11之后应该修复了）：
 
 
 
-实际上，仅当动画师在其.end位置完成时，视图控制器转换才成功。任何其他情况都意味着转换已被取消，因此您可以直接调用completeTransition（false）。
-
-尝试上下摆动桌子，然后转换开始，但随后取消。 迟早你会看到像这样可怕的东西：
-
-![image-20190111133132818](/Users/andyron/Library/Application Support/typora-user-images/image-20190111133132818.png)
-
->  注意：此错误似乎已在iOS11中修复，但您仍需要对仍在使用iOS10的所有用户使用下面介绍的修复程序。
+![image-20190111133132818](https://ws4.sinaimg.cn/large/006tNc79gy1fz487groy8j3095094q7d.jpg)
 
 
 
-这是与视觉效果视图相关的问题。在动画块中设置效果时，如果动画被反转或取消，它似乎无法正确删除，因此您最终会弄得一团糟。还记得你添加到PresentTransition的auxAnimationsCancel属性吗？是时候使用它了。
-找到对animator.addCompletion的调用，并在默认值后添加以下行：case：
+使用之前在`PresentTransition`中添加的`auxAnimationsCancel`属性。
+在`transitionAnimator(using:)`中找到`animator.addCompletion`的调用，并在`default:`添加：
 
 ```swift
 self.auxAnimationsCancel?()
 ```
 
-
-
-如果动画师没有完成，你将运行存储在该块中的任何内容。切换回LockScreenViewController.swift并找到presentSettings。在设置auxAnimations属性后，添加以下行：
+到`LockScreenViewController`的`presentSettings(_:)`方法。在设置`auxAnimations`属性后，添加：
 
 ```swift
 presentTransition.auxAnimationsCancel = blurAnimations(false)
 ```
 
-
-
-再次构建和运行，你的像素化问题应该已经消失。但是还有另一个问题。想想你的非交互式过渡。点击编辑。出了点问题！
-只要用户点击按钮，您就需要更改代码以将视图控制器转换显式设置为非交互式。
-
-切换回LockScreenViewController.swift并找到小部件表数据源方法tableView（_：cellForRowAt :)。您将看到代码为“编辑”按钮指定了一个闭包，如下所示：
-
-```swift
-
-```
+运行，像素化问题应该已经消失。
 
 
 
-就在self.presentSettings（）行之前，插入：
+但是还有另一个问题。点击**Edit**按钮的非交互式转场没反应了！😱
+
+只要用户点击**Edit**按钮，就需要更改代码以将视图控制器转场设置为非交互式。
+
+到`LockScreenViewController`的`tableView(_:cellForRowAt:)`，在`self.presentSettings()`之前插入：
 
 ```swift
 self.presentTransition.wantsInteractiveStart = false
 ```
 
+运行，效果:
 
-
-这可确保您以非交互方式呈现设置视图控制器。 再试一次应用程序，试试过渡。
-
-![2019-01-11 13-40-54.2019-01-11 13_41_51](/Users/andyron/myfield/temporary/backup image/iOS动画/2019-01-11 13-40-54.2019-01-11 13_41_51.gif)
+![2019-01-11 13-40-54.2019-01-11 13_41_51](https://ws2.sinaimg.cn/large/006tNc79gy1fz487orsyng308o0dj4qp.gif)
 
 
 
@@ -1624,31 +1585,31 @@ self.presentTransition.wantsInteractiveStart = false
 
 ### 可中断的转场动画
 
-接下来，您将考虑在转场期间在非交互模式和交互模式之间切换。
+接下来，要考虑转场期间在非交互模式和交互模式之间切换。
 
-UIViewPropertyAnimator与视图控制器转换的集成旨在解决用户开始转换到另一个控制器的情况，但在中途改变他们的想法。
+
 
 在本章的这一部分中，您将添加代码以在点击编辑后开始显示设置控制器，但如果用户在动画期间再次点击屏幕，则暂停转换。
 
 切换到PresentTranstion.swift。您需要稍微改变动画师，不仅要分别处理交互式和非交互式模式，还要同时处理相同的过渡。
-再添加两个属性：
+在`PresentTranstion`中再添加两个属性：
 
 ```swift
-  var context: UIViewControllerContextTransitioning?
-  var animator: UIViewPropertyAnimator?
+var context: UIViewControllerContextTransitioning?
+var animator: UIViewPropertyAnimator?
 ```
 
-您将使用这些来跟踪动画的当前背景以及动画师处理其动画。
-向下滚动到transitionAnimator（使用:)，并在`return animator`之前的底部，插入以下内容：
+使用这两个属性来跟踪动画的上下文以及动画师。
+在`transitionAnimator(using:)`方法的`return animator`前插入：
 
 ```swift
-    self.animator = animator
-    self.context = transitionContext
+self.animator = animator
+self.context = transitionContext
 ```
 
-每次为转换创建新的动画师时，您也会存储对它的引用。
+每次为转场创建新的动画师时，也会存储对它的引用。
 
-转换完成后释放这些资源也很重要。 在之前插入的两行之后添加一个新的完成块：
+转场完成后释放这些资源也很重要。 继续添加：
 
 ```swift
 animator.addCompletion { [unowned self] _  in
@@ -1657,9 +1618,7 @@ animator.addCompletion { [unowned self] _  in
 }
 ```
 
-
-
-现在，您可以向类中添加一个方法来中断转换：
+在`PresentTranstion`中再添加一个方法：
 
 ```swift
 func interruptTransition() {
@@ -1669,26 +1628,25 @@ func interruptTransition() {
 }
 ```
 
+ 
 
-
-您可以调用pauseInteractiveTransitioning（）来暂停动画师，并在转换动画师上暂停（）以使其处于交互模式。
-要在非交互式转换期间允许触摸，您必须明确将动画设置为能够处理用户活动。 滚动回transitionAnimator（使用:)并将此行插入底部：
+在`transitionAnimator(using:)`方法的`return animator`前插入：
 
 ```swift
 animator.isUserInteractionEnabled = true
 ```
 
-您确保过渡动画是交互式的，这样用户可以在暂停后继续与屏幕进行交互。
+确保转场动画是交互式的，这样用户可以在暂停后继续与屏幕进行交互。
 
 
 
-您将允许用户向上或向下滚动以分别完成或取消转换。 为此，切换回LockScreenViewController.swift并添加一个新属性：
+允许用户向上或向下滚动以分别完成或取消转场。 为此，在`LockScreenViewController`中添加一个新属性：
 
 ```swift
 var touchesStartPointY: CGFloat? 
 ```
 
-如果用户在转换期间触摸屏幕，您可以将其暂停并存储第一次触摸的位置：
+如果用户在转场期间触摸屏幕，可以将其暂停并存储第一次触摸的位置：
 
 ```swift
   override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -1703,12 +1661,7 @@ var touchesStartPointY: CGFloat?
 
 
 
-您检查触摸是否在非交互式转换期间发生，并且转换的动画师当前正在运行。 在这种情况下，您存储当前触摸位置，然后调用自定义方法interruptTransition（）。 这将暂停转换并使其保持交互模式。
-运行应用程序，点击编辑，然后再次快速再次点击。 转换将在屏幕上冻结，如下所示：
-
-
-
-现在，您需要跟踪用户触摸并查看用户是向上还是向下平移。 添加以下内容：
+跟踪用户触摸并查看用户是向上还是向下平移，添加：
 
 ```swift
  override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -1736,5 +1689,5 @@ var touchesStartPointY: CGFloat?
 最后一次尝试应用程序。 点击编辑，再次点击以暂停转换，并根据您平移的方向取消或完成转换。
 这就是本书的这一部分！
 
-你已经学到了很多关于UIViewPropertyAnimator以及如何充分利用它的知识。 你已经完成了相当冗长的四章，但是你取得了很多成就，而且项目看起来很棒：
+
 

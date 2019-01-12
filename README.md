@@ -15,7 +15,7 @@ iOS动画学习
 
 
 
-[系统学习iOS动画之零：说明和目录](iOS_Animations_by_Tutorials/README.md)   
+[系统学习iOS动画之零：说明和目录](iOS_Animations_by_Tutorials/)   
 [系统学习iOS动画之一：视图动画](iOS_Animations_by_Tutorials/Section_I.md)   
 [系统学习iOS动画之二：自动布局](iOS_Animations_by_Tutorials/Section_II.md)  
 [系统学习iOS动画之三：图层动画](iOS_Animations_by_Tutorials/Section_III.md)  
