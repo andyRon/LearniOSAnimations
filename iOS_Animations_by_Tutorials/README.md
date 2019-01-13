@@ -118,7 +118,8 @@ CALayer  CAEmitterLayer
 
 英语水平有限，勉强能看懂和理解书籍，但有的部分翻译成中文，就有点尴尬了，所以遇到一些不好翻译的词时，我就把英文原文也列出来。
 
-另外加一个学到英语词汇😊
+学到英语词汇😊：
+prolific	prolific StackOverflow participant
 wrangle  	争吵，口角
 thrill		(使)兴奋
 convey	  表达，运输
@@ -131,6 +132,16 @@ acceleration
 deceleration
 oscillation
 snappy
+blobby blob
+interpolate
+hypothetical situation
+mimic
+elaborate
+assortment
+tame
+spice
+gorgeous
+pendulum 	钟摆
 
 
 

@@ -31,21 +31,21 @@
 ## 20-UIViewPropertyAnimator入门
 
 
-在iOS10之前，创建基于视图的动画的唯一选择是`UIView.animate(withDuration: ...)`一组API，但这组API没有为开发人员提供暂停或停止已经运行的动画的处理方式。此外，对于反转，加速或减慢动画，开发人员只能使用基于图层的`CAAnimation`（核心动画）。
+在iOS10之前，创建基于视图的动画的唯一选择是`UIView.animate(withDuration: ...)`I，但这组API没有为开发人员提供暂停或停止已经运行的动画的处理方式。此外，对于反转，加速或减慢动画，开发人员只能使用基于图层的`CAAnimation`（核心动画）。
 
 `UIViewPropertyAnimator`就是为了解决上述问题而出现的，它是一个允许保持运行动画的类，允许开发者调整当前运行的动画，并提供有关动画当前状态的详细信息。
 
-当然，简单单一的视图动画直接使用`UIView.animate(withDuration: ...)`就可以了。此外，`UIViewPropertyAnimator`并未实现`UIView.animate(withDuration: ...)`的所有内容。
+当然，简单单一的视图动画直接使用`UIView.animate(withDuration: ...)`就可以了。
 
 ### 基础动画
 
-本章的[开始项目](README.md#关于代码) **LockSearch** 。 类似于iOS中的锁定屏幕的屏幕。 初始视图控制器有搜索栏，单个窗口小部件和编辑按钮等：
+本章的[开始项目](README.md#关于代码) **LockSearch** 。 类似于iOS锁屏时的屏幕。 初始视图控制器有搜索栏，单个窗口小部件和编辑按钮等：
 
 ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fxukdn545vj31c00u0gy0.jpg)
 
-[开始项目](README.md#关于代码) 已经实现了一些与动画无关的功能。 例如，如果点击“显示更多”，窗口小部件将展开并显示更多项目。 如果点击编辑，会另一个视图控制器，用于编辑窗口小部件列表。
+[开始项目](README.md#关于代码) 已经实现了一些与动画无关的功能。 例如，如果点击**Show More**按钮，窗口小部件将展开并显示更多项目。 如果点击编辑，会转到另一个视图控制器，这是一个简单的TableView。
 
-当然，该项目只是模拟iOS中的锁定屏幕，没有实际的功能，用来学习动画。
+当然，该项目只是模拟iOS中的锁定屏幕，用来学习动画，没有实际的功能，。
 
 打开`LockScreenViewController.swift`并向该视图控制器添加一个新的`viewWillAppear(_:)`方法：
 
@@ -547,21 +547,19 @@ func toggleBlur(_ blurred: Bool) {
 
 
 
-<!--
+#### 自定义时间曲线 
 
-#### Custom timing providers
+`UIViewPropertyAnimator`类还有一个构造器`UIViewPropertyAnimator(duration:timingParameters:)`。
 
-还有一个构造器`UIViewPropertyAnimator(duration:timingParameters:)`。
+参数`timingParameters`必须遵守`UITimingCurveProvider`协议，有两个类可供我们使用：[`UICubicTimingParameters`](https://developer.apple.com/documentation/uikit/uicubictimingparameters)和[`UISpringTimingParameters`](https://developer.apple.com/documentation/uikit/uispringtimingparameters)。
 
-这一次，您可以创建一个可以为动画提供任何计时数据的全新对象！ 您可以使用其中一个UIKit对象来定义自定义立方体或基于弹簧的计时，但您也可以自行推出。
+下面看看这个构造器的使用方式。
 
-您将看到如何创建自定义弹簧动画，然后再转到本章的下一部分，您将在实践中创建一些弹簧动画。
-名为timingParameters的第二个参数是UITimingCurveProvider类型 - 由UIKit定义的协议。 UIKit中有两个符合该协议的类：UICubicTimingParameters和UISpringTimingParameters。
-我们来看看UISpringTimingParameters。
 
-#### 提供阻尼和速度
 
-即使您使用自定义计时提供程序，您仍然可以选择简单的方法，并提供阻尼比和初始速度，就像使用便捷初始化程序时一样。 代码如下所示：
+#### 阻尼和速度
+
+添加阻尼和速度的方式如下：
 
 ```swift
 let spring = UISpringTimingParameters(dampingRatio:0.5, initialVelocity: CGVector(dx: 1.0, dy: 0.2))
@@ -569,20 +567,13 @@ let spring = UISpringTimingParameters(dampingRatio:0.5, initialVelocity: CGVecto
 let animator = UIViewPropertyAnimator(duration: 1.0, timingParameters: spring)
 ```
 
-
-
-spring参数表示弹簧的配置，并将其提供给动画对象以用于动画的计时。 如前所述，这仍将计算弹簧“向后”。
-
-注意初始速度是矢量类型。 如果您要为任何视图的位置或大小设置动画，UIKit将在开始时应用二维初始速度。 如果您要为视图的位置设置alpha或单个轴的动画，UIKit将仅考虑初始速度矢量的dx属性。
-
-initialVelocity也是一个可选参数，因此如果您根本不需要设置速度，只需提供阻尼比即可。
+注意初始速度`initialVelocity`是**矢量类型**，这个参数是一个可选参数。
 
 
 
-#### Custom springs
+#### 自定义弹簧动画
 
-如果你想对你的弹簧更加具体，你可以在UISpringTimingParameters上使用不同的初始化器，让你指定弹簧的质量，刚度和阻尼，就像你在本书前面对你的层动画所做的那样。
-因此，配置自定义弹簧的代码如下：
+如果想对弹簧动画更加具体的设置，可以`UISpringTimingParameters`的另一个构造器`init(mass:stiffness:damping:initialVelocity:)`，代码如下：
 
 ```swift
 let spring = UISpringTimingParameters(mass: 10.0, stiffness: 5.0, damping: 30, initialVelocity: CGVector(dx: 1.0, dy: 0.2))
@@ -590,13 +581,7 @@ let spring = UISpringTimingParameters(mass: 10.0, stiffness: 5.0, damping: 30, i
 let animator = UIViewPropertyAnimator(duration: 1.0, timingParameters: spring) 
 ```
 
-
-
-如果您需要快速了解所有这些参数的工作原理，请快速阅读[第11章“图层弹簧”]()。
-在下一节中，您将尝试一些自定义时序动画。
-
--->
-
+上面这些参数的工作原理，可以查看之前的文章[11-图层弹簧动画](Section_III.md#11-图层弹簧动画)。
 
 
 ### 自动布局动画
@@ -1587,11 +1572,9 @@ self.presentTransition.wantsInteractiveStart = false
 
 接下来，要考虑转场期间在非交互模式和交互模式之间切换。
 
+在这一部分，将实现点击**Edit**按钮后开始执行显示设置控制器的动画，但如果用户在动画期间再次点击屏幕，则暂停转场。
 
-
-在本章的这一部分中，您将添加代码以在点击编辑后开始显示设置控制器，但如果用户在动画期间再次点击屏幕，则暂停转换。
-
-切换到PresentTranstion.swift。您需要稍微改变动画师，不仅要分别处理交互式和非交互式模式，还要同时处理相同的过渡。
+切换到`PresentTranstion.swift`。需要稍微改变动画师，不仅要分别处理交互式和非交互式模式，还要同时处理相同的过渡。
 在`PresentTranstion`中再添加两个属性：
 
 ```swift
@@ -1682,12 +1665,9 @@ var touchesStartPointY: CGFloat?
 }
 ```
 
+运行，点击**Edit**按钮后，立即点击屏幕，这个时候转场会暂停，此时向下滑动会完成转场，向上滑动会取消转场，效果如下：
 
-
-通过这个相当大的代码块，您的非交互式转换交互式转换已经完成！
-你观察了两种不同的情况。 首先，如果用户将其触摸向下移动超过40点，则取消转换并重置模糊效果。 如果用户向上移动触摸超过40点，则表示您已成功完成转换。
-最后一次尝试应用程序。 点击编辑，再次点击以暂停转换，并根据您平移的方向取消或完成转换。
-这就是本书的这一部分！
+![](https://ws1.sinaimg.cn/large/006tNc79gy1fz4qlv71nqg308o0erwqa.gif)
 
 
 
