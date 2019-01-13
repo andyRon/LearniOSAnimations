@@ -1214,7 +1214,7 @@ class PresentTransition: NSObject, UIViewControllerAnimatedTransitioning {
 
 
 
-`UIViewControllerAnimatedTransitioning`协议已经在[系统学习iOS动画之四：视图控制器的转场动画](#Section_IV.md)中学过。
+`UIViewControllerAnimatedTransitioning`协议已经在[系统学习iOS动画之四：视图控制器的转场动画](Section_IV.md)中学过。
 
 我将创建一个转场动画：原视图逐渐模糊图，新视图慢慢移动出来。
 
@@ -1301,7 +1301,7 @@ extension LockScreenViewController: UIViewControllerTransitioningDelegate {
 }
 ```
 
-`UIViewControllerTransitioningDelegate`协议在 [系统学习iOS动画之四：视图控制器的转场动画](#Section_IV.md) 中学习过。
+`UIViewControllerTransitioningDelegate`协议在 [系统学习iOS动画之四：视图控制器的转场动画](Section_IV.md) 中学习过。
 
 `animationController(forPresented:presents:source:)`方法是告诉UIKit，我想自定义视图控制器转场。
 
