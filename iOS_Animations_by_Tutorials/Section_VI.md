@@ -265,7 +265,7 @@ func buttonTransform(percent: CGFloat) -> CATransform3D {
 
 效果如下：
 
-![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxvpgah492g306y067799.gif)
+![](../images/LearniOSAnimations-012.gif)
 
 
 
@@ -535,4 +535,4 @@ if isGalleryOpen {
 
 本章的最后效果：
 
-![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxvr9roxswg308q0fo7wh.gif)
+![](../images/LearniOSAnimations-013.gif)

@@ -311,5 +311,5 @@ UIView.animate(withDuration: 0.8, delay: 1.0, usingSpringWithDamping: 0.4, initi
 
 效果为：😝
 
-![](https://ws1.sinaimg.cn/large/006tNbRwgy1fw8qbtmmeag308s0fnafk.gif)
+![](../images/LearniOSAnimations-004.gif)
 

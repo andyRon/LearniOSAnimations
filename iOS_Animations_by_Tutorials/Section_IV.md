@@ -27,7 +27,7 @@ iOS中最容易识别的动画之一是将新视图控制器推入导航堆栈�
 
 下图呈现一个“New Contact”视图控制器向上滑动以覆盖当前视图（联系人列表），这是默认的动画方式：
 
-![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxshdgh771j308k0a1gm3.jpg)
+![](../images/LearniOSAnimations-001.jpg)
 
 
 
@@ -43,7 +43,7 @@ iOS中最容易识别的动画之一是将新视图控制器推入导航堆栈�
 
 开始项目预览一下：
 
-![](https://ws2.sinaimg.cn/large/006tNbRwgy1fx8i1nv0jdg308o0fq1ky.gif)
+![](../images/LearniOSAnimations-016.gif)
 
 
 
@@ -53,7 +53,7 @@ iOS中最容易识别的动画之一是将新视图控制器推入导航堆栈�
 
 每次**呈现**新的视图控制器时，UIKit都会询问其代理是否要使用自定义转场。以下是自定义转场动画的第一步：
 
-![image-20181202172719920](https://ws1.sinaimg.cn/large/006tNbRwgy1fxsj2owhp1j30d9068mye.jpg)
+![](../images/LearniOSAnimations-017.png)
 
 需要实现`animationController(forPresented:presenting:source:) `方法，这个方法如果返回`nil`，则进行默认的转场动画，如果返回时遵守`UIViewControllerAnimatedTransitioning`协议的对象，则将这个对象作为自定义转场的**Animator**（可以翻译为动画师）。
 
@@ -61,7 +61,7 @@ iOS中最容易识别的动画之一是将新视图控制器推入导航堆栈�
 
 在UIKit使用自定义**Animator**之前，还需要一些步骤：
 
-![image-20181202172932834](https://ws2.sinaimg.cn/large/006tNbRwgy1fxsj4zacy0j30ey06q75k.jpg)
+![](../images/LearniOSAnimations-018.png)
 
 `transitionDuration(using:)`返回动画持续时间。
 
@@ -160,13 +160,13 @@ return duration
 
 当两个视图控制器之间的转场开始时，现有视图将添加到**转场容器视图**(transition container view)中，并且新视图控制器的视图已创建但尚未可见，如下所示：
 
-![image-20181202105011119](https://ws2.sinaimg.cn/large/006tNbRwgy1fxs7li884gj30f607cjtg.jpg)
+![](../images/LearniOSAnimations-019.png)
 
 因此，现在的任务是将新视图添加到`animateTransition()`中的转场容器中，以特定动画将其显示，如有需要也是特定动画的方式**解除**旧视图。
 
 默认情况下，转场动画完成后，旧视图将从转场容器中删除。
 
-![image-20181202105026911](https://ws2.sinaimg.cn/large/006tNbRwgy1fxs7lpwd9ij30ep07840o.jpg)
+![](../images/LearniOSAnimations-020.png)
 
 下面👇先实现简单的转场动画。
 
@@ -199,7 +199,7 @@ UIView.animate(withDuration: duration, animations: {
 
 目前的效果就是：
 
-![](https://ws2.sinaimg.cn/large/006tNbRwgy1fxtalfnhalg308q0fnqv6.gif)
+![](../images/LearniOSAnimations-021.gif)
 
 
 
@@ -266,7 +266,7 @@ UIView.animate(withDuration: duration, delay: 0.0, usingSpringWithDamping: 0.4, 
 
 现在的效果：
 
-![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxtc46bmy7g308q0fnkjl.gif)
+![](../images/LearniOSAnimations-022.gif)
 
 动画从左上角开始; 这是因为originFrame的默认值的原点是*(0,0)* 。
 
@@ -282,7 +282,7 @@ selectedImage!.isHidden = true
 
 目前的效果是初始小视图转场到全屏了，没有问题，但是**解除**详情页时就有问题，详情页突然就消失了：
 
-![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxtcugg85pg308q0fn7wj.gif)
+![](../images/LearniOSAnimations-023.gif)
 
 
 
@@ -325,7 +325,7 @@ transition.dismissCompletion = {
 
 那么，目前效果：
 
-![](https://ws2.sinaimg.cn/large/006tNbRwgy1fxtdmixexpg308q0fnnpd.gif)
+![](../images/LearniOSAnimations-024.gif)
 
 
 
@@ -357,7 +357,7 @@ override func viewWillTransition(to size: CGSize, with coordinator: UIViewContro
 
 运行，旋转设备（模拟器中按**Cmd +向左箭头**）：
 
-![](https://ws1.sinaimg.cn/large/006tNbRwgy1fxtf9wmj4eg30n00lpb29.gif)
+![](../images/LearniOSAnimations-025.gif)
 
 
 
@@ -367,7 +367,7 @@ override func viewWillTransition(to size: CGSize, with coordinator: UIViewContro
 
 现在上面的动画看上去已经很不错，但如果仔细观看，会发现还有两个问题，**解除**动画时，全屏视图到小视图完成之前看到详细视图的文本；全屏视图是直角，直到动画要完成的最后一个才从直角突然变到圆角。
 
-![](https://ws1.sinaimg.cn/large/006tNbRwgy1fxtfxqpzeog306y07mtq7.gif)
+![](../images/LearniOSAnimations-026.gif)
 
 
 
@@ -409,7 +409,7 @@ herbView.layer.cornerRadius = self.presenting ? 0.0 : 20.0/xScaleFactor
 
 上面两个修改后的效果：
 
-![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxtgx7q5s5g308s0fqqv5.gif)
+![](../images/LearniOSAnimations-009.gif)
 
 
 
@@ -423,7 +423,7 @@ herbView.layer.cornerRadius = self.presenting ? 0.0 : 20.0/xScaleFactor
 
 `UINavigationController`是iOS中为数不多的内置应用导航解决方案之一。 将一个新的视图控制器推入或弹出导航堆栈，这个过程自带一个时尚的动画。 
 
-![](https://ws3.sinaimg.cn/large/006tNbRwgy1fy8go5czmog308q09fgp7.gif)
+![](../images/LearniOSAnimations-027.gif)
 
 
 
@@ -435,7 +435,7 @@ herbView.layer.cornerRadius = self.presenting ? 0.0 : 20.0/xScaleFactor
 
 本章[开始项目](README.md#关于代码)是一个新项目，叫**LogoReveal**  。
 
-![](https://ws2.sinaimg.cn/large/006tNbRwgy1fy8gxv524xj307o0amwet.jpg)
+![](../images/LearniOSAnimations-028.jpg)
 
 点击默认屏幕任意地方（`MasterViewController`），跳转展示vacation packing list页面(`DetailViewController`)，RW Logo是通过`UIBezierPath`绘制的`CAShapeLayer`图层。
 
@@ -443,7 +443,7 @@ herbView.layer.cornerRadius = self.presenting ? 0.0 : 20.0/xScaleFactor
 
 自定义导航控制器转场的原理类似上一章节的[自定义转场的原理](#自定义转场的原理)，同样也可以用两个图概括：
 
-![image-20181203214052969](https://ws1.sinaimg.cn/large/006tNbRwgy1fxtw0sqszej30dz05e3z5.jpg)
+![](../images/LearniOSAnimations-029.jpg)
 
 
 
@@ -522,7 +522,7 @@ func navigationController(_ navigationController: UINavigationController, animat
 
 运行，点击，导航栏有一个两秒转场，但其他就没有反应了，这是因为`animateTransition()`中还没有编写任何代码。
 
-![](https://ws4.sinaimg.cn/large/006tNbRwgy1fxtmk2z7xbg308s090mxf.gif)
+![](../images/LearniOSAnimations-030.gif)
 
 
 
@@ -598,7 +598,7 @@ maskLayer.add(animation, forKey: nil)
 
 效果：
 
-![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxtnj606n9g308s0fq0uw.gif)
+![](../images/LearniOSAnimations-031.gif)
 
 
 
@@ -616,7 +616,7 @@ fromVC.logo.add(animation, forKey: nil)
 
 运行后，没有有原始的logo了：
 
-![](https://ws1.sinaimg.cn/large/006tNbRwgy1fxtnwpmszsg308s0fq777.gif)
+![](../images/LearniOSAnimations-032.gif)
 
 
 
@@ -718,7 +718,7 @@ else {
 
 最终效果会是：
 
-![](https://ws1.sinaimg.cn/large/006tNbRwgy1fxtxbxrvowg308s0fqan5.gif)
+![](../images/LearniOSAnimations-033.gif)
 
 
 
@@ -740,7 +740,7 @@ else {
 
 当导航控制器向其代理询问动画控制器（就是之前提到Animator）时，可能会发生两件事。返回nil，在这种情况下，导航控制器会运行标准转场动画； 如果返回一个动画控制器，那么导航控制器除了会向其代理询问转场动画控制器，也会询问交互控制器，如下所示：
 
-![image-20181216165544709](https://ws1.sinaimg.cn/large/006tNbRwgy1fy8ou4nshrj30fm06lt9a.jpg)
+![](../images/LearniOSAnimations-034.jpg)
 
 
 
@@ -842,7 +842,7 @@ switch recognizer.state {
 
 如果手势已经开始，只需将操作交给交互控制器，如下图所示：
 
-![image-20181203233104113](https://ws4.sinaimg.cn/large/006tNbRwgy1fxtz7gpuxxj30bh06zdgi.jpg)
+![](../images/LearniOSAnimations-035.jpg)
 
 
 
@@ -914,7 +914,7 @@ override func update(_ percentComplete: CGFloat) {
 
 运行效果：
 
-![](https://ws3.sinaimg.cn/large/006tNbRwgy1fy9iqrfex0g308q0fogwz.gif)
+![](../images/LearniOSAnimations-036.gif)
 
 这边出现问题，就是手指离开屏幕后，动画立即停止，再次滑动时也没有反应。
 
@@ -936,7 +936,7 @@ case .cancelled, .ended:
 ```
 
 在用户手指离开屏幕之前，如果平移得足够远，就表示转场完成，呈现新的视图控制器；相反，就滚回原来的视图控制器。
-![](https://ws2.sinaimg.cn/large/006tNbRwgy1fy9kfeum2qj30db04zaae.jpg)
+![](../images/LearniOSAnimations-037.jpg)
 
 重写`cancel()` 和 `finish()`方法：
 
@@ -970,4 +970,4 @@ interactive = false
 
 本章最后的效果：
 
-![](https://ws1.sinaimg.cn/large/006tNbRwgy1fy9krwbad6g308q0fogzr.gif)
+![](../images/LearniOSAnimations-010.gif)

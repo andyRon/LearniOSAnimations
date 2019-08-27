@@ -1412,7 +1412,7 @@ balloon.position = CGPoint(x: -50.0, y: loginButton.center.y)
 
 运行，效果：
 
-![](https://ws1.sinaimg.cn/large/006tNbRwgy1fx69ltw09dg308s0avwtn.gif)
+![](../images/LearniOSAnimations-002.gif)
 
 
 
@@ -1676,7 +1676,7 @@ if !self.isSquare {
 
 这样的最终效果就是：
 
-![](https://ws2.sinaimg.cn/large/006tNbRwgy1fxmnjaf154g308m0fn1gb.gif)
+![](../images/LearniOSAnimations-005.gif)
 
 
 
@@ -1897,7 +1897,7 @@ gradientAnimation.toValue = [0.65, 0.8, 0.85, 0.9, 0.95, 1.0]
 
 
 
-![](https://ws2.sinaimg.cn/large/006tNbRwgy1fy6f1w4io8g308o0fpjw8.gif)
+![](../images/LearniOSAnimations-006.gif)
 
 
 
@@ -2039,7 +2039,7 @@ airplaneOrientationAnimation.toValue = 2.0 * .pi
 
 最终效果
 
-![](https://ws4.sinaimg.cn/large/006tNbRwgy1fx7j42np9ig308q08r0w0.gif)
+![](../images/LearniOSAnimations-007.gif)
 
 
 
@@ -2490,4 +2490,4 @@ dot.add(tint, forKey: nil)
 
 本章最后的效果：
 
-![](https://ws4.sinaimg.cn/large/006tNbRwgy1fy7mgff62bg308o0811bi.gif)
+![](../images/LearniOSAnimations-008.gif)

@@ -46,31 +46,31 @@
 |项目名      |  BahamaAirLoginScreen   |  Flight Info    |  Packing List  |
 | ---- 		| :----: | :----: | :--------------------------------------------: |
 | 对应章节   |   1 2 3    8 9 10 11 12    |   4 5   |   6 7  |
-| 预览图     |  ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fx69ltw09dg308s0avwtn.gif)    |  ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fxcajmwugeg308m0fndxy.gif)    |  ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fw8qbtmmeag308s0fnafk.gif) |
+| 预览图     |  ![](../images/LearniOSAnimations-002.gif)    |  ![](../images/LearniOSAnimations-003.gif)    |  ![](../images/LearniOSAnimations-004.gif) |
 
 
 |项目名      |  MultiplayerSearch   |  SlideToReveal    |  PullToRefresh  |
 | ---- 		| :----: | :----: | :--------------------------------------------: |
 | 对应章节   |   13    |   14   |   15  |
-| 预览图     |  ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fxmnjaf154g308m0fn1gb.gif) |   ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fy6f1w4io8g308o0fpjw8.gif)   |  ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fx7j42np9ig308q08r0w0.gif) |
+| 预览图     |  ![](../images/LearniOSAnimations-005.gif) |   ![](../images/LearniOSAnimations-006.gif)   |  ![](../images/LearniOSAnimations-007.gif) |
 
 
 |项目名      |   Lris  |  BeginnerCook    |  LogoReveal   |
 | ---- 		| :----: | :----: | :--------------------------------------------: |
 | 对应章节   |  16     |  17    |  18 19   |
-| 预览图     |  ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fy7mgff62bg308o0811bi.gif)  |  ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxtgx7q5s5g308s0fqqv5.gif)   | ![](https://ws1.sinaimg.cn/large/006tNbRwgy1fy9krwbad6g308q0fogzr.gif) |
+| 预览图     |  ![](../images/LearniOSAnimations-008.gif)  |  ![](../images/LearniOSAnimations-009.gif)   | ![](../images/LearniOSAnimations-010.gif) |
 
 
 |项目名      |   LockSearch  |  OfficeBuddy    |  ImageGallery   |
 | ---- 		| :----: | :----: | :--------------------------------------------: |
 | 对应章节   |   20 21 22 23     |  24    |   25  |
-| 预览图     | ![](https://ws4.sinaimg.cn/large/006tNc79gy1fz2mwu0xstg308o0fo4h8.gif) |  ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxvpgah492g306y067799.gif)  |  ![](https://ws3.sinaimg.cn/large/006tNbRwgy1fxvr9roxswg308q0fo7wh.gif)    |
+| 预览图     | ![](../images/LearniOSAnimations-011.gif) |  ![](../images/LearniOSAnimations-012.gif)  |  ![](../images/LearniOSAnimations-013.gif)    |
 
 
 |项目名      |  Snow Scene   |  SouthPoleFun    |
 | ---- 		| :----: | :----: |
 | 对应章节   |   26    |   27   |
-| 预览图     |  ![](https://ws4.sinaimg.cn/large/006tNbRwgy1fxvzhofmleg30ku112b2a.gif)   |  ![](https://ws2.sinaimg.cn/large/006tNbRwgy1fxw1bdetvhg30fm08sn0q.gif)  |
+| 预览图     |  ![](../images/LearniOSAnimations-014.gif)   |  ![](../images/LearniOSAnimations-015.gif)  |
 
 
 

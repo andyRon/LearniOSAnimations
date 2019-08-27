@@ -442,7 +442,7 @@ emitterCell.lifetimeRange = 1.0
 
 效果：
 
-![](https://ws4.sinaimg.cn/large/006tNbRwgy1fxvzhofmleg30ku112b2a.gif)
+![](../images/LearniOSAnimations-014.gif)
 
 
 
@@ -649,7 +649,7 @@ self.loadWalkAnimation()
 
 最后，运行，效果：
 
-![](https://ws2.sinaimg.cn/large/006tNbRwgy1fxw1bdetvhg30fm08sn0q.gif)
+![](../images/LearniOSAnimations-015.gif)
 
 
 

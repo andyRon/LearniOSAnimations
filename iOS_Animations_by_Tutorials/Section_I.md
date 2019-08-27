@@ -1135,7 +1135,7 @@ func summarySwitch(to summaryText: String) {
 
 本章最后效果：
 
-![](https://ws1.sinaimg.cn/large/006tNbRwgy1fxcajmwugeg308m0fndxy.gif)
+![](../images/LearniOSAnimations-003.gif)
 
 
 
